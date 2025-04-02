@@ -1,4 +1,6 @@
 "use client";
+import Carrent from '@/public/carrent.jpg'
+import Image from 'next/image';
 
 import { useState } from "react";
 
@@ -9,10 +11,21 @@ const CarRentalSearch = () => {
   return (
     <section
       className="relative w-full min-h-[91vh] bg-cover bg-center flex items-center px-4 py-12 lg:py-24"
-      style={{ backgroundImage: "url('/images/car-bg.jpg')" }}
     >
+      {/* Background Image - fixed positioning */}
+      <div className=" -z-10">
+        <Image
+          src={Carrent}
+          alt="Car rental background"
+          fill
+          className="object-cover"
+          quality={100}
+          priority // Important for above-the-fold images
+        />
+      </div>
+
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+      <div className="absolute inset-0  bg-opacity-40"></div>
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Heading */}
