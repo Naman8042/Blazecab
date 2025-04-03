@@ -34,7 +34,7 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-8 text-[#1565C0]">
+          <div className="hidden md:flex space-x-8 text-[#3D85C6]">
             {navItems.map(({ name, path }) => (
               <Link key={path} href={path} className="hover:text-[#FFB300] transition duration-300">
                 {name}
@@ -44,7 +44,7 @@ const Navbar = () => {
 
           {/* Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button className="bg-[#1565C0] text-white hover:bg-[#0D47A1]">
+            <Button className="bg-[#3D85C6] text-white hover:bg-[#0D47A1] ">
               <Link href="/login">Login</Link>
             </Button>
             <Button className="bg-[#FFB300] text-white hover:bg-[#FFA000]">

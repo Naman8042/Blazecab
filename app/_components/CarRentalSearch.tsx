@@ -1,118 +1,328 @@
 "use client";
-import Carrent from '@/public/carrent.jpg'
-import Image from 'next/image';
+import Image from "next/image";
+import Carrent from "@/public/carrent.jpg";
+import { useState, FormEvent } from "react";
+import Link from "next/link";
+import axios from "axios";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
-import { useState } from "react";
+type PhotonFeature = {
+  properties: {
+    osm_id: number;
+    name: string;
+    country?: string;
+    city?: string;
+    street?: string;
+    housenumber?: string;
+    postcode?: string;
+  };
+  geometry: {
+    coordinates: [number, number];
+  };
+};
+
+type FormData = {
+  pickupLocation: string;
+  dropoffLocation: string;
+  pickupDate: Date;
+  pickupTime: Date;
+  dropoffDate: Date;
+};
 
 const CarRentalSearch = () => {
-  const [returnDifferentLocation, setReturnDifferentLocation] = useState(false);
-  const [isDriverAgeChecked, setIsDriverAgeChecked] = useState(true);
+  const [rideType, setRideType] = useState<string>("One Way");
+  // Form state
+  const [formData, setFormData] = useState<FormData>({
+    pickupLocation: "",
+    dropoffLocation: "",
+    pickupDate: new Date(),
+    pickupTime: new Date(),
+    dropoffDate: new Date(Date.now() + 86400000), // Tomorrow
+  });
+  const [pickupSuggestions, setPickupSuggestions] = useState<PhotonFeature[]>(
+    []
+  );
+  const [dropoffSuggestions, setDropoffSuggestions] = useState<PhotonFeature[]>(
+    []
+  );
+  const [activeField, setActiveField] = useState<"pickup" | "dropoff" | null>(
+    null
+  );
+
+ 
+
+  const handleDateChange = (date: Date | null, field: keyof FormData) => {
+    if (date) {
+      setFormData((prev) => ({ ...prev, [field]: date }));
+    }
+  };
+
+  const handleTimeChange = (time: Date | null, field: keyof FormData) => {
+    if (time) {
+      setFormData((prev) => ({ ...prev, [field]: time }));
+    }
+  };
+
+  const handleAddressSearch = async (
+    query: string,
+    field: "pickup" | "dropoff"
+  ) => {
+    if (!query || query.length < 3) {
+      if (field === "pickup") setPickupSuggestions([]);
+      else setDropoffSuggestions([]);
+      return;
+    }
+
+    try {
+      const response = await axios.get<{ features: PhotonFeature[] }>(
+        `https://photon.komoot.io/api/?q=${encodeURIComponent(query)}`
+      );
+
+      const uniqueResults = response.data.features.filter(
+        (place, i, self) =>
+          i ===
+          self.findIndex((p) => p.properties.osm_id === place.properties.osm_id)
+      );
+
+      if (field === "pickup") setPickupSuggestions(uniqueResults);
+      else setDropoffSuggestions(uniqueResults);
+    } catch (error) {
+      console.error("Error fetching data from Photon API:", error);
+      if (field === "pickup") setPickupSuggestions([]);
+      else setDropoffSuggestions([]);
+    }
+  };
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    console.log("Form submitted:", formData);
+    // Add your form submission logic here
+  };
+
+  const getVisibleInputCount = () => {
+    if (rideType === "One Way") return 4;
+    if (rideType === "Round Trip") return 5;
+    if (rideType === "Local") return 3;
+    return 5;
+  };
+
+  const inputCount = getVisibleInputCount();
+  console.log(inputCount);
 
   return (
-    <section
-      className="relative w-full min-h-[91vh] bg-cover bg-center flex items-center px-4 py-12 lg:py-24"
-    >
-      {/* Background Image - fixed positioning */}
-      <div className=" -z-10">
+    <section className="relative w-full min-h-[84.5vh] sm:h-[91vh] flex items-center  py-6 px- md:py-12 lg:py-24 overflow-hidden">
+      {/* Background Image */}
+      <div className="absolute inset-0 -z-10">
         <Image
           src={Carrent}
           alt="Car rental background"
           fill
-          className="object-cover"
+          className=""
           quality={100}
-          priority // Important for above-the-fold images
+          priority
         />
       </div>
 
       {/* Overlay */}
-      <div className="absolute inset-0  bg-opacity-40"></div>
+      <div className="absolute inset-0  bg-opacity-50 -z-10"></div>
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Heading */}
-        <h1 className="text-white text-4xl sm:text-5xl md:text-6xl font-bold mb-8">
-          Find the best car rental deals
-        </h1>
-
-        {/* Search Box */}
-        <div className="bg-[#00204A] text-white p-6 rounded-lg shadow-lg w-full">
-          {/* Main Search Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {/* Pick-up location */}
-            <div className="col-span-1 md:col-span-2 lg:col-span-1">
-              <label className="block text-sm font-semibold mb-1">Pick-up location</label>
-              <input
-                type="text"
-                placeholder="City, airport, or address"
-                className="w-full p-3 rounded-lg bg-white text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              />
-            </div>
-
-            {/* Pick-up Date/Time */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-semibold mb-1">Pick-up date</label>
-                <input
-                  type="date"
-                  className="w-full p-3 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold mb-1">Time</label>
-                <input
-                  type="time"
-                  className="w-full p-3 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                />
-              </div>
-            </div>
-
-            {/* Drop-off Date/Time */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-semibold mb-1">Drop-off date</label>
-                <input
-                  type="date"
-                  className="w-full p-3 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold mb-1">Time</label>
-                <input
-                  type="time"
-                  className="w-full p-3 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Checkboxes and Search Button */}
-          <div className="mt-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <label className="flex items-center space-x-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="w-5 h-5 text-blue-500 rounded focus:ring-blue-500"
-                  checked={isDriverAgeChecked}
-                  onChange={() => setIsDriverAgeChecked(!isDriverAgeChecked)}
-                />
-                <span className="text-sm">Driver aged between 25 – 70</span>
-              </label>
-
-              <label className="flex items-center space-x-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="w-5 h-5 text-blue-500 rounded focus:ring-blue-500"
-                  checked={returnDifferentLocation}
-                  onChange={() => setReturnDifferentLocation(!returnDifferentLocation)}
-                />
-                <span className="text-sm">Return car to a different location</span>
-              </label>
-            </div>
-
-            <button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200 ease-in-out transform hover:scale-105">
-              Search Cars
-            </button>
-          </div>
+        <div className="text-center lg:text-left mb-4 md:mb-8 lg:mb-12">
+          <h1 className="text-white text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
+            Find the best car rental deals
+          </h1>
+          <p className="text-white text-lg sm:text-xl max-w-2xl mx-auto lg:mx-0 hidden sm:block">
+            Compare prices from top rental companies and save up to 60%
+          </p>
         </div>
+
+        <form onSubmit={handleSubmit}>
+          <div className="bg-[#3D85C6] bg-opacity-90 text-white p-6 rounded-xl shadow-2xl w-full backdrop-blur-sm">
+            {/* Ride Type Toggle */}
+            <div className="flex flex-wrap justify-between sm:justify-center gap-2 mb-6 ">
+              {["One Way", "Round Trip", "Local"].map((type) => (
+                <button
+                  key={type}
+                  type="button"
+                  onClick={() => setRideType(type)}
+                  className={`px-2 md:px-4 py-2 rounded-full font-medium transition-all duration-200 ${
+                    rideType === type
+                      ? "bg-[#FFB300] text-white text-sm sm:text-base"
+                      : " bg-opacity-20 text-white hover:bg-opacity-30 text-sm sm:text-base"
+                  }`}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
+
+            {/* Dynamic Grid for Inputs */}
+            <div
+              className="flex flex-col sm:grid gap-2 md:gap-4"
+              style={{
+                gridTemplateColumns: `repeat(${inputCount}, minmax(0, 1fr))`,
+              }}
+            >
+              {/* Pick-up Location */}
+              <div className="relative">
+                <label className="block text-sm font-medium mb-1 text-white/80">
+                  Pick-up location
+                </label>
+                <input
+                  type="text"
+                  value={formData.pickupLocation}
+                  onChange={(e) => {
+                    setFormData({
+                      ...formData,
+                      pickupLocation: e.target.value,
+                    });
+                    handleAddressSearch(e.target.value, "pickup");
+                  }}
+                  onFocus={() => setActiveField("pickup")}
+                  onBlur={() => setTimeout(() => setActiveField(null), 200)}
+                  placeholder="City or address"
+                  className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 placeholder-gray-500"
+                />
+
+                {/* Show suggestions only for the active input */}
+                {activeField === "pickup" && pickupSuggestions.length > 0 && (
+                  <ul className="absolute top-full text-black left-0 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-50">
+                    {pickupSuggestions.map((suggestion) => (
+                      <li
+                        key={suggestion.properties.osm_id}
+                        className="p-2 hover:bg-gray-100 cursor-pointer"
+                        onClick={() => {
+                          setFormData({
+                            ...formData,
+                            pickupLocation: suggestion.properties.name,
+                          });
+                          setPickupSuggestions([]);
+                          setActiveField(null);
+                        }}
+                      >
+                        {suggestion.properties.name},{" "}
+                        {suggestion.properties.city || ""}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              {/* Drop-off Location */}
+              {rideType !== "Local" && (
+                <div className="relative">
+                  <label className="block text-sm font-medium mb-1 text-white/80">
+                    Drop-off location
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.dropoffLocation}
+                    onChange={(e) => {
+                      setFormData({
+                        ...formData,
+                        dropoffLocation: e.target.value,
+                      });
+                      handleAddressSearch(e.target.value, "dropoff");
+                    }}
+                    onFocus={() => setActiveField("dropoff")}
+                    onBlur={() => setTimeout(() => setActiveField(null), 200)}
+                    placeholder="City or address"
+                    className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 placeholder-gray-500"
+                  />
+
+                  {/* Show suggestions only for the active input */}
+                  {activeField === "dropoff" &&
+                    dropoffSuggestions.length > 0 && (
+                      <ul className="absolute top-full text-black left-0 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-50">
+                        {dropoffSuggestions.map((suggestion) => (
+                          <li
+                            key={suggestion.properties.osm_id}
+                            className="p-2 hover:bg-gray-100 cursor-pointer"
+                            onClick={() => {
+                              setFormData({
+                                ...formData,
+                                dropoffLocation: suggestion.properties.name,
+                              });
+                              setDropoffSuggestions([]);
+                              setActiveField(null);
+                            }}
+                          >
+                            {suggestion.properties.name},{" "}
+                            {suggestion.properties.city || ""}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                </div>
+              )}
+
+              {/* Pick-up Date */}
+              <div className="w-full ">
+                <label className="block text-sm font-medium mb-1 text-white/80">
+                  Pick-up date
+                </label>
+                <div className="w-full">
+                  {/* {" "} */}
+                  <DatePicker
+                    selected={formData.pickupDate}
+                    onChange={(date) => handleDateChange(date, "pickupDate")}
+                    className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:outline-none border border-gray-300"
+                    wrapperClassName="w-full" // This ensures the DatePicker container takes full width
+                  />
+                </div>
+              </div>
+
+              {/* Pick-up Time */}
+              <div className="w-full ">
+                <label className="block text-sm font-medium mb-1 text-white/80">
+                  Pick-up time
+                </label>
+                <div className="w-full">
+                  <DatePicker
+                    selected={formData.pickupTime}
+                    onChange={(time) => handleTimeChange(time, "pickupTime")}
+                    showTimeSelect
+                    showTimeSelectOnly
+                    timeIntervals={30}
+                    wrapperClassName="w-full"
+                    className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900"
+                  />
+                </div>
+              </div>
+
+              {/* Drop-off Date and Time (Visible for Round Trip) */}
+              {rideType === "Round Trip" && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium mb-1 text-white/80">
+                      Drop-off date
+                    </label>
+                    <DatePicker
+                      selected={formData.dropoffDate}
+                      onChange={(date) => handleDateChange(date, "dropoffDate")}
+                      className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900"
+                    />
+                  </div>
+
+                </>
+              )}
+            </div>
+
+            {/* Search Button */}
+            <div className="mt-6 flex justify-center">
+              <button
+                type="submit"
+                className="bg-[#FFB300] cursor-pointer text-white font-semibold py-3 px-8 rounded-lg"
+              >
+                <Link href="/carride">
+                Search Cars
+                </Link>
+                
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
     </section>
   );
