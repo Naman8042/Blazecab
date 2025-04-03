@@ -146,7 +146,7 @@ const CarRentalSearch = () => {
                   key={type}
                   type="button"
                   onClick={() => setRideType(type)}
-                  className={`px-2 md:px-4 py-2 rounded-full font-medium transition-all duration-200 ${
+                  className={`px-4 md:px-4 py-2 rounded-full font-medium transition-all duration-200 ${
                     rideType === type
                       ? "bg-[#FFB300] text-white text-sm sm:text-base"
                       : " bg-opacity-20 text-white hover:bg-opacity-30 text-sm sm:text-base"
