@@ -1,4 +1,4 @@
-import React from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { GiGearStickPattern } from "react-icons/gi";
 import { TbAirConditioning } from "react-icons/tb";
@@ -93,9 +93,11 @@ const CarCard = ({ car }:CarCardProps) => {
           <p className="font-semibold text-lg md:text-2xl text-gray-800">
             ₹{car.price}
           </p>
+          <Link href="/bookingpage">
           <Button className="mt-2 bg-[#3D85C6] hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
             View Deals
           </Button>
+          </Link>
         </div>
       </div>
     </div>
