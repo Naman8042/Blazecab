@@ -16,7 +16,7 @@ const testimonials = [
     image: "/images/usman.jpg",
     rating: 5,
     quote:
-      "But don't just take our word for it—hear what our satisfied clients have to say. From Fortune 500 companies to small...",
+      "But don&apos;t just take our word for it&mdash;hear what our satisfied clients have to say. From Fortune 500 companies to small...",
   },
   {
     id: 2,
@@ -25,7 +25,7 @@ const testimonials = [
     image: "/images/amir.jpg",
     rating: 5,
     quote:
-      "But don't just take our word for it—hear what our satisfied clients have to say. From Fortune 500 companies to small...",
+      "But don&apos;t just take our word for it&mdash;hear what our satisfied clients have to say. From Fortune 500 companies to small...",
   },
   {
     id: 3,
@@ -34,7 +34,7 @@ const testimonials = [
     image: "/images/amir.jpg",
     rating: 5,
     quote:
-      "But don't just take our word for it—hear what our satisfied clients have to say. From Fortune 500 companies to small...",
+      "But don&apos;t just take our word for it&mdash;hear what our satisfied clients have to say. From Fortune 500 companies to small...",
   },
   {
     id: 4,
@@ -43,7 +43,7 @@ const testimonials = [
     image: "/images/amir.jpg",
     rating: 5,
     quote:
-      "But don't just take our word for it—hear what our satisfied clients have to say. From Fortune 500 companies to small...",
+      "But don&apos;t just take our word for it&mdash;hear what our satisfied clients have to say. From Fortune 500 companies to small...",
   },
 ];
 
