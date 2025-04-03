@@ -22,7 +22,12 @@ const FilterSidebar = () => {
   });
 
   const [selectedSeats, setSelectedSeats] = useState<string | null>(null);
-  const [filters, setFilters] = useState<Filters>({});
+  const [filters, setFilters] = useState<Filters>({
+    transmission: { automatic: false, manual: false },
+    pickup: { airportTerminal: false },
+    policies: { unlimitedMileage: false, freeCancellation: false, fairFuelPolicy: false },
+  });
+  
 
   const toggleSection = (section: SectionName) => {
     setOpenSections((prev) => ({ ...prev, [section]: !prev[section] }));
