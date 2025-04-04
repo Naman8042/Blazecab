@@ -1,91 +1,61 @@
-"use client";  
-import Logo from '@/assets/blazecab_logo.jpg';
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+"use client";
+
+import Logo from "@/assets/blazecab_logo.jpg";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import Image from 'next/image';
-
-const navItems = [
-  { name: "Home", path: "/" },
-  { name: "Job Specs", path: "/jobspecs" },
-  { name: "Projects", path: "/projects" },
-  { name: "Job Posts", path: "/job-posts" },
-  { name: "Pages", path: "/pages" },
-  { name: "Job Submissions", path: "/select" },
-  { name: "Contact", path: "/contact-us" },
-];
+import Image from "next/image";
+import { FaPhoneAlt } from "react-icons/fa";
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
   return (
     <div className="shadow-md w-full z-50 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-6">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo with Responsive Sizing */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-6 py-2">
+        <div className="flex justify-between items-center h-14">
+          {/* Logo */}
           <Link href="/" className="flex items-center">
             <Image
               src={Logo}
               alt="BlazeCab Logo"
-              className="h-10 w-auto sm:h-12 md:h-[55px] md:w-[160px]" 
+              className="h-8 w-24 sm:h-10 sm:w-28 md:h-[55px] md:w-[160px]"
             />
           </Link>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-8 text-[#3D85C6]">
-            {navItems.map(({ name, path }) => (
-              <Link key={path} href={path} className="hover:text-[#FFB300] transition duration-300">
-                {name}
-              </Link>
-            ))}
+          {/* 24x7 Support Button */}
+          <div className="flex items-center border border-[#3D85C6] h-9 sm:h-auto rounded-md overflow-hidden text-xs sm:text-sm lg:text-base">
+            {/* Left Section */}
+            <div className="bg-white px-2 py-1 sm:px-3 sm:py-2 flex items-center gap-1 sm:gap-2 h-full">
+              <FaPhoneAlt 
+                className="text-[#3D85C6]" 
+                size={14}  // Default for small screens
+              />
+              <span className="text-black font-medium">24x7</span>
+            </div>
+
+            {/* Right Section */}
+            <a
+              href="tel:7703821374"
+              className="bg-[#3D85C6] h-full text-center flex items-center  text-white px-3 py-1 sm:px-4 sm:py-2 font-bold text-xs sm:text-sm lg:text-base"
+            >
+              7703821374
+            </a>
           </div>
 
-          {/* Auth Buttons */}
+          {/* Auth Buttons (Hidden on Mobile) */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button className="bg-[#3D85C6] text-white hover:bg-[#0D47A1] ">
+            <Button className="bg-[#3D85C6] text-white hover:bg-[#0D47A1] px-4 py-2">
               <Link href="/login">Login</Link>
             </Button>
-            <Button className="bg-[#FFB300] text-white hover:bg-[#FFA000]">
+            <Button className="bg-[#FFB300] text-white hover:bg-[#FFA000] px-4 py-2">
               <Link href="/signup">Signup</Link>
             </Button>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button className="md:hidden text-gray-800" onClick={() => setIsOpen(!isOpen)}>
-            {isOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
+          {/* Mobile Menu Button (Only Login) */}
+          <Button className="bg-[#3D85C6] text-white hover:bg-[#0D47A1] md:hidden px-3 py-1 text-xs sm:text-sm">
+            <Link href="/login">Login</Link>
+          </Button>
         </div>
       </div>
-
-      {/* Mobile Menu */}
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          transition={{ duration: 0.3 }}
-          className="md:hidden bg-white shadow-lg"
-        >
-          <div className="p-4 space-y-4 text-gray-800">
-            {navItems.map(({ name, path }) => (
-              <Link key={path} href={path} className="block hover:text-[#FFB300] transition duration-300">
-                {name}
-              </Link>
-            ))}
-
-            {/* Auth Buttons for Mobile */}
-            <div className="flex flex-col space-y-2 mt-4">
-              <Link href="/login" className="text-center text-gray-800 hover:text-[#FFB300] transition duration-300">
-                Login
-              </Link>
-              <Link href="/signup" className="text-center bg-[#FFB300] hover:bg-[#FFA000] text-white px-5 py-2 rounded-lg">
-                Sign Up
-              </Link>
-            </div>
-          </div>
-        </motion.div>
-      )}
     </div>
   );
 };

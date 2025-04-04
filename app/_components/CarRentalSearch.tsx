@@ -111,9 +111,9 @@ const CarRentalSearch = () => {
   console.log(inputCount);
 
   return (
-    <section className="relative w-full min-h-[84.5vh] sm:h-[91vh] flex items-center  py-6 px- md:py-12 lg:py-24 overflow-hidden">
+    <section className="relative w-full bg-gray-100 min-h-[84.5vh] sm:h-[91vh] flex items-center  py-6 px- md:py-12 lg:py-24 overflow-hidden">
       {/* Background Image */}
-      <div className="absolute inset-0 -z-10">
+      {/* <div className="absolute inset-0 -z-10">
         <Image
           src={Carrent}
           alt="Car rental background"
@@ -122,23 +122,23 @@ const CarRentalSearch = () => {
           quality={100}
           priority
         />
-      </div>
+      </div> */}
 
       {/* Overlay */}
       <div className="absolute inset-0  bg-opacity-50 -z-10"></div>
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center lg:text-left mb-4 md:mb-8 lg:mb-12">
-          <h1 className="text-white text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
+          <h1 className="text-[#3D85C6] text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
             Find the best car rental deals
           </h1>
-          <p className="text-white text-lg sm:text-xl max-w-2xl mx-auto lg:mx-0 hidden sm:block">
+          <p className="text-[#3D85C6] text-lg sm:text-xl max-w-2xl mx-auto lg:mx-0 hidden sm:block">
             Compare prices from top rental companies and save up to 60%
           </p>
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="bg-[#3D85C6] bg-opacity-90 text-white p-6 rounded-xl shadow-2xl w-full backdrop-blur-sm">
+          <div className=" bg-opacity-90 bg-white p-6 rounded-xl shadow-2xl w-full backdrop-blur-sm">
             {/* Ride Type Toggle */}
             <div className="flex flex-wrap justify-between sm:justify-center gap-2 mb-6 ">
               {["One Way", "Round Trip", "Local"].map((type) => (
@@ -148,8 +148,8 @@ const CarRentalSearch = () => {
                   onClick={() => setRideType(type)}
                   className={`px-4 md:px-4 py-2 rounded-full font-medium transition-all duration-200 ${
                     rideType === type
-                      ? "bg-[#FFB300] text-white text-sm sm:text-base"
-                      : " bg-opacity-20 text-white hover:bg-opacity-30 text-sm sm:text-base"
+                      ? "bg-[#FFB300] text-white text-sm sm:text-base cursor-pointer"
+                      : " bg-opacity-20 text-black hover:bg-opacity-30 text-sm sm:text-base cursor-pointer"
                   }`}
                 >
                   {type}
@@ -166,7 +166,7 @@ const CarRentalSearch = () => {
             >
               {/* Pick-up Location */}
               <div className="relative">
-                <label className="block text-sm font-medium mb-1 text-white/80">
+                <label className="block text-sm font-medium mb-1 ">
                   Pick-up location
                 </label>
                 <input
@@ -182,12 +182,12 @@ const CarRentalSearch = () => {
                   onFocus={() => setActiveField("pickup")}
                   onBlur={() => setTimeout(() => setActiveField(null), 200)}
                   placeholder="City or address"
-                  className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 placeholder-gray-500"
+                  className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 placeholder-gray-500 border-2"
                 />
 
                 {/* Show suggestions only for the active input */}
                 {activeField === "pickup" && pickupSuggestions.length > 0 && (
-                  <ul className="absolute top-full text-black left-0 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-50">
+                  <ul className="absolute top-full text-black left-0 w-full bg-white  rounded-lg shadow-lg z-50">
                     {pickupSuggestions.map((suggestion) => (
                       <li
                         key={suggestion.properties.osm_id}
@@ -212,7 +212,7 @@ const CarRentalSearch = () => {
               {/* Drop-off Location */}
               {rideType !== "Local" && (
                 <div className="relative">
-                  <label className="block text-sm font-medium mb-1 text-white/80">
+                  <label className="block text-sm font-medium mb-1 ">
                     Drop-off location
                   </label>
                   <input
@@ -228,7 +228,7 @@ const CarRentalSearch = () => {
                     onFocus={() => setActiveField("dropoff")}
                     onBlur={() => setTimeout(() => setActiveField(null), 200)}
                     placeholder="City or address"
-                    className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 placeholder-gray-500"
+                    className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 placeholder-gray-500 border-2"
                   />
 
                   {/* Show suggestions only for the active input */}
@@ -259,7 +259,7 @@ const CarRentalSearch = () => {
 
               {/* Pick-up Date */}
               <div className="w-full ">
-                <label className="block text-sm font-medium mb-1 text-white/80">
+                <label className="block text-sm font-medium mb-1 ">
                   Pick-up date
                 </label>
                 <div className="w-full">
@@ -267,7 +267,7 @@ const CarRentalSearch = () => {
                   <DatePicker
                     selected={formData.pickupDate}
                     onChange={(date) => handleDateChange(date, "pickupDate")}
-                    className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:outline-none border border-gray-300"
+                    className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 focus:ring-2  border-2"
                     wrapperClassName="w-full" // This ensures the DatePicker container takes full width
                   />
                 </div>
@@ -275,7 +275,7 @@ const CarRentalSearch = () => {
 
               {/* Pick-up Time */}
               <div className="w-full ">
-                <label className="block text-sm font-medium mb-1 text-white/80">
+                <label className="block text-sm font-medium mb-1 ">
                   Pick-up time
                 </label>
                 <div className="w-full">
@@ -286,7 +286,7 @@ const CarRentalSearch = () => {
                     showTimeSelectOnly
                     timeIntervals={30}
                     wrapperClassName="w-full"
-                    className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900"
+                    className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2"
                   />
                 </div>
               </div>
@@ -295,13 +295,13 @@ const CarRentalSearch = () => {
               {rideType === "Round Trip" && (
                 <>
                   <div>
-                    <label className="block text-sm font-medium mb-1 text-white/80">
+                    <label className="block text-sm font-medium mb-1 ">
                       Drop-off date
                     </label>
                     <DatePicker
                       selected={formData.dropoffDate}
                       onChange={(date) => handleDateChange(date, "dropoffDate")}
-                      className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900"
+                      className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2"
                     />
                   </div>
 
