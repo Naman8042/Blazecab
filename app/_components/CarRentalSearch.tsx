@@ -1,6 +1,4 @@
 "use client";
-import Image from "next/image";
-import Carrent from "@/public/carrent.jpg";
 import { useState, FormEvent } from "react";
 import Link from "next/link";
 import axios from "axios";
