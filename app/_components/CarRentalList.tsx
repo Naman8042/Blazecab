@@ -63,18 +63,18 @@ const CarCard = ({ car }:CarCardProps) => {
 
         {/* Features */}
         <div className="flex flex-wrap justify-center md:justify-start gap-2 mt-3">
-          <span className="bg-[#3D85C6] text-white px-3 py-1 rounded-lg flex items-center gap-1 text-sm">
+          <span className="bg-[#6aa4e0] text-white px-3 py-1 rounded-lg flex items-center gap-1 text-sm">
             <FaPeopleGroup className="text-lg" /> {car.passengers}
           </span>
-          <span className="bg-[#3D85C6] text-white px-3 py-1 rounded-lg flex items-center gap-1 text-sm">
+          <span className="bg-[#6aa4e0] text-white px-3 py-1 rounded-lg flex items-center gap-1 text-sm">
             <BsDoorOpenFill className="text-lg" /> {car.doors}
           </span>
           {car.ac && (
-            <span className="bg-[#3D85C6] text-white px-3 py-1 rounded-lg flex items-center gap-1 text-sm">
+            <span className="bg-[#6aa4e0] text-white px-3 py-1 rounded-lg flex items-center gap-1 text-sm">
               <TbAirConditioning className="text-lg" /> AC
             </span>
           )}
-          <span className="bg-[#3D85C6] text-white px-3 py-1 rounded-lg flex items-center gap-1 text-sm">
+          <span className="bg-[#6aa4e0] text-white px-3 py-1 rounded-lg flex items-center gap-1 text-sm">
             <GiGearStickPattern className="text-lg" /> {car.transmission}
           </span>
         </div>
@@ -94,7 +94,7 @@ const CarCard = ({ car }:CarCardProps) => {
             ₹{car.price}
           </p>
           <Link href="/bookingpage">
-          <Button className="mt-2 bg-[#3D85C6] hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+          <Button className="mt-2 bg-[#6aa4e0] hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
             View Deals
           </Button>
           </Link>
@@ -107,7 +107,7 @@ const CarCard = ({ car }:CarCardProps) => {
 const CarRentalList = () => {
   return (
     <div className="min-h-screen p-4 flex flex-col items-center   w-full md:w-4/5">
-      <h1 className="text-2xl font-bold mb-4 text-[#3D85C6]">
+      <h1 className="text-2xl font-bold mb-4 text-[#6aa4e0]">
         Car Rental Listings
       </h1>
       <div className="w-full flex flex-col gap-4 items-center">

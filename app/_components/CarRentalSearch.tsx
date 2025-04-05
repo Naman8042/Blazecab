@@ -127,10 +127,10 @@ const CarRentalSearch = () => {
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center lg:text-left mb-4 md:mb-8 lg:mb-12">
-          <h1 className="text-[#3D85C6] text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
+          <h1 className="text-[#6aa4e0] text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
             Find the best car rental deals
           </h1>
-          <p className="text-[#3D85C6] text-lg sm:text-xl max-w-2xl mx-auto lg:mx-0 hidden sm:block">
+          <p className="text-[#6aa4e0] text-lg sm:text-xl max-w-2xl mx-auto lg:mx-0 hidden sm:block">
             Compare prices from top rental companies and save up to 60%
           </p>
         </div>

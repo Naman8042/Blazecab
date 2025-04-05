@@ -62,7 +62,7 @@ const TestimonialSection = () => {
           <span className="bg-[#FFB300] text-white px-3 py-1 rounded-full text-xs font-semibold">
             Testimonials
           </span>
-          <h2 className="text-2xl md:text-3xl font-bold text-[#3D85C6] mt-2">
+          <h2 className="text-2xl md:text-3xl font-bold text-[#6aa4e0] mt-2">
             Real Stories, Real Results
           </h2>
         </motion.div>
@@ -108,9 +108,9 @@ const TestimonialSection = () => {
                       width={60}
                       height={60}
                       alt={testimonial.name}
-                      className="rounded-full border border-[#3D85C6]"
+                      className="rounded-full border border-[#6aa4e0]"
                     />
-                    <h3 className="font-semibold text-[#3D85C6] mt-2 text-sm">
+                    <h3 className="font-semibold text-[#6aa4e0] mt-2 text-sm">
                       {testimonial.name}
                     </h3>
                     <p className="text-xs text-gray-500">{testimonial.role}</p>
