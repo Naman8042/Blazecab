@@ -4,6 +4,7 @@ import Link from "next/link";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { Button } from "@/components/ui/button";
 
 type PhotonFeature = {
   properties: {
@@ -47,8 +48,6 @@ const CarRentalSearch = () => {
   const [activeField, setActiveField] = useState<"pickup" | "dropoff" | null>(
     null
   );
-
- 
 
   const handleDateChange = (date: Date | null, field: keyof FormData) => {
     if (date) {
@@ -144,10 +143,10 @@ const CarRentalSearch = () => {
                   key={type}
                   type="button"
                   onClick={() => setRideType(type)}
-                  className={`px-4 md:px-4 py-2 rounded-full font-medium transition-all duration-200 ${
+                  className={`px-3 md:px-4 py-2 rounded-full font-medium transition-all duration-200 ${
                     rideType === type
-                      ? "bg-[#FFB300] text-white text-sm sm:text-base cursor-pointer"
-                      : " bg-opacity-20 text-black hover:bg-opacity-30 text-sm sm:text-base cursor-pointer"
+                      ? "bg-[#6aa4e0] text-white text-[13px] sm:text-base cursor-pointer uppercase "
+                      : " bg-opacity-20 text-black hover:bg-opacity-30 text-[15px] sm:text-base cursor-pointer uppercase"
                   }`}
                 >
                   {type}
@@ -165,7 +164,7 @@ const CarRentalSearch = () => {
               {/* Pick-up Location */}
               <div className="relative">
                 <label className="block text-sm font-medium mb-1 ">
-                  Pick-up location
+                  Pick-up City
                 </label>
                 <input
                   type="text"
@@ -211,7 +210,7 @@ const CarRentalSearch = () => {
               {rideType !== "Local" && (
                 <div className="relative">
                   <label className="block text-sm font-medium mb-1 ">
-                    Drop-off location
+                    Drop City
                   </label>
                   <input
                     type="text"
@@ -294,30 +293,31 @@ const CarRentalSearch = () => {
                 <>
                   <div>
                     <label className="block text-sm font-medium mb-1 ">
-                      Drop-off date
+                      Return date
                     </label>
-                    <DatePicker
-                      selected={formData.dropoffDate}
-                      onChange={(date) => handleDateChange(date, "dropoffDate")}
-                      className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2"
-                    />
+                    <div className="w-full">
+                      <DatePicker
+                        selected={formData.dropoffDate}
+                        onChange={(date) =>
+                          handleDateChange(date, "dropoffDate")
+                        }
+                        wrapperClassName="w-full"
+                        className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2"
+                      />
+                    </div>
                   </div>
-
                 </>
               )}
             </div>
 
             {/* Search Button */}
             <div className="mt-6 flex justify-center">
-              <button
+              <Button
                 type="submit"
-                className="bg-[#FFB300] cursor-pointer text-white font-semibold py-3 px-8 rounded-lg"
+                className="font-semibold py-3 px-8 "
               >
-                <Link href="/carride">
-                Search Cars
-                </Link>
-                
-              </button>
+                <Link href="/carride">Search Cars</Link>
+              </Button>
             </div>
           </div>
         </form>
