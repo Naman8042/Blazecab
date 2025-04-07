@@ -57,19 +57,20 @@ export function SigninForm({
                 <Input
                   id="password"
                   type="password"
+                  placeholder="Password"
                   required
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
                 
               <Button type="submit" className="w-full">
-                Login
+                Signin
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
-              <a href="#" className="underline underline-offset-4">
-                Sign up
+              <a href="/login" className=" underline-offset-4">
+                Login
               </a>
             </div>
           </form>

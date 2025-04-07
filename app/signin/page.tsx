@@ -11,7 +11,7 @@ const Page = () => {
   const signinHandler = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent form default submission behavior
       try{
-        await axios.post("/api/users/signup",{email,password,userName})
+        await axios.post("/api/signup",{email,password,userName})
       }
       catch(err){
         console.log(err)
