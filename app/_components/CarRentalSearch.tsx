@@ -66,7 +66,12 @@ const CarRentalSearch = () => {
     field: "pickup" | "dropoff"
   ) => {
     if (!query || query.length < 3) {
-      field === "pickup" ? setPickupSuggestions([]) : setDropoffSuggestions([]);
+      if (field === "pickup") {
+        setPickupSuggestions([]);
+      } else {
+        setDropoffSuggestions([]);
+      }
+      
       return;
     }
 
@@ -74,20 +79,30 @@ const CarRentalSearch = () => {
       const response = await axios.get<{ features: PhotonFeature[] }>(
         `https://photon.komoot.io/api/?q=${encodeURIComponent(query)}`
       );
-
-      const uniqueResults = response.data.features.filter(
-        (place, i, self) =>
-          i ===
-          self.findIndex((p) => p.properties.osm_id === place.properties.osm_id)
-      );
-
-      field === "pickup"
-        ? setPickupSuggestions(uniqueResults)
-        : setDropoffSuggestions(uniqueResults);
+    
+      const features = response?.data?.features ?? [];
+    
+      const uniqueResults = features.filter((place, i, self) => {
+        const osmId = place?.properties?.osm_id;
+        return i === self.findIndex((p) => p?.properties?.osm_id === osmId);
+      });
+    
+      if (field === "pickup") {
+        setPickupSuggestions(uniqueResults);
+      } else {
+        setDropoffSuggestions(uniqueResults);
+      }
+    
     } catch (error) {
       console.error("Error fetching data from Photon API:", error);
-      field === "pickup" ? setPickupSuggestions([]) : setDropoffSuggestions([]);
+    
+      if (field === "pickup") {
+        setPickupSuggestions([]);
+      } else {
+        setDropoffSuggestions([]);
+      }
     }
+    
   };
 
   const handleSubmit = (e: FormEvent) => {
