@@ -60,7 +60,6 @@ const CarRentalSearch = () => {
       setFormData((prev) => ({ ...prev, pickupTime: time }));
     }
   };
-  
 
   const handleAddressSearch = async (
     query: string,
@@ -100,7 +99,7 @@ const CarRentalSearch = () => {
         minute: "2-digit",
       }),
     };
-  
+
     console.log("Form submitted:", formattedData);
   };
 
@@ -120,8 +119,8 @@ const CarRentalSearch = () => {
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center lg:text-left mb-4 md:mb-8 lg:mb-12">
           <h1 className="text-[#6aa4e0] text-2xl sm:text-4xl md:text-5xl font-bold mb-4">
-          Ride Smart → Ride Safe → Ride with Blaze<span className="text-[#fbd20b]">Cab</span>
-
+            Ride Smart → Ride Safe → Ride with Blaze
+            <span className="text-[#fbd20b]">Cab</span>
           </h1>
           <p className="text-[#6aa4e0] text-lg sm:text-xl max-w-2xl mx-auto lg:mx-0 hidden sm:block">
             Compare prices from top rental companies and save up to 60%
@@ -199,19 +198,10 @@ const CarRentalSearch = () => {
               {/* Dropoff Location */}
               {rideType !== "Local" && (
                 <div className="relative">
-                  
-                    {
-                      rideType=="One Way"?(
-                        <label className="block text-sm font-medium mb-1">
-                        Drop City
-                        </label>
-                      ):(
-                        <label className="block text-sm font-medium mb-1">
-                        Destination City
-                        </label>
-                      )
-                    }
-                  
+                  <label className="block text-sm font-medium mb-1">
+                    {rideType === "One Way" ? "Drop City" : "Destination City"}
+                  </label>
+
                   <input
                     type="text"
                     value={formData.dropoffLocation}
@@ -224,7 +214,11 @@ const CarRentalSearch = () => {
                     }}
                     onFocus={() => setActiveField("dropoff")}
                     onBlur={() => setTimeout(() => setActiveField(null), 200)}
-                    placeholder={rideType=="One Way"?("Enter Your Drop City"):("Enter Your Destination City")}
+                    placeholder={
+                      rideType == "One Way"
+                        ? "Enter Your Drop City"
+                        : "Enter Your Destination City"
+                    }
                     className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 placeholder-gray-500 border-2"
                   />
                   {activeField === "dropoff" &&
