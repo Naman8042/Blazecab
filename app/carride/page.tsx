@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Link from "next/link";
 
 interface CarCategoryCardProps {
   category: string;
@@ -19,13 +20,13 @@ const CarCategoryCard=({
 }:CarCategoryCardProps) => (
   <div className="mb-10">
     <h2 className="text-xl font-bold mb-4">{category}</h2>
-    <div className="flex flex-col items-center bg-white p-4 rounded-lg shadow">
+    <div className="flex flex-col items-center bg-white p-2 sm:p-4 rounded-lg shadow">
       <img src={image} alt={name} className="w-48 h-32 object-contain mb-2" />
       <h3 className="text-lg font-semibold">{name}</h3>
-      <p className="text-blue-600 font-bold">{`₹${price} All Inclusive`}</p>
-      <Button className="w-1/2 mt-2">Select Car</Button>
+      <p className="text-[#6aa4e0] font-bold">{`₹${price} All Inclusive`}</p>
+      <Link href={"/bookingpage"} className="w-full flex items-center justify-center px-4 md:px-6 mt-2 max-w-md"> <Button className="w-full">Select Car</Button></Link>
 
-      <Card className="p-4 md:p-6 h-[200px] mt-4 w-full max-w-md shadow-none border-none ring-0">
+      <Card className="p-4 md:p-6 h-[180px] mt-2 w-full max-w-md shadow-none border-none ring-0">
 
         <Tabs defaultValue="inclusions">
           <TabsList className="flex justify-between bg-gray-200 rounded-lg p-1 w-full text-xs md:text-sm">
@@ -34,7 +35,7 @@ const CarCategoryCard=({
             <TabsTrigger value="tac">T&C</TabsTrigger>
           </TabsList>
 
-          <CardContent className="mt-4 text-sm md:text-base min-h-[130px] relative">
+          <CardContent className="mt-4 text-sm md:text-base min-h-[130px] relative ">
             <TabsContent
               value="inclusions"
               className="absolute top-0 left-0 w-full transition-opacity duration-300"
@@ -63,45 +64,94 @@ const CarCategoryCard=({
   </div>
 );
 
-const CarList=() => {
+const carData = [
+  {
+    category: "Hatchback",
+    image: "https://res.cloudinary.com/dtrofwkib/image/upload/v1744721159/wago_hxfxnc.webp",
+    name: "Maruti WagonR",
+    price: "6020",
+    inclusions: [
+      "Base Fare and Fuel Charges",
+      "Driver Allowance",
+      "State Tax & Toll",
+      "GST (5%)",
+    ],
+  },
+  {
+    category: "Sedan",
+    image: "https://res.cloudinary.com/dtrofwkib/image/upload/v1744721149/Sedan-BlazeCab_jknbhq.webp",
+    name: "Toyota Etios",
+    price: "6143",
+    inclusions: [
+      "Base Fare and Fuel Charges",
+      "Driver Allowance",
+      "State Tax & Toll",
+      "GST (5%)",
+    ],
+  },
+  {
+    category: "SUV",
+    image: "https://res.cloudinary.com/dtrofwkib/image/upload/v1744721158/Toyota-Innova-BlazeCab_sh3i9j.webp",
+    name: "Toyota Innova",
+    price: "10106",
+    inclusions: [
+      "Base Fare and Fuel Charges",
+      "Driver Allowance",
+      "State Tax & Toll",
+      "GST (5%)",
+    ],
+  },
+  {
+    category: "Urbania",
+    image: "https://res.cloudinary.com/dtrofwkib/image/upload/v1744721159/Urbania_hyn8oe.webp",
+    name: "Urbania",
+    price: "10106",
+    inclusions: [
+      "Base Fare and Fuel Charges",
+      "Driver Allowance",
+      "State Tax & Toll",
+      "GST (5%)",
+    ],
+  },
+  {
+    category: "12 Seater",
+    image: "https://res.cloudinary.com/dtrofwkib/image/upload/v1744721123/12-Seater-Tempo-BlazeCab_bkovkk.webp",
+    name: "12 Seater",
+    price: "10106",
+    inclusions: [
+      "Base Fare and Fuel Charges",
+      "Driver Allowance",
+      "State Tax & Toll",
+      "GST (5%)",
+    ],
+  },
+  {
+    category: "15 Seater",
+    image: "https://res.cloudinary.com/dtrofwkib/image/upload/v1744721123/15-Seater-Tempo-BlazeCab_nznvns.webp",
+    name: "15 Seater",
+    price: "10106",
+    inclusions: [
+      "Base Fare and Fuel Charges",
+      "Driver Allowance",
+      "State Tax & Toll",
+      "GST (5%)",
+    ],
+  },
+];
+
+const CarList = () => {
   return (
     <div className="p-4 max-w-xl mx-auto">
-      <CarCategoryCard
-        category="Hatchback"
-        image="data:image/jpeg;base64,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"
-        name="Maruti WagonR"
-        price="6020"
-        inclusions={[
-          "Base Fare and Fuel Charges",
-          "Driver Allowance",
-          "State Tax & Toll",
-          "GST (5%)",
-        ]}
-      />
-      <CarCategoryCard
-        category="Sedan"
-        image="https://imgd.aeplcdn.com/664x374/cw/ec/24731/Toyota-Platinum-Etios-Exterior-119077.jpg?wm=0&q=80"
-        name="Toyota Etios"
-        price="6143"
-        inclusions={[
-          "Base Fare and Fuel Charges",
-          "Driver Allowance",
-          "State Tax & Toll",
-          "GST (5%)",
-        ]}
-      />
-      <CarCategoryCard
-        category="SUV"
-        image="data:image/jpeg;base64,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"
-        name="Toyota Innova"
-        price="10106"
-        inclusions={[
-          "Base Fare and Fuel Charges",
-          "Driver Allowance",
-          "State Tax & Toll",
-          "GST (5%)",
-        ]}
-      />
+      {carData.map((car, index) => (
+        <CarCategoryCard
+          key={index}
+          category={car.category}
+          image={car.image}
+          name={car.name}
+          price={car.price}
+          inclusions={car.inclusions}
+        />
+      ))}
     </div>
   );
 };
