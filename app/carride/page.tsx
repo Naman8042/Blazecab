@@ -19,7 +19,7 @@ const CarCategoryCard=({
   inclusions,
 }:CarCategoryCardProps) => (
   <div className="mb-10">
-    <h2 className="text-xl font-bold mb-4">{category}</h2>
+    <h2 className="text-xl font-bold mb-4 text-center sm:text-start">{category}</h2>
     <div className="flex flex-col items-center bg-white p-2 sm:p-4 rounded-lg shadow">
       <img src={image} alt={name} className="w-48 h-32 object-contain mb-2" />
       <h3 className="text-lg font-semibold">{name}</h3>
@@ -66,9 +66,9 @@ const CarCategoryCard=({
 
 const carData = [
   {
-    category: "Hatchback",
+    category: "Hatchback 4+1",
     image: "https://res.cloudinary.com/dtrofwkib/image/upload/v1744721159/wago_hxfxnc.webp",
-    name: "Maruti WagonR",
+    name: "Maruti WagonR or Similar",
     price: "6020",
     inclusions: [
       "Base Fare and Fuel Charges",
@@ -78,9 +78,45 @@ const carData = [
     ],
   },
   {
-    category: "Sedan",
+    category: "Suv 6+1",
+    image: "https://res.cloudinary.com/dtrofwkib/image/upload/v1744721138/Innova_Crysta_itts9b.webp",
+    name: "Innova Crysta 6+1",
+    price: "6020",
+    inclusions: [
+      "Base Fare and Fuel Charges",
+      "Driver Allowance",
+      "State Tax & Toll",
+      "GST (5%)",
+    ],
+  },
+  {
+    category: "Suv 7+1",
+    image: "https://res.cloudinary.com/dtrofwkib/image/upload/v1744721138/Innova_Crysta_itts9b.webp",
+    name: "Innova Crysta 7+1",
+    price: "6020",
+    inclusions: [
+      "Base Fare and Fuel Charges",
+      "Driver Allowance",
+      "State Tax & Toll",
+      "GST (5%)",
+    ],
+  },
+  {
+    category: "Suv 6+1",
+    image: "https://res.cloudinary.com/dtrofwkib/image/upload/v1744721138/Maruti_Ertiga_BlazeCab_jjutkn.webp",
+    name: "Ertiga 6+1",
+    price: "6020",
+    inclusions: [
+      "Base Fare and Fuel Charges",
+      "Driver Allowance",
+      "State Tax & Toll",
+      "GST (5%)",
+    ],
+  },
+  {
+    category: "Sedan 4+1",
     image: "https://res.cloudinary.com/dtrofwkib/image/upload/v1744721149/Sedan-BlazeCab_jknbhq.webp",
-    name: "Toyota Etios",
+    name: "Toyota Etios or Similar",
     price: "6143",
     inclusions: [
       "Base Fare and Fuel Charges",
@@ -90,9 +126,9 @@ const carData = [
     ],
   },
   {
-    category: "SUV",
+    category: "SUV 6+1",
     image: "https://res.cloudinary.com/dtrofwkib/image/upload/v1744721158/Toyota-Innova-BlazeCab_sh3i9j.webp",
-    name: "Toyota Innova",
+    name: "Toyota Innova 6+1",
     price: "10106",
     inclusions: [
       "Base Fare and Fuel Charges",
@@ -102,7 +138,7 @@ const carData = [
     ],
   },
   {
-    category: "Urbania",
+    category: "Urbania Traveller 11+1",
     image: "https://res.cloudinary.com/dtrofwkib/image/upload/v1744721159/Urbania_hyn8oe.webp",
     name: "Urbania",
     price: "10106",
@@ -114,9 +150,9 @@ const carData = [
     ],
   },
   {
-    category: "12 Seater",
-    image: "https://res.cloudinary.com/dtrofwkib/image/upload/v1744721123/12-Seater-Tempo-BlazeCab_bkovkk.webp",
-    name: "12 Seater",
+    category: "Urbania Traveller 15+1",
+    image: "https://res.cloudinary.com/dtrofwkib/image/upload/v1744721159/Urbania_hyn8oe.webp",
+    name: "Urbania",
     price: "10106",
     inclusions: [
       "Base Fare and Fuel Charges",
@@ -126,9 +162,21 @@ const carData = [
     ],
   },
   {
-    category: "15 Seater",
+    category: "Tempo Traveller 11+1",
+    image: "https://res.cloudinary.com/dtrofwkib/image/upload/v1744721123/12-Seater-Tempo-BlazeCab_bkovkk.webp",
+    name: "Force Tempo Traveller ",
+    price: "10106",
+    inclusions: [
+      "Base Fare and Fuel Charges",
+      "Driver Allowance",
+      "State Tax & Toll",
+      "GST (5%)",
+    ],
+  },
+  {
+    category: "Tempo Traveller 15+1",
     image: "https://res.cloudinary.com/dtrofwkib/image/upload/v1744721123/15-Seater-Tempo-BlazeCab_nznvns.webp",
-    name: "15 Seater",
+    name: "Force Tempo Traveller 15+1",
     price: "10106",
     inclusions: [
       "Base Fare and Fuel Charges",
