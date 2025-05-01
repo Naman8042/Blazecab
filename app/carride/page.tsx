@@ -78,9 +78,9 @@ const carData = [
     ],
   },
   {
-    category: "Suv 6+1",
+    category: "Innova Crysta 6+1",
     image: "https://res.cloudinary.com/dtrofwkib/image/upload/v1744721138/Innova_Crysta_itts9b.webp",
-    name: "Innova Crysta 6+1",
+    name: "Toyota Innova Crysta ",
     price: "6020",
     inclusions: [
       "Base Fare and Fuel Charges",
@@ -90,9 +90,9 @@ const carData = [
     ],
   },
   {
-    category: "Suv 7+1",
+    category: "Innova Crysta 7+1",
     image: "https://res.cloudinary.com/dtrofwkib/image/upload/v1744721138/Innova_Crysta_itts9b.webp",
-    name: "Innova Crysta 7+1",
+    name: "Toyota Innova Crysta 7+1",
     price: "6020",
     inclusions: [
       "Base Fare and Fuel Charges",
@@ -104,7 +104,7 @@ const carData = [
   {
     category: "Suv 6+1",
     image: "https://res.cloudinary.com/dtrofwkib/image/upload/v1744721138/Maruti_Ertiga_BlazeCab_jjutkn.webp",
-    name: "Ertiga 6+1",
+    name: "Maruti Ertiga 6+1 or Similar",
     price: "6020",
     inclusions: [
       "Base Fare and Fuel Charges",
@@ -116,7 +116,7 @@ const carData = [
   {
     category: "Sedan 4+1",
     image: "https://res.cloudinary.com/dtrofwkib/image/upload/v1744721149/Sedan-BlazeCab_jknbhq.webp",
-    name: "Toyota Etios or Similar",
+    name: "Shift Dzire or Similar",
     price: "6143",
     inclusions: [
       "Base Fare and Fuel Charges",
@@ -126,7 +126,7 @@ const carData = [
     ],
   },
   {
-    category: "SUV 6+1",
+    category: "Toyota Innova 6+1",
     image: "https://res.cloudinary.com/dtrofwkib/image/upload/v1744721158/Toyota-Innova-BlazeCab_sh3i9j.webp",
     name: "Toyota Innova 6+1",
     price: "10106",
@@ -176,7 +176,7 @@ const carData = [
   {
     category: "Tempo Traveller 15+1",
     image: "https://res.cloudinary.com/dtrofwkib/image/upload/v1744721123/15-Seater-Tempo-BlazeCab_nznvns.webp",
-    name: "Force Tempo Traveller 15+1",
+    name: "Force Tempo Traveller",
     price: "10106",
     inclusions: [
       "Base Fare and Fuel Charges",
