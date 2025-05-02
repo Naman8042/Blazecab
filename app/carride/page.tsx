@@ -116,7 +116,7 @@ const carData = [
   {
     category: "Sedan 4+1",
     image: "https://res.cloudinary.com/dtrofwkib/image/upload/v1744721149/Sedan-BlazeCab_jknbhq.webp",
-    name: "Shift Dzire or Similar",
+    name: "Swift Dzire or Similar",
     price: "6143",
     inclusions: [
       "Base Fare and Fuel Charges",
