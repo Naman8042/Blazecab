@@ -179,10 +179,10 @@ const onNavigateHandler = (e: FormEvent) => {
                   key={type}
                   type="button"
                   onClick={() => setRideType(type)}
-                  className={`px-3 md:px-4 py-2 rounded-full font-medium transition-all duration-200 ${
+                  className={`px-1.5 md:px-4 py-1 md:py-2 rounded-full font-medium transition-all duration-200 ${
                     rideType === type
-                      ? "bg-[#6aa4e0] text-white text-[13px] sm:text-base cursor-pointer uppercase"
-                      : "bg-opacity-20 text-black hover:bg-opacity-30 text-[15px] sm:text-base cursor-pointer uppercase"
+                      ? "bg-[#6aa4e0] text-white text-[13px] text-xs  sm:text-base cursor-pointer uppercase"
+                      : "bg-opacity-20 text-black hover:bg-opacity-30 text-[15px] text-xs  sm:text-base cursor-pointer uppercase"
                   }`}
                 >
                   {type}
