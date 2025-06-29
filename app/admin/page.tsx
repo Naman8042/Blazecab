@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Book, Menu } from "lucide-react";
 import axios from "axios";
 import Image from "next/image";
+import Loading from "../loading";
 
 const Sidebar = ({ setActive }: { setActive: (val: string) => void }) => {
   return (
@@ -193,7 +194,12 @@ const CarsView = () => {
     setEditIndex(index);
   };
 
-  if (loading) return <div>Loading cars...</div>;
+  if (loading)
+    return (
+      <div className="flex justify-center">
+        <Loading />
+      </div>
+    );
 
   const fields: (keyof Forminterface)[] = ["name", "image"]; // example
 
