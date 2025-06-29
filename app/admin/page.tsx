@@ -1,7 +1,8 @@
 "use client";
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { Book, Menu } from "lucide-react";
 import axios from "axios";
+import Image from "next/image";
 
 const Sidebar = ({ setActive }: { setActive: (val: string) => void }) => {
   return (
@@ -127,26 +128,25 @@ const Content = ({ active }: { active: string }) => {
 //   );
 // };
 
-
-interface CarInterface{
+interface CarInterface {
   image: string;
   name: string;
   price: number;
-  _id:string
+  _id: string;
 }
 
-interface Forminterface{
-  _id:string,
-  name:string,
-  image:string,
-  price:number
+interface Forminterface {
+  _id: string;
+  name: string;
+  image: string;
+  price: number;
 }
 
 const CarsView = () => {
   const [cars, setCars] = useState<CarInterface[]>([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState<Forminterface>({
-    _id:"",
+    _id: "",
     name: "",
     image: "",
     price: 0,
@@ -167,27 +167,26 @@ const CarsView = () => {
     fetchCars();
   }, []);
 
- const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  if (editIndex !== null) {
-    await axios.put(`/api/car?id=${cars[editIndex]._id}`, form);
-    const updated = [...cars];
-    updated[editIndex] = form;
-    setCars(updated);
-  } else {
-    const response = await axios.post("/api/cars", form);
-    setCars([...cars, response.data]);
-  }
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (editIndex !== null) {
+      await axios.put(`/api/car?id=${cars[editIndex]._id}`, form);
+      const updated = [...cars];
+      updated[editIndex] = form;
+      setCars(updated);
+    } else {
+      const response = await axios.post("/api/cars", form);
+      setCars([...cars, response.data]);
+    }
 
-  setForm({
-    name: "",
-    image: "",
-    price: 0,
-    _id: "",
-  });
-  setEditIndex(null);
-};
-
+    setForm({
+      name: "",
+      image: "",
+      price: 0,
+      _id: "",
+    });
+    setEditIndex(null);
+  };
 
   const handleEdit = (car: CarInterface, index: number) => {
     setForm(car);
@@ -196,7 +195,7 @@ const CarsView = () => {
 
   if (loading) return <div>Loading cars...</div>;
 
-  const fields: (keyof Forminterface)[] = ['name','image']; // example
+  const fields: (keyof Forminterface)[] = ["name", "image"]; // example
 
   return (
     <div className="overflow-y-auto h-[83vh]">
@@ -250,7 +249,7 @@ const CarsView = () => {
             {cars.map((car, index) => (
               <tr key={index} className="odd:bg-white even:bg-gray-50">
                 <td className="p-2 border text-center align-middle">
-                  <img
+                  <Image
                     src={car.image}
                     alt={car.name}
                     className="w-16 h-10 mx-auto"
@@ -291,12 +290,10 @@ interface Booking {
   status: string;
 }
 
-
 const BookingsView = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
-const [loading, setLoading] = useState(true);
-const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
-
+  const [loading, setLoading] = useState(true);
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -367,19 +364,32 @@ const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">
-        Today's and Tomorrow's Bookings
+        Today&apos;s and Tomorrow&apos;s Bookings
       </h2>
+
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-200">
           <thead className="bg-gray-100 text-xs sm:text-lg">
             <tr>
-              <th className="p-2 border text-center align-middle">Booking ID</th>
+              <th className="p-2 border text-center align-middle">
+                Booking ID
+              </th>
               <th className="p-2 border text-center align-middle">Type</th>
-              <th className="p-2 border text-center align-middle">Pickup City</th>
-              <th className="p-2 border text-center align-middle">Destination</th>
-              <th className="p-2 border text-center align-middle">Created At</th>
-              <th className="p-2 border text-center align-middle">Pickup Date</th>
-              <th className="p-2 border text-center align-middle">Customer Name</th>
+              <th className="p-2 border text-center align-middle">
+                Pickup City
+              </th>
+              <th className="p-2 border text-center align-middle">
+                Destination
+              </th>
+              <th className="p-2 border text-center align-middle">
+                Created At
+              </th>
+              <th className="p-2 border text-center align-middle">
+                Pickup Date
+              </th>
+              <th className="p-2 border text-center align-middle">
+                Customer Name
+              </th>
               <th className="p-2 border text-center align-middle">Phone</th>
               <th className="p-2 border text-center align-middle">Status</th>
             </tr>
@@ -398,17 +408,27 @@ const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
                   <td className="p-2 border text-[#6aa4e0] underline text-center align-middle">
                     {booking.id}
                   </td>
-                  <td className="p-2 border text-center align-middle">{booking.type}</td>
-                  <td className="p-2 border text-center align-middle">{booking.pickupCity}</td>
-                  <td className="p-2 border text-center align-middle">{booking.destinationCity}</td>
+                  <td className="p-2 border text-center align-middle">
+                    {booking.type}
+                  </td>
+                  <td className="p-2 border text-center align-middle">
+                    {booking.pickupCity}
+                  </td>
+                  <td className="p-2 border text-center align-middle">
+                    {booking.destinationCity}
+                  </td>
                   <td className="p-2 border text-center align-middle">
                     {new Date(booking.createdAt).toLocaleDateString()}
                   </td>
                   <td className="p-2 border text-center align-middle">
                     {new Date(booking.pickupDate).toLocaleDateString()}
                   </td>
-                  <td className="p-2 border text-center align-middle">{booking.customerName}</td>
-                  <td className="p-2 border text-center align-middle">{booking.customerPhone}</td>
+                  <td className="p-2 border text-center align-middle">
+                    {booking.customerName}
+                  </td>
+                  <td className="p-2 border text-center align-middle">
+                    {booking.customerPhone}
+                  </td>
                   <td className="p-2 border text-center align-middle">
                     {getStatusBadge(booking.status)}
                   </td>

@@ -8,7 +8,6 @@ import { useSearchParams } from "next/navigation";
 import { CarRentalSearch } from "../_components/CarRentalSearch";
 import axios from "axios";
 import Loading from "../loading";
-import Image from "next/image";
 
 interface CarCategoryCardProps {
   category: string;
@@ -27,7 +26,7 @@ const CarCategoryCard = ({
   price,
   inclusions,
   searchParams,
-  distance
+  distance,
 }: CarCategoryCardProps) => (
   <div className="mb-12">
     <h2 className="text-2xl font-bold text-[#6aa4e0] mb-4 text-center sm:text-left">
@@ -37,7 +36,7 @@ const CarCategoryCard = ({
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col sm:flex-row sm:items-center p-5 gap-6 transition-all hover:shadow-xl">
       {/* Car Image */}
       <div className="flex justify-center sm:w-1/3">
-        <Image src={image} alt={name} className="w-48 h-32 object-contain" />
+        <img src={image} alt={name} className="w-48 h-32 object-contain" />
       </div>
 
       {/* Car Info and Tabs */}
@@ -246,7 +245,8 @@ export function parseTimeStringToDate(timeStr: string): Date | undefined {
   const match = timeStr.match(/^(\d{1,2}):(\d{2})\s?(AM|PM)$/i);
   if (!match) return undefined;
 
-const [_, hourStr, minuteStr, meridian] = match;
+  const [_, hourStr, minuteStr, meridian] = match;
+  console.log(_);
   let hours = parseInt(hourStr, 10);
   const minutes = parseInt(minuteStr, 10);
 
