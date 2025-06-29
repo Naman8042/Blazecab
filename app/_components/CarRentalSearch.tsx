@@ -1,6 +1,6 @@
 "use client";
 import { useState, FormEvent } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -29,15 +29,23 @@ type FormData = {
   dropoffDate: Date;
 };
 
-const CarRentalSearch = () => {
-  const [rideType, setRideType] = useState<string>("One Way");
+type CarRentalSearchProps = {
+  initialValues?: Partial<FormData> & { rideType?: string };
+  source?: "home" | "carride";
+};
+
+
+export const CarRentalSearch = ({ initialValues ,source}: CarRentalSearchProps) => {
+  const [rideType, setRideType] = useState<string>(initialValues?.rideType || "One Way");
+
   const [formData, setFormData] = useState<FormData>({
-    pickupLocation: "",
-    dropoffLocation: "",
-    pickupDate: new Date(),
-    pickupTime: new Date(), // 👈 store time as Date
-    dropoffDate: new Date(Date.now() + 86400000),
+    pickupLocation: initialValues?.pickupLocation || "",
+    dropoffLocation: initialValues?.dropoffLocation || "",
+    pickupDate: initialValues?.pickupDate ? new Date(initialValues.pickupDate) : new Date(),
+    pickupTime: initialValues?.pickupTime ? new Date(`1970-01-01T${initialValues.pickupTime}`) : new Date(),
+    dropoffDate: initialValues?.dropoffDate ? new Date(initialValues.dropoffDate) : new Date(Date.now() + 86400000),
   });
+
 
   const [pickupSuggestions, setPickupSuggestions] = useState<PhotonFeature[]>(
     []
@@ -48,6 +56,40 @@ const CarRentalSearch = () => {
   const [activeField, setActiveField] = useState<"pickup" | "dropoff" | null>(
     null
   );
+
+  const router = useRouter();
+
+const onNavigateHandler = (e: FormEvent) => {
+  e.preventDefault();
+
+  const formattedData = {
+    pickupLocation: formData.pickupLocation,
+    dropoffLocation: formData.dropoffLocation,
+    pickupDate: formData.pickupDate.toISOString(),
+    pickupTime: formData.pickupTime.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
+    dropoffDate:
+      rideType === "Round Trip"
+        ? formData.dropoffDate.toISOString()
+        : undefined,
+    rideType,
+  };
+
+  const query = new URLSearchParams(
+  Object.entries(formattedData).reduce((acc, [key, value]) => {
+    if (value !== undefined) {
+      acc[key] = String(value); // convert everything to string
+    }
+    return acc;
+  }, {} as Record<string, string>)
+).toString();
+
+
+  router.push(`/carride?${query}`);
+};
+
 
   const handleDateChange = (date: Date | null, field: keyof FormData) => {
     if (date) {
@@ -128,22 +170,9 @@ const CarRentalSearch = () => {
   const inputCount = getVisibleInputCount();
 
   return (
-    <section className="relative w-full bg-gray-100 min-h-[84.5vh] sm:h-[91vh] flex items-center py-6 md:py-12 lg:py-24 overflow-hidden">
-      <div className="absolute inset-0 bg-opacity-50 -z-10"></div>
-
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center lg:text-left mb-4 md:mb-8 lg:mb-12">
-          <h1 className="text-[#6aa4e0] text-2xl sm:text-4xl md:text-5xl font-bold mb-4">
-            Ride Smart → Ride Safe → Ride with Blaze
-            <span className="text-[#fbd20b]">Cab</span>
-          </h1>
-          <p className="text-[#6aa4e0] text-lg sm:text-xl max-w-2xl mx-auto lg:mx-0 hidden sm:block">
-            Compare prices from top rental companies and save up to 60%
-          </p>
-        </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="bg-opacity-90 bg-white p-6 rounded-xl shadow-2xl w-full backdrop-blur-sm">
+          <div className={`bg-opacity-90 bg-white p-6 rounded-xl ${source==="home"?("shadow-2xl"):("border-2")} border w-full backdrop-blur-sm`}>
             <div className="flex flex-wrap justify-between sm:justify-center gap-2 mb-6">
               {["One Way", "Round Trip", "Local"].map((type) => (
                 <button
@@ -309,15 +338,37 @@ const CarRentalSearch = () => {
             </div>
 
             <div className="mt-6 flex justify-center">
-              <Button type="submit" className="font-semibold py-3 px-8">
-                <Link href="/carride">Search Cars</Link>
+              <Button type="submit" className="font-semibold py-3 px-8" onClick={onNavigateHandler}>
+                Search Cars
               </Button>
             </div>
           </div>
         </form>
-      </div>
-    </section>
+      
   );
 };
 
-export default CarRentalSearch;
+function CarSearch(){
+  return(
+    <section className="relative w-full bg-gray-100 min-h-[84.5vh] sm:h-[91vh] flex items-center py-6 md:py-12 lg:py-24 overflow-hidden">
+      <div className="absolute inset-0 bg-opacity-50 -z-10"></div>
+
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center lg:text-left mb-4 md:mb-8 lg:mb-12">
+          <h1 className="text-[#6aa4e0] text-2xl sm:text-4xl md:text-5xl font-bold mb-4">
+            Ride Smart → Ride Safe → Ride with Blaze
+            <span className="text-[#fbd20b]">Cab</span>
+          </h1>
+          <p className="text-[#6aa4e0] text-lg sm:text-xl max-w-2xl mx-auto lg:mx-0 hidden sm:block">
+            Compare prices from top rental companies and save up to 60%
+          </p>
+        </div>
+
+        <CarRentalSearch/>
+        
+      </div>
+    </section>
+  )
+}
+
+export default CarSearch;

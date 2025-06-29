@@ -1,10 +1,25 @@
+"use client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
+import { useSearchParams } from "next/navigation";
 
 export default function BookingPage() {
+  const searchParams = useSearchParams();
+
+  const startLocation = searchParams.get("startLocation");
+  const endLocation = searchParams.get("endLocation");
+  const date = searchParams.get("date");
+  const carType = searchParams.get("carType");
+  const totalKm = searchParams.get("totalKm");
+  const price = searchParams.get("price");
+
+  const formattedDate = date ? new Date(date).toLocaleDateString("en-US") : "";
+ 
+
+
   return (
     <div className="w-full sm:h-[91vh] flex items-center justify-center  p-4">
       <div className="max-w-7xl w-full flex flex-col md:flex-row gap-6 ">
@@ -71,19 +86,19 @@ export default function BookingPage() {
             </CardHeader>
             <CardContent className="space-y-2 text-sm md:text-base">
               <p>
-                <strong>Itinerary:</strong> Bangalore → Mysore
+                <strong>Itinerary:</strong> {startLocation} → {endLocation}
               </p>
               <p>
-                <strong>Pickup Date:</strong> 4th April 2025 at 7:00 AM
+                <strong>Pickup Date:</strong> {formattedDate} 
               </p>
               <p>
-                <strong>Car Type:</strong> Wagon R or Equivalent
+                <strong>Car Type:</strong> {carType}
               </p>
               <p>
-                <strong>KMs Included:</strong> 145 km
+                <strong>KMs Included:</strong> {Math.floor(Number(totalKm))} Km
               </p>
               <p>
-                <strong>Total Fare:</strong> ₹ 2074
+                <strong>Total Fare:</strong> ₹ {Math.floor(Number(price))}
               </p>
             </CardContent>
           </Card>

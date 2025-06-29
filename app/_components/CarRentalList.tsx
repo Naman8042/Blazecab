@@ -35,88 +35,83 @@ const cars = [
 ];
 
 
-interface Car {
-    name: string;
-    type: string;
-    passengers: number;
-    doors: number;
-    ac: boolean;
-    transmission: string;
-    image: string;
-    price: number;
-  }
-  
-  interface CarCardProps {
-    car: Car;
-  }
 
-  
-const CarCard = ({ car }:CarCardProps) => {
+const CarCard = ({ car }: { car: Car }) => {
   return (
-    <div className="flex flex-col md:flex-row items-center md:items-start rounded-lg shadow-lg p-4 w-full md:w-4/5 bg-white transition-transform hover:scale-[1.02]">
-      {/* Left Section - Car Details */}
-      <div className="flex-1 flex flex-col text-center md:text-left">
-        <h2 className="text-xl md:text-2xl font-semibold text-gray-900">
-          {car.name}
-        </h2>
-        <p className="text-gray-500 text-sm md:text-base">{car.type}</p>
-
-        {/* Features */}
-        <div className="flex flex-wrap justify-center md:justify-start gap-2 mt-3">
-          <span className="bg-[#6aa4e0] text-white px-3 py-1 rounded-lg flex items-center gap-1 text-sm">
-            <FaPeopleGroup className="text-lg" /> {car.passengers}
-          </span>
-          <span className="bg-[#6aa4e0] text-white px-3 py-1 rounded-lg flex items-center gap-1 text-sm">
-            <BsDoorOpenFill className="text-lg" /> {car.doors}
-          </span>
-          {car.ac && (
-            <span className="bg-[#6aa4e0] text-white px-3 py-1 rounded-lg flex items-center gap-1 text-sm">
-              <TbAirConditioning className="text-lg" /> AC
-            </span>
-          )}
-          <span className="bg-[#6aa4e0] text-white px-3 py-1 rounded-lg flex items-center gap-1 text-sm">
-            <GiGearStickPattern className="text-lg" /> {car.transmission}
-          </span>
-        </div>
-      </div>
-
-      {/* Right Section - Car Image & Price */}
-      <div className="flex-1 flex flex-col md:flex-row items-center justify-between mt-4 md:mt-0">
+    <div className="bg-white shadow-lg rounded-xl overflow-hidden transition-transform hover:scale-[1.01] w-full max-w-4xl mx-auto">
+      <div className="flex flex-col lg:flex-row items-center gap-6 p-6">
+        {/* Car Image */}
         <img
           src={car.image}
           alt={car.name}
-          className="w-40 md:w-48 object-contain rounded-lg "
+          className="w-40 lg:w-52 object-contain rounded-md"
         />
 
-        {/* Price & Button */}
-        <div className="text-center md:text-right mt-3 md:mt-0">
-          <p className="font-semibold text-lg md:text-2xl text-gray-800">
-            ₹{car.price}
-          </p>
-          <Link href="/bookingpage">
-          <Button className="mt-2 bg-[#6aa4e0] hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
-            View Deals
-          </Button>
-          </Link>
+        {/* Car Info */}
+        <div className="flex-1 w-full text-center lg:text-left">
+          <h2 className="text-2xl font-semibold text-gray-800">{car.name}</h2>
+          <p className="text-gray-500 text-sm mb-2">{car.type}</p>
+
+          {/* Features */}
+          <div className="flex flex-wrap justify-center lg:justify-start gap-3 mt-4">
+            <span className="bg-blue-500 text-white px-3 py-1 rounded-full flex items-center gap-2 text-sm">
+              <FaPeopleGroup /> {car.passengers} Passengers
+            </span>
+            <span className="bg-blue-500 text-white px-3 py-1 rounded-full flex items-center gap-2 text-sm">
+              <BsDoorOpenFill /> {car.doors} Doors
+            </span>
+            {car.ac && (
+              <span className="bg-blue-500 text-white px-3 py-1 rounded-full flex items-center gap-2 text-sm">
+                <TbAirConditioning /> AC
+              </span>
+            )}
+            <span className="bg-blue-500 text-white px-3 py-1 rounded-full flex items-center gap-2 text-sm">
+              <GiGearStickPattern /> {car.transmission}
+            </span>
+          </div>
+
+          {/* Price & CTA */}
+          <div className="mt-6 flex flex-col lg:flex-row justify-between items-center">
+            <p className="text-xl font-bold text-gray-900 mb-2 lg:mb-0">
+              ₹{car.price} <span className="text-sm text-gray-500">/ All Inclusive</span>
+            </p>
+            <Link href="/bookingpage">
+              <Button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-full">
+                View Deals
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-const CarRentalList = () => {
+const CarRentalList = ({ cars }: { cars: Car[] }) => {
   return (
-    <div className="min-h-screen p-4 flex flex-col items-center   w-full md:w-4/5">
-      <h1 className="text-2xl font-bold mb-4 text-[#6aa4e0]">
+    <div className="min-h-screen py-10 px-4 bg-gray-50">
+      {/* <h1 className="text-3xl font-bold text-center mb-8 text-blue-600">
         Car Rental Listings
       </h1>
-      <div className="w-full flex flex-col gap-4 items-center">
+      <div className="flex flex-col items-center gap-6">
         {cars.map((car) => (
-          <CarCard key={car.id} car={car} />
+          <CarCard key={car.name} car={car} />
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };
 
 export default CarRentalList;
+
+// Interface
+interface Car {
+  name: string;
+  type: string;
+  passengers: number;
+  doors: number;
+  ac: boolean;
+  transmission: string;
+  image: string;
+  price: number;
+}
