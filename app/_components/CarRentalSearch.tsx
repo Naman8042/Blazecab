@@ -171,7 +171,7 @@ const onNavigateHandler = (e: FormEvent) => {
 
   return (
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="h-[74vh]">
           <div className={`bg-opacity-90 bg-white p-6 rounded-xl ${source==="home"?("shadow-2xl"):("border-2")} border w-full backdrop-blur-sm`}>
             <div className="flex flex-wrap justify-between sm:justify-center gap-2 mb-6">
               {["One Way", "Round Trip", "Local"].map((type) => (
