@@ -241,7 +241,7 @@ const CarList = () => {
 export default CarList;
 
 // utils/parseTimeStringToDate.ts
-export function parseTimeStringToDate(timeStr: string): Date | undefined {
+function parseTimeStringToDate(timeStr: string): Date | undefined {
   const match = timeStr.match(/^(\d{1,2}):(\d{2})\s?(AM|PM)$/i);
   if (!match) return undefined;
 
