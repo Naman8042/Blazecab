@@ -1,6 +1,6 @@
 "use client";
-import { useState, useEffect } from "react";
-import { Home, Book, Menu } from "lucide-react";
+import { useState, useEffect} from "react";
+import { Book, Menu } from "lucide-react";
 import axios from "axios";
 
 const Sidebar = ({ setActive }: { setActive: (val: string) => void }) => {
@@ -48,89 +48,105 @@ const Content = ({ active }: { active: string }) => {
   );
 };
 
-const RoutesView = () => {
-  const [routes, setRoutes] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+// const RoutesView = () => {
+//   const [routes, setRoutes] = useState<any[]>([]);
+//   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchRoutes = async () => {
-      try {
-        // const response = await axios.get("/api/routes"); // replace with your backend API endpoint
-        const data = [
-          {
-            pickupLocation: "New York",
-            dropoffLocation: "Boston",
-            pickupDate: "2025-06-30T00:00:00.000Z",
-            pickupTime: "10:30 AM",
-            dropoffDate: "2025-07-01T00:00:00.000Z",
-            rideType: "Round Trip",
-          },
-          {
-            pickupLocation: "San Francisco",
-            dropoffLocation: "Los Angeles",
-            pickupDate: "2025-07-02T00:00:00.000Z",
-            pickupTime: "09:00 AM",
-            dropoffDate: null,
-            rideType: "One Way",
-          },
-        ];
+//   useEffect(() => {
+//     const fetchRoutes = async () => {
+//       try {
+//         // const response = await axios.get("/api/routes"); // replace with your backend API endpoint
+//         const data = [
+//           {
+//             pickupLocation: "New York",
+//             dropoffLocation: "Boston",
+//             pickupDate: "2025-06-30T00:00:00.000Z",
+//             pickupTime: "10:30 AM",
+//             dropoffDate: "2025-07-01T00:00:00.000Z",
+//             rideType: "Round Trip",
+//           },
+//           {
+//             pickupLocation: "San Francisco",
+//             dropoffLocation: "Los Angeles",
+//             pickupDate: "2025-07-02T00:00:00.000Z",
+//             pickupTime: "09:00 AM",
+//             dropoffDate: null,
+//             rideType: "One Way",
+//           },
+//         ];
 
-        setRoutes(data);
-      } catch (error) {
-        console.error("Error fetching routes:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchRoutes();
-  }, []);
+//         setRoutes(data);
+//       } catch (error) {
+//         console.error("Error fetching routes:", error);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     fetchRoutes();
+//   }, []);
 
-  if (loading) return <div>Loading routes...</div>;
+//   if (loading) return <div>Loading routes...</div>;
 
-  return (
-    <div>
-      <h2 className="text-xl font-semibold mb-4">Submitted Routes</h2>
-      <div className="overflow-x-auto">
-        <table className="min-w-full border border-gray-200">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="p-2 border">Pickup</th>
-              <th className="p-2 border">Dropoff</th>
-              <th className="p-2 border">Pickup Date</th>
-              <th className="p-2 border">Pickup Time</th>
-              <th className="p-2 border">Dropoff Date</th>
-              <th className="p-2 border">Ride Type</th>
-            </tr>
-          </thead>
-          <tbody>
-            {routes.length > 0 &&
-              routes.map((route, index) => (
-                <tr key={index} className="odd:bg-white even:bg-gray-50">
-                  <td className="p-2 border">{route.pickupLocation}</td>
-                  <td className="p-2 border">{route.dropoffLocation}</td>
-                  <td className="p-2 border">
-                    {new Date(route.pickupDate).toLocaleDateString()}
-                  </td>
-                  <td className="p-2 border">{route.pickupTime}</td>
-                  <td className="p-2 border">
-                    {route.dropoffDate
-                      ? new Date(route.dropoffDate).toLocaleDateString()
-                      : "-"}
-                  </td>
-                  <td className="p-2 border">{route.rideType}</td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-};
+//   return (
+//     <div>
+//       <h2 className="text-xl font-semibold mb-4">Submitted Routes</h2>
+//       <div className="overflow-x-auto">
+//         <table className="min-w-full border border-gray-200">
+//           <thead>
+//             <tr className="bg-gray-100">
+//               <th className="p-2 border">Pickup</th>
+//               <th className="p-2 border">Dropoff</th>
+//               <th className="p-2 border">Pickup Date</th>
+//               <th className="p-2 border">Pickup Time</th>
+//               <th className="p-2 border">Dropoff Date</th>
+//               <th className="p-2 border">Ride Type</th>
+//             </tr>
+//           </thead>
+//           <tbody>
+//             {routes.length > 0 &&
+//               routes.map((route, index) => (
+//                 <tr key={index} className="odd:bg-white even:bg-gray-50">
+//                   <td className="p-2 border">{route.pickupLocation}</td>
+//                   <td className="p-2 border">{route.dropoffLocation}</td>
+//                   <td className="p-2 border">
+//                     {new Date(route.pickupDate).toLocaleDateString()}
+//                   </td>
+//                   <td className="p-2 border">{route.pickupTime}</td>
+//                   <td className="p-2 border">
+//                     {route.dropoffDate
+//                       ? new Date(route.dropoffDate).toLocaleDateString()
+//                       : "-"}
+//                   </td>
+//                   <td className="p-2 border">{route.rideType}</td>
+//                 </tr>
+//               ))}
+//           </tbody>
+//         </table>
+//       </div>
+//     </div>
+//   );
+// };
+
+
+interface CarInterface{
+  image: string;
+  name: string;
+  price: number;
+  _id:string
+}
+
+interface Forminterface{
+  _id:string,
+  name:string,
+  image:string,
+  price:number
+}
 
 const CarsView = () => {
-  const [cars, setCars] = useState<any[]>([]);
+  const [cars, setCars] = useState<CarInterface[]>([]);
   const [loading, setLoading] = useState(true);
-  const [form, setForm] = useState<any>({
+  const [form, setForm] = useState<Forminterface>({
+    _id:"",
     name: "",
     image: "",
     price: 0,
@@ -151,32 +167,36 @@ const CarsView = () => {
     fetchCars();
   }, []);
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    if (editIndex !== null) {
-      await axios.put(`/api/car?id=${cars[editIndex]._id}`, form);
-      const updated = [...cars];
-      updated[editIndex] = form;
-      setCars(updated);
-    } else {
-      // create
-      const response = await axios.post("/api/cars", form);
-      setCars([...cars, response.data]);
-    }
-    setForm({
-      name: "",
-      image: "",
-      price: 0,
-    });
-    setEditIndex(null);
-  };
+ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  if (editIndex !== null) {
+    await axios.put(`/api/car?id=${cars[editIndex]._id}`, form);
+    const updated = [...cars];
+    updated[editIndex] = form;
+    setCars(updated);
+  } else {
+    const response = await axios.post("/api/cars", form);
+    setCars([...cars, response.data]);
+  }
 
-  const handleEdit = (car: any, index: number) => {
+  setForm({
+    name: "",
+    image: "",
+    price: 0,
+    _id: "",
+  });
+  setEditIndex(null);
+};
+
+
+  const handleEdit = (car: CarInterface, index: number) => {
     setForm(car);
     setEditIndex(index);
   };
 
   if (loading) return <div>Loading cars...</div>;
+
+  const fields: (keyof Forminterface)[] = ['name','image']; // example
 
   return (
     <div className="overflow-y-auto h-[83vh]">
@@ -187,7 +207,7 @@ const CarsView = () => {
         onSubmit={handleSubmit}
         className="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded mb-6"
       >
-        {["name", "image"].map((field) => (
+        {fields.map((field) => (
           <input
             key={field}
             className="p-2 border rounded"
@@ -259,10 +279,24 @@ const CarsView = () => {
   );
 };
 
+interface Booking {
+  id: string;
+  type: string;
+  pickupCity: string;
+  destinationCity: string;
+  createdAt: string;
+  pickupDate: string;
+  customerName: string;
+  customerPhone: string;
+  status: string;
+}
+
+
 const BookingsView = () => {
-  const [bookings, setBookings] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedBooking, setSelectedBooking] = useState<any>(null);
+  const [bookings, setBookings] = useState<Booking[]>([]);
+const [loading, setLoading] = useState(true);
+const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+
 
   useEffect(() => {
     const fetchBookings = async () => {
