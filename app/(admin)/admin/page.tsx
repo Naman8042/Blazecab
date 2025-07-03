@@ -3,25 +3,22 @@ import { useState, useEffect } from "react";
 import { Book, Menu } from "lucide-react";
 import axios from "axios";
 import Image from "next/image";
-import Loading from "../loading";
+import Loading from "../../loading";
+import OnewayRoute from '@/app/_components/OnewayRoute'
+import { Button } from "@/components/ui/button";
 
 const Sidebar = ({ setActive }: { setActive: (val: string) => void }) => {
   return (
-    <div className="w-80 h-screen bg-[#6aa4e0] text-white p-4 hidden sm:block">
+    <div className="w-80 h-full bg-[#6aa4e0] text-white p-4 hidden sm:block overflow-y-auto">
       <h2 className="text-xl font-bold mb-6">Admin Dashboard</h2>
       <nav className="space-y-8">
-        {/* <button
-          onClick={() => setActive("home")}
-          className="flex items-center gap-2 hover:text-gray-300"
-        >
-          <Home size={20} /> Home
-        </button>
+       
         <button
-          onClick={() => setActive("routes")}
-          className="flex items-center gap-2 hover:text-gray-300"
+        onClick={() => setActive("routes")}
+        className="flex items-center gap-2 hover:text-gray-300"
         >
-          <Menu size={20} /> Routes
-        </button> */}
+         <Menu size={20} /> Routes
+        </button> 
         <button
           onClick={() => setActive("bookings")}
           className="flex items-center gap-2 hover:text-gray-300"
@@ -41,203 +38,146 @@ const Sidebar = ({ setActive }: { setActive: (val: string) => void }) => {
 
 const Content = ({ active }: { active: string }) => {
   return (
-    <div className="p-6 w-full">
+    <div className=" w-full">
       {/* {active === "home" && <div>Welcome to the Admin Dashboard</div>} */}
-      {/* {active === "routes" && <RoutesView />} */}
+      {active === "routes" && <OnewayRoute/>}
       {active === "bookings" && <BookingsView />}
       {active === "cars" && <CarsView />}
     </div>
   );
 };
 
-// const RoutesView = () => {
-//   const [routes, setRoutes] = useState<any[]>([]);
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     const fetchRoutes = async () => {
-//       try {
-//         // const response = await axios.get("/api/routes"); // replace with your backend API endpoint
-//         const data = [
-//           {
-//             pickupLocation: "New York",
-//             dropoffLocation: "Boston",
-//             pickupDate: "2025-06-30T00:00:00.000Z",
-//             pickupTime: "10:30 AM",
-//             dropoffDate: "2025-07-01T00:00:00.000Z",
-//             rideType: "Round Trip",
-//           },
-//           {
-//             pickupLocation: "San Francisco",
-//             dropoffLocation: "Los Angeles",
-//             pickupDate: "2025-07-02T00:00:00.000Z",
-//             pickupTime: "09:00 AM",
-//             dropoffDate: null,
-//             rideType: "One Way",
-//           },
-//         ];
-
-//         setRoutes(data);
-//       } catch (error) {
-//         console.error("Error fetching routes:", error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-//     fetchRoutes();
-//   }, []);
-
-//   if (loading) return <div>Loading routes...</div>;
-
-//   return (
-//     <div>
-//       <h2 className="text-xl font-semibold mb-4">Submitted Routes</h2>
-//       <div className="overflow-x-auto">
-//         <table className="min-w-full border border-gray-200">
-//           <thead>
-//             <tr className="bg-gray-100">
-//               <th className="p-2 border">Pickup</th>
-//               <th className="p-2 border">Dropoff</th>
-//               <th className="p-2 border">Pickup Date</th>
-//               <th className="p-2 border">Pickup Time</th>
-//               <th className="p-2 border">Dropoff Date</th>
-//               <th className="p-2 border">Ride Type</th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {routes.length > 0 &&
-//               routes.map((route, index) => (
-//                 <tr key={index} className="odd:bg-white even:bg-gray-50">
-//                   <td className="p-2 border">{route.pickupLocation}</td>
-//                   <td className="p-2 border">{route.dropoffLocation}</td>
-//                   <td className="p-2 border">
-//                     {new Date(route.pickupDate).toLocaleDateString()}
-//                   </td>
-//                   <td className="p-2 border">{route.pickupTime}</td>
-//                   <td className="p-2 border">
-//                     {route.dropoffDate
-//                       ? new Date(route.dropoffDate).toLocaleDateString()
-//                       : "-"}
-//                   </td>
-//                   <td className="p-2 border">{route.rideType}</td>
-//                 </tr>
-//               ))}
-//           </tbody>
-//         </table>
-//       </div>
-//     </div>
-//   );
-// };
 
 interface CarInterface {
-  image: string;
-  name: string;
-  price: number;
-  _id: string;
+  _id?: string
+  category: string
+  name: string
+  capacity: string
+  image: string
+  price: string
+  inclusions: string[]
+  exclusions: string[]
+  termscondition: string[]
 }
 
-interface Forminterface {
-  _id: string;
-  name: string;
-  image: string;
-  price: number;
-}
-
-const CarsView = () => {
-  const [cars, setCars] = useState<CarInterface[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [form, setForm] = useState<Forminterface>({
-    _id: "",
-    name: "",
-    image: "",
-    price: 0,
-  });
-  const [editIndex, setEditIndex] = useState<number | null>(null);
+ function CarsView() {
+  const [cars, setCars] = useState<CarInterface[]>([])
+  const [loading, setLoading] = useState(true)
+  const [form, setForm] = useState<CarInterface>({
+    category: '',
+    name: '',
+    capacity: '',
+    image: '',
+    price: '',
+    inclusions: [],
+    exclusions: [],
+    termscondition: [],
+  })
+  const [editIndex, setEditIndex] = useState<number | null>(null)
 
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const response = await axios.get("/api/car");
-        setCars(response.data);
+        const response = await axios.get('/api/car')
+        setCars(response.data)
       } catch (error) {
-        console.error("Error fetching cars:", error);
+        console.error('Error fetching cars:', error)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
-    fetchCars();
-  }, []);
+    }
+    fetchCars()
+  }, [])
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+
+    if (['inclusions', 'exclusions', 'termscondition'].includes(name)) {
+      setForm({ ...form, [name]: value.split(',').map(item => item.trim()) })
+    } else {
+      setForm({ ...form, [name]: value })
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (editIndex !== null) {
-      await axios.put(`/api/car?id=${cars[editIndex]._id}`, form);
-      const updated = [...cars];
-      updated[editIndex] = form;
-      setCars(updated);
+    e.preventDefault()
+    if (editIndex !== null && cars[editIndex]._id) {
+      await axios.put(`/api/car?id=${cars[editIndex]._id}`, form)
+      const updated = [...cars]
+      updated[editIndex] = form
+      setCars(updated)
     } else {
-      const response = await axios.post("/api/cars", form);
-      setCars([...cars, response.data]);
+      const response = await axios.post('/api/cars', form)
+      setCars([...cars, response.data])
     }
 
     setForm({
-      name: "",
-      image: "",
-      price: 0,
-      _id: "",
-    });
-    setEditIndex(null);
-  };
+      category: '',
+      name: '',
+      capacity: '',
+      image: '',
+      price: '',
+      inclusions: [],
+      exclusions: [],
+      termscondition: [],
+    })
+    setEditIndex(null)
+  }
 
   const handleEdit = (car: CarInterface, index: number) => {
-    setForm(car);
-    setEditIndex(index);
-  };
+    setForm(car)
+    setEditIndex(index)
+  }
 
   if (loading)
     return (
-      <div className="flex justify-center">
+      <div className="flex justify-center h-full">
         <Loading />
       </div>
-    );
-
-  const fields: (keyof Forminterface)[] = ["name", "image"]; // example
+    )
 
   return (
-    <div className="overflow-y-auto h-[83vh]">
+    <div className="overflow-y-auto h-full px-4 pt-4">
       <h2 className="text-xl font-semibold mb-4">Car Management</h2>
 
       {/* Car Form */}
-      <form
-        onSubmit={handleSubmit}
-        className="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded mb-6"
-      >
-        {fields.map((field) => (
+      <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded mb-6">
+        {['category', 'name', 'capacity', 'image', 'price'].map(field => (
           <input
             key={field}
-            className="p-2 border rounded"
+            name={field}
+            value={(form as any)[field]}
+            onChange={handleChange}
             placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-            value={form[field]}
-            onChange={(e) => setForm({ ...form, [field]: e.target.value })}
+            className="p-2 border rounded"
           />
         ))}
 
-        <input
-          className="p-2 border rounded"
-          type="number"
-          placeholder="Price"
-          value={form.price}
-          onChange={(e) =>
-            setForm({ ...form, price: parseFloat(e.target.value) })
-          }
+        <textarea
+          name="inclusions"
+          value={form.inclusions.join(', ')}
+          onChange={handleChange}
+          placeholder="Inclusions (comma separated)"
+          className="p-2 border rounded col-span-2"
+        />
+        <textarea
+          name="exclusions"
+          value={form.exclusions.join(', ')}
+          onChange={handleChange}
+          placeholder="Exclusions (comma separated)"
+          className="p-2 border rounded col-span-2"
+        />
+        <textarea
+          name="termscondition"
+          value={form.termscondition.join(', ')}
+          onChange={handleChange}
+          placeholder="Terms & Conditions (comma separated)"
+          className="p-2 border rounded col-span-2"
         />
 
-        <button
-          type="submit"
-          className="col-span-2 bg-[#6aa4e0] text-white py-2 rounded"
-        >
-          {editIndex !== null ? "Update Car" : "Add Car"}
-        </button>
+        <Button type="submit" className="col-span-2">
+          {editIndex !== null ? 'Update Car' : 'Add Car'}
+        </Button>
       </form>
 
       {/* Car Table */}
@@ -247,31 +187,24 @@ const CarsView = () => {
             <tr>
               <th className="p-2 border">Image</th>
               <th className="p-2 border">Name</th>
-              <th className="p-2 border">Price/Km</th>
-              <th className="p-2 border">Action</th>
+              <th className="p-2 border">Category</th>
+              <th className="p-2 border">Capacity</th>
+              <th className="p-2 border">Price/km</th>
+              <th className="p-2 border">Actions</th>
             </tr>
           </thead>
           <tbody>
             {cars.map((car, index) => (
-              <tr key={index} className="odd:bg-white even:bg-gray-50">
-                <td className="p-2 border text-center align-middle">
-                  <Image
-                    src={car.image}
-                    alt={car.name}
-                    className="w-16 h-10 mx-auto"
-                  />
+              <tr key={car._id || index} className="odd:bg-white even:bg-gray-50">
+                <td className="p-2 border text-center">
+                  <Image src={car.image} alt={car.name} width={80} height={50} className="mx-auto rounded" />
                 </td>
-                <td className="p-2 border text-center align-middle">
-                  {car.name}
-                </td>
-                <td className="p-2 border text-center align-middle">
-                  ₹{car.price}
-                </td>
-                <td className="p-2 border text-center align-middle">
-                  <button
-                    onClick={() => handleEdit(car, index)}
-                    className="text-[#6aa4e0] hover:underline"
-                  >
+                <td className="p-2 border text-center">{car.name}</td>
+                <td className="p-2 border text-center">{car.category}</td>
+                <td className="p-2 border text-center">{car.capacity}</td>
+                <td className="p-2 border text-center">₹{car.price}</td>
+                <td className="p-2 border text-center">
+                  <button onClick={() => handleEdit(car, index)} className="text-[#6aa4e0] hover:underline">
                     Edit
                   </button>
                 </td>
@@ -281,8 +214,9 @@ const CarsView = () => {
         </table>
       </div>
     </div>
-  );
-};
+  )
+}
+
 
 interface Booking {
   id: string;
@@ -365,10 +299,10 @@ const BookingsView = () => {
     );
   };
 
-  if (loading) return <div>Loading bookings...</div>;
+  if (loading) return <div className="flex items-center justify-center">Loading bookings...</div>;
 
   return (
-    <div>
+    <div className="h-full  p-4">
       <h2 className="text-xl font-semibold mb-4">
         Today&apos;s and Tomorrow&apos;s Bookings
       </h2>
@@ -499,7 +433,7 @@ export default function Dashboard() {
   const [active, setActive] = useState("bookings");
 
   return (
-    <div className="flex flex-col sm:flex-row h-screen">
+    <div className="flex flex-col sm:flex-row h-[89.75vh]">
       <Sidebar setActive={setActive} />
       <header className="sm:hidden bg-[#6aa4e0] text-white p-4 flex justify-between items-center w-full">
         <h1 className="text-lg font-bold">Dashboard</h1>
@@ -511,6 +445,14 @@ export default function Dashboard() {
             }`}
           >
             Bookings
+          </button>
+          <button
+            onClick={() => setActive("routes")}
+            className={`${
+              active === "routes" ? "underline font-semibold" : ""
+            }`}
+          >
+            Routes
           </button>
           <button
             onClick={() => setActive("cars")}

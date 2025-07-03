@@ -5,9 +5,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { CarRentalSearch } from "../_components/CarRentalSearch";
+import { CarRentalSearch } from "../../_components/CarRentalSearch";
 import axios from "axios";
-import Loading from "../loading";
+import Loading from "../../loading";
 
 interface CarCategoryCardProps {
   category: string;
@@ -15,6 +15,8 @@ interface CarCategoryCardProps {
   name: string;
   price: number;
   inclusions: string[];
+  exclusions: string[];
+  termscondition: string[];
   distance?: number | null;
   searchParams: URLSearchParams;
 }
@@ -25,6 +27,8 @@ const CarCategoryCard = ({
   name,
   price,
   inclusions,
+  exclusions,
+  termscondition,
   searchParams,
   distance,
 }: CarCategoryCardProps) => (
@@ -44,7 +48,7 @@ const CarCategoryCard = ({
         <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start mb-4">
           <div className="text-center sm:text-left">
             <h3 className="text-xl font-semibold text-gray-800">{name}</h3>
-            <p className="text-[#6aa4e0] font-bold text-xl flex items-center gap-2 ">
+            <p className="text-[#6aa4e0] font-bold text-xl flex items-center gap-2 justify-center sm:justify-start">
               ₹{price}{" "}
               <span className="text-xs font-medium text-gray-500">
                 All Inclusive
@@ -61,12 +65,14 @@ const CarCategoryCard = ({
                 date: searchParams.get("pickupDate") || "",
                 carType: name,
                 totalKm: distance?.toFixed(2) || "0",
-                price: price.toFixed(2),
+                price: price,
               },
             }}
             className="mt-4 sm:mt-0 sm:ml-4 w-full sm:w-auto"
           >
-            <Button className="w-full sm:w-64 px-6 py-2">Select Car</Button>
+            <Button className="w-full sm:w-64 md:w-72 lg:w-80 px-6 py-2">
+              Select Car
+            </Button>
           </Link>
         </div>
 
@@ -85,18 +91,21 @@ const CarCategoryCard = ({
               </TabsTrigger>
             </TabsList>
 
-            <CardContent className="mt-4 text-sm text-gray-700 min-h-[130px] relative">
+            <CardContent className="p-4 text-sm text-gray-700  relative">
               <TabsContent value="inclusions" className="space-y-1">
                 {inclusions.map((item, index) => (
                   <p key={index}>✅ {item}</p>
                 ))}
               </TabsContent>
               <TabsContent value="exclusions" className="space-y-1">
-                <p>❌ Extra KM charges</p>
-                <p>❌ Parking charges</p>
+                {exclusions.map((item, index) => (
+                  <p key={index}>❌ {item}</p>
+                ))}
               </TabsContent>
               <TabsContent value="tac" className="space-y-1">
-                <p>📜 Terms and conditions apply.</p>
+                {termscondition.map((item, index) => (
+                  <p key={index}>📜 {item}</p>
+                ))}
               </TabsContent>
             </CardContent>
           </Tabs>
@@ -146,67 +155,119 @@ const CarList = () => {
   const searchParams = useSearchParams();
   const [cars, setCars] = useState<CarCategoryCardProps[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+  const [distance, setDistance] = useState<number | null>(null);
+
+  const rideType = searchParams.get("rideType") || "One Way";
+  const pickupLocation = searchParams.get("pickupLocation") || "";
+  const dropoffLocation = searchParams.get("dropoffLocation") || "";
 
   const pickupDateStr = searchParams.get("pickupDate");
   const pickupTimeStr = parseTimeStringToDate("pickupTime");
   const dropoffDateStr = searchParams.get("dropoffDate");
 
   const initialValues = {
-    pickupLocation: searchParams.get("pickupLocation") || "",
-    dropoffLocation: searchParams.get("dropoffLocation") || "",
+    pickupLocation,
+    dropoffLocation,
     pickupDate: pickupDateStr ? new Date(pickupDateStr) : undefined,
     pickupTime: pickupTimeStr
       ? new Date(`1970-01-01T${pickupTimeStr}`)
       : undefined,
     dropoffDate: dropoffDateStr ? new Date(dropoffDateStr) : undefined,
-    rideType: searchParams.get("rideType") || "One Way",
+    rideType,
   };
 
-  const [distance, setDistance] = useState<number | null>(null);
-
   useEffect(() => {
-    const rideType = searchParams.get("rideType");
-    const pickupLocation = searchParams.get("pickupLocation");
-    const dropoffLocation = searchParams.get("dropoffLocation");
-
-    const validRideType = rideType === "One Way" || rideType === "Round Trip";
-
-    if (!validRideType || !pickupLocation || !dropoffLocation) return;
-
-    async function getCars() {
+    const fetchCars = async () => {
       try {
-        const { data } = await axios.get("/api/car");
-        setCars(data);
-      } catch (error) {
-        console.error("Failed to fetch cars:", error);
-      }
-    }
+        setLoading(true);
+        const carResponse = await axios.get("/api/car");
+        const carData = carResponse.data;
 
-    getCars();
-  }, [searchParams]);
+        if (rideType === "One Way") {
+          const fixedResponse = await axios.get(
+            `/api/routes?pickup=${pickupLocation}&drop=${dropoffLocation}`
+          );
+          console.log(fixedResponse.data);
+          if (fixedResponse.data.length == 0) {
+            setError(true);
+            return;
+          }
+          const fixedPrices = fixedResponse.data;
+
+          // Match fixed price to car name
+          const enrichedCars = carData
+            .map((car: any) => {
+              const fixedMatch = fixedPrices.find(
+                (f: any) => f.cabs.toLowerCase() === car.category.toLowerCase()
+              );
+
+              if (!fixedMatch) return null; // Skip if no match found
+
+              return {
+                ...car,
+                price: fixedMatch.price,
+                inclusions: [
+                  ...car.inclusions,
+                  `${fixedMatch.distance} km included`,
+                  `Extra: ₹${fixedMatch.per_kms_extra_charge}/km`,
+                ],
+                distance: fixedMatch.distance,
+              };
+            })
+            .filter(Boolean); // Remove nulls
+
+          console.log(enrichedCars);
+          setCars(enrichedCars);
+        } else {
+          setCars(carData);
+        }
+      } catch (error) {
+        console.error("Error fetching cars:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCars();
+  }, [pickupLocation, dropoffLocation, rideType]);
 
   useEffect(() => {
     const fetchDistance = async () => {
+      if (!pickupLocation || !dropoffLocation || rideType === "One Way") return;
       try {
         setLoading(true);
-        const { pickupLocation, dropoffLocation } = initialValues;
-        if (!pickupLocation || !dropoffLocation) return;
-
         const pickupCoords = await getCoordinates(pickupLocation);
         const dropoffCoords = await getCoordinates(dropoffLocation);
 
         let dist = await getDistance(pickupCoords, dropoffCoords);
-        dist = dist / 1000;
+        dist = dist / 1000; // meters to km
         setDistance(dist);
-        setLoading(false);
-        console.log("Distance (meters):", dist);
       } catch (error) {
         console.error("Error calculating distance:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchDistance();
-  }, [initialValues.pickupLocation, initialValues.dropoffLocation]);
+  }, [pickupLocation, dropoffLocation, rideType]);
+
+  if (error) {
+    return (
+      <div className="flex h-[90vh] items-center justify-center bg-gray-50">
+        <div className="text-center p-6 rounded-xl shadow-md bg-white">
+          <h2 className="text-2xl font-semibold text-[#6aa4e0] mb-2">
+            No Cars Available
+          </h2>
+          <p className="text-gray-600">
+            We couldn't find any cars for this route. Please try a different
+            search.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="px-4 sm:px-8 py-10 max-w-5xl mx-auto">
@@ -216,16 +277,24 @@ const CarList = () => {
         Explore Our Car Categories
       </h1>
 
-      {cars?.length && !loading ? (
+      {cars.length && !loading ? (
         cars.map((car, index) => (
           <CarCategoryCard
             key={index}
             category={car.category}
             image={car.image}
             name={car.name}
-            price={distance ? Math.round(car.price * distance) : car.price}
+            price={
+              rideType === "One Way"
+                ? car.price
+                : distance
+                ? Math.round(car.price * distance)
+                : car.price
+            }
             inclusions={car.inclusions}
-            distance={distance}
+            exclusions={car.exclusions}
+            termscondition={car.termscondition}
+            distance={rideType === "One Way" ? car.distance : distance}
             searchParams={searchParams}
           />
         ))
