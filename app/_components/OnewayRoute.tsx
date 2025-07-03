@@ -5,39 +5,62 @@ import useSWR from 'swr'
 import { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 
+type Route = {
+  _id: string;
+  pickup: string;
+  drop: string;
+  price: number;
+  distance: number;
+  cabs: string;
+  per_kms_extra_charge?: string;
+};
+
+type PaginatedResponse = {
+  routes: Route[];
+};
+
+type SearchResponse = {
+  routes: Route[];
+};
+
+
 const fetcher = (url: string) => fetch(url).then(res => res.json())
 const PAGE_LIMIT = 50
 
-const getKey = (pageIndex: number, previousPageData: any) => {
-  if (previousPageData && previousPageData.routes.length === 0) return null
-  return `/api/onewayroutes?page=${pageIndex + 1}&limit=${PAGE_LIMIT}`
-}
+const getKey = (pageIndex: number, previousPageData: PaginatedResponse | null) => {
+  if (previousPageData && previousPageData.routes.length === 0) return null;
+  return `/api/onewayroutes?page=${pageIndex + 1}&limit=${PAGE_LIMIT}`;
+};
+
 
 export default function RouteList() {
   const [searchTerm, setSearchTerm] = useState('')
   const [searchInput, setSearchInput] = useState('')
   const bottomRef = useRef<HTMLDivElement | null>(null)
 
-  const { data: searchData, isValidating: searchLoading } = useSWR(
-    searchTerm ? `/api/search?city=${encodeURIComponent(searchTerm)}` : null,
-    fetcher
-  )
+  const { data: searchData, isValidating: searchLoading } = useSWR<SearchResponse>(
+  searchTerm ? `/api/search?city=${encodeURIComponent(searchTerm)}` : null,
+  fetcher
+);
+
 
   const {
-    data: paginatedData,
-    size,
-    setSize,
-    isValidating,
-    error,
-    mutate,
-  } = useSWRInfinite(getKey, fetcher)
+  data: paginatedData,
+  size,
+  setSize,
+  isValidating,
+  error,
+  mutate,
+} = useSWRInfinite<PaginatedResponse>(getKey, fetcher);
 
-  const routes = searchTerm
-    ? searchData?.routes || []
-    : paginatedData?.flatMap(page => page.routes) || []
+
+  const routes: Route[] = searchTerm
+  ? searchData?.routes || []
+  : paginatedData?.flatMap(page => page.routes) || [];
+
 
   const [editIndex, setEditIndex] = useState<number | null>(null)
-  const [form, setForm] = useState<any>({})
+  const [form, setForm] = useState<Partial<Route>>({});
   const [newRoute, setNewRoute] = useState({
     pickup: '',
     drop: '',
@@ -59,10 +82,11 @@ export default function RouteList() {
     return () => observer.disconnect()
   }, [isValidating, setSize, searchTerm])
 
-  const handleEditClick = (route: any, index: number) => {
-    setEditIndex(index)
-    setForm(route)
-  }
+  const handleEditClick = (route: Route, index: number) => {
+  setEditIndex(index);
+  setForm(route);
+};
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })

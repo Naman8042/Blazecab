@@ -177,6 +177,13 @@ const CarList = () => {
     rideType,
   };
 
+  type FixedPrice = {
+  cabs: string;
+  price: number;
+  distance: number;
+  per_kms_extra_charge: number;
+};
+
   useEffect(() => {
     const fetchCars = async () => {
       try {
@@ -196,26 +203,27 @@ const CarList = () => {
           const fixedPrices = fixedResponse.data;
 
           // Match fixed price to car name
-          const enrichedCars = carData
-            .map((car: any) => {
-              const fixedMatch = fixedPrices.find(
-                (f: any) => f.cabs.toLowerCase() === car.category.toLowerCase()
-              );
+         const enrichedCars = carData
+  .map((car: CarCategoryCardProps) => {
+    const fixedMatch = fixedPrices.find(
+      (f: FixedPrice) => f.cabs.toLowerCase() === car.category.toLowerCase()
+    );
 
-              if (!fixedMatch) return null; // Skip if no match found
+    if (!fixedMatch) return null;
 
-              return {
-                ...car,
-                price: fixedMatch.price,
-                inclusions: [
-                  ...car.inclusions,
-                  `${fixedMatch.distance} km included`,
-                  `Extra: ₹${fixedMatch.per_kms_extra_charge}/km`,
-                ],
-                distance: fixedMatch.distance,
-              };
-            })
-            .filter(Boolean); // Remove nulls
+    return {
+      ...car,
+      price: fixedMatch.price,
+      inclusions: [
+        ...car.inclusions,
+        `${fixedMatch.distance} km included`,
+        `Extra: ₹${fixedMatch.per_kms_extra_charge}/km`,
+      ],
+      distance: fixedMatch.distance,
+    };
+  })
+  .filter(Boolean);
+
 
           console.log(enrichedCars);
           setCars(enrichedCars);
