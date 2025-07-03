@@ -46,7 +46,6 @@ export default function RouteList() {
 
   const {
   data: paginatedData,
-  size,
   setSize,
   isValidating,
   error,
@@ -181,7 +180,7 @@ export default function RouteList() {
             </tr>
           </thead>
           <tbody>
-            {routes.map((route: any, index: number) => (
+            {routes.map((route: Route, index: number) => (
               <tr key={route._id} className="odd:bg-white even:bg-gray-50">
                 {editIndex === index ? (
                   <>

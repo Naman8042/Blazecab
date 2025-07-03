@@ -269,7 +269,7 @@ const CarList = () => {
             No Cars Available
           </h2>
           <p className="text-gray-600">
-            We couldn't find any cars for this route. Please try a different
+            `We couldn &apos t find any cars for this route. Please try a different`
             search.
           </p>
         </div>

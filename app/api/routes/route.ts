@@ -55,7 +55,10 @@ export async function PUT(request: NextRequest) {
     });
     if (!updated) return NextResponse.json({ error: "Route not found" });
     return NextResponse.json(updated);
-  } catch (err) {}
+  } catch (err) {
+    console.log(err)
+    return NextResponse.json(err)
+  }
 }
 
 export async function DELETE(request: NextRequest) {
@@ -68,6 +71,9 @@ export async function DELETE(request: NextRequest) {
     });
     if (!updated) return NextResponse.json({ error: "Route not found" });
     return NextResponse.json("Deleted Successfully");
-  } catch (err) {}
+  } catch (err) {
+    console.log(err)
+    return NextResponse.json(err)
+  }
 }
 
