@@ -142,16 +142,16 @@ interface CarInterface {
 
       {/* Car Form */}
       <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded mb-6">
-        {['category', 'name', 'capacity', 'image', 'price'].map(field => (
-          <input
-            key={field}
-            name={field}
-            value={(form as any)[field]}
-            onChange={handleChange}
-            placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-            className="p-2 border rounded"
-          />
-        ))}
+        {(['category', 'name', 'capacity', 'image', 'price'] as Array<keyof CarInterface>).map(field => (
+  <input
+    key={field}
+    name={field}
+    value={form[field]}
+    onChange={handleChange}
+    placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+    className="p-2 border rounded"
+  />
+))}
 
         <textarea
           name="inclusions"
