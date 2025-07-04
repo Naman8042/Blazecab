@@ -33,7 +33,7 @@ type CarRentalSearchProps = {
   initialValues?: Partial<FormData> & { rideType?: string };
   source?: "home" | "carride";
   setShowForm?: Dispatch<SetStateAction<boolean>>;
-  showForm: boolean;
+  showForm?: boolean;
 };
 
 export const CarRentalSearch = ({
