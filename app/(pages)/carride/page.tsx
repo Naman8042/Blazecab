@@ -27,6 +27,21 @@ type FixedPrice = {
 };
 
 
+interface RoundTrip {
+  cabs: string;
+  distance: number;
+  per_kms_charge: number;
+}
+
+interface LocalTrip {
+  cabs: string;
+  distance: number;
+  time: number;
+  perkmextra_charge: number;
+  price: number;
+}
+
+
 const CarList = () => {
   const searchParams = useSearchParams();
 
@@ -117,7 +132,7 @@ const CarList = () => {
           const enrichedCars = carData
             .map((car: CarCategoryCardProps) => {
               const match = roundTripData.find(
-                (r: any) => r.cabs?.toLowerCase() === car.category.toLowerCase()
+                (r: RoundTrip) => r.cabs?.toLowerCase() === car.category.toLowerCase()
               );
 
               if (!match) return null;
@@ -151,7 +166,7 @@ const CarList = () => {
           const enrichedCars = carData
             .map((car: CarCategoryCardProps) => {
               const match = roundTripData.find(
-                (r: any) => r.cabs?.toLowerCase() === car.category.toLowerCase()
+                (r: LocalTrip) => r.cabs?.toLowerCase() === car.category.toLowerCase()
               );
 
               if (!match) return null;
