@@ -10,18 +10,19 @@ export default function BookingPage() {
   const searchParams = useSearchParams();
 
   const startLocation = searchParams.get("startLocation");
-  const endLocation = searchParams.get("endLocation");
+  const endLocation = searchParams.get("endLocation") || "";
   const date = searchParams.get("date");
   const carType = searchParams.get("carType");
   const totalKm = searchParams.get("totalKm");
   const price = searchParams.get("price");
+  const inclusions = JSON.parse(searchParams.get("inclusions") || "[]");
+  const exclusions = JSON.parse(searchParams.get("exclusions") || "[]");
+  const termscondition = JSON.parse(searchParams.get("termscondition") || "[]");
 
   const formattedDate = date ? new Date(date).toLocaleDateString("en-US") : "";
- 
-
 
   return (
-    <div className="w-full sm:h-[91vh] flex items-center justify-center  p-4">
+    <div className="w-full sm:h-[89.75vh] flex items-center justify-center  p-4">
       <div className="max-w-7xl w-full flex flex-col md:flex-row gap-6 ">
         {/* Left Form Section */}
         <Card className="md:w-[60%] w-full shadow-lg rounded-lg bg-white flex flex-col justify-center">
@@ -76,7 +77,7 @@ export default function BookingPage() {
         </Card>
 
         {/* Right Booking Details Section */}
-        <div className="flex flex-col gap-4 justify-between w-full md:w-[35%]">
+        <div className="flex flex-col gap-4 justify-between w-full md:w-[35%] h-full">
           {/* Top Box - Booking Summary */}
           <Card className="shadow-lg rounded-lg bg-white p-4 md:p-6 h-auto">
             <CardHeader>
@@ -86,10 +87,11 @@ export default function BookingPage() {
             </CardHeader>
             <CardContent className="space-y-2 text-sm md:text-base">
               <p>
-                <strong>Itinerary:</strong> {startLocation} → {endLocation}
+                <strong>Itinerary:</strong> {startLocation}{" "}
+                {endLocation && `→ ${endLocation}`}
               </p>
               <p>
-                <strong>Pickup Date:</strong> {formattedDate} 
+                <strong>Pickup Date:</strong> {formattedDate}
               </p>
               <p>
                 <strong>Car Type:</strong> {carType}
@@ -104,41 +106,38 @@ export default function BookingPage() {
           </Card>
 
           {/* Bottom Box - Fixed Height for Consistency */}
-          <Card className="shadow-lg rounded-lg bg-white p-4 md:p-6 h-[200px] relative">
-            <Tabs defaultValue="inclusions">
-              <TabsList className="flex justify-between bg-gray-200 rounded-lg p-1 w-full text-xs md:text-sm">
-                <TabsTrigger value="inclusions">Inclusions</TabsTrigger>
-                <TabsTrigger value="exclusions">Exclusions</TabsTrigger>
-                <TabsTrigger value="tac">T&C</TabsTrigger>
-              </TabsList>
+          <Card className="shadow-lg rounded-lg bg-white p-4 md:p-6 relative">
+  <Tabs defaultValue="inclusions">
+    <TabsList className="flex justify-between bg-gray-200 rounded-lg p-1 w-full text-xs md:text-sm">
+      <TabsTrigger value="inclusions">Inclusions</TabsTrigger>
+      <TabsTrigger value="exclusions">Exclusions</TabsTrigger>
+      <TabsTrigger value="tac">T&C</TabsTrigger>
+    </TabsList>
 
-              {/* Tab Content Wrapper (Ensures No Height Change) */}
-              <CardContent className="mt-4 text-sm md:text-base min-h-[130px] relative">
-                <TabsContent
-                  value="inclusions"
-                  className="absolute top-0 left-0 w-full transition-opacity duration-300"
-                >
-                  <p>✅ Base Fare and Fuel Charges</p>
-                  <p>✅ Driver Allowance</p>
-                  <p>✅ State Tax & Toll</p>
-                  <p>✅ GST (5%)</p>
-                </TabsContent>
-                <TabsContent
-                  value="exclusions"
-                  className="absolute top-0 left-0 w-full transition-opacity duration-300"
-                >
-                  <p>❌ Extra KM charges</p>
-                  <p>❌ Parking charges</p>
-                </TabsContent>
-                <TabsContent
-                  value="tac"
-                  className="absolute top-0 left-0 w-full transition-opacity duration-300"
-                >
-                  <p>📜 Terms and conditions apply.</p>
-                </TabsContent>
-              </CardContent>
-            </Tabs>
-          </Card>
+    {/* Keep height consistent and scroll if needed */}
+    <CardContent className="mt-4 text-sm md:text-base max-h-64 overflow-y-auto space-y-2">
+      <TabsContent value="inclusions">
+        {Array.isArray(inclusions) &&
+          inclusions.map((item, index) => (
+            <p key={index}>✅ {item}</p>
+          ))}
+      </TabsContent>
+      <TabsContent value="exclusions">
+        {Array.isArray(exclusions) &&
+          exclusions.map((item, index) => (
+            <p key={index}>❌ {item}</p>
+          ))}
+      </TabsContent>
+      <TabsContent value="tac">
+        {Array.isArray(termscondition) &&
+          termscondition.map((item, index) => (
+            <p key={index}>📜 {item}</p>
+          ))}
+      </TabsContent>
+    </CardContent>
+  </Tabs>
+</Card>
+
         </div>
       </div>
     </div>

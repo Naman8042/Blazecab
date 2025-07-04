@@ -5,7 +5,6 @@ const CarSchema = new mongoose.Schema({
   name: { type: String, required: true },
   capacity: { type: String, required: true },
   image: { type: String, required: true },
-  price: { type: String, required: true },
   inclusions: { type: [String], default: [] },
   exclusions: { type: [String], default: [] },
   termscondition: { type: [String], default: [] },

@@ -1,5 +1,3 @@
-"use client";
-
 import useSWRInfinite from "swr/infinite";
 import useSWR from "swr";
 import { useEffect, useRef, useState } from "react";
@@ -9,10 +7,9 @@ type Route = {
   _id: string;
   pickup: string;
   drop: string;
-  price: number;
   distance: number;
   cabs: string;
-  per_kms_extra_charge?: string;
+  per_kms_charge: string;
 };
 
 type PaginatedResponse = {
@@ -29,7 +26,7 @@ const getKey = (
   previousPageData: PaginatedResponse | null
 ) => {
   if (previousPageData && previousPageData.routes.length === 0) return null;
-  return `/api/onewayroutes?page=${pageIndex + 1}&limit=${PAGE_LIMIT}`;
+  return `/api/twowaypagination?page=${pageIndex + 1}&limit=${PAGE_LIMIT}`;
 };
 
 export default function RouteList() {
@@ -46,7 +43,7 @@ export default function RouteList() {
     mutate: mutateSearch,
   } = useSWR<SearchResponse>(
     pickup && drop
-      ? `/api/routes?pickup=${encodeURIComponent(
+      ? `/api/twowaysearch?pickup=${encodeURIComponent(
           pickup
         )}&drop=${encodeURIComponent(drop)}`
       : null,
@@ -71,12 +68,10 @@ export default function RouteList() {
   const [newRoute, setNewRoute] = useState({
     pickup: "",
     drop: "",
-    price: "",
     distance: "",
     cabs: "",
-    per_kms_extra_charge: "",
+    per_kms_charge: "",
   });
-
   useEffect(() => {
     if (!bottomRef.current || pickup || drop) return;
     const observer = new IntersectionObserver(
@@ -102,7 +97,7 @@ export default function RouteList() {
   };
 
   const handleSave = async () => {
-    const res = await fetch(`/api/onewayroutes/?id=${form._id}`, {
+    const res = await fetch(`/api/twoway/?id=${form._id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
@@ -119,17 +114,10 @@ export default function RouteList() {
 
   const handleDelete = async (_id: string) => {
     if (!confirm("Delete this route?")) return;
-    const res = await fetch(`/api/onewayroutes/?id=${_id}`, {
+    const res = await fetch(`/api/twoway/?id=${_id}`, {
       method: "DELETE",
     });
-    if (res.ok) {
-      setEditIndex(null);
-      if (pickup && drop) {
-        mutateSearch();
-      } else {
-        mutate();
-      }
-    }
+    if (res.ok) mutate();
   };
 
   const handleNewChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,7 +125,7 @@ export default function RouteList() {
   };
 
   const handleAddNew = async () => {
-    const res = await fetch("/api/onewayroutes", {
+    const res = await fetch("/api/twoway", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newRoute),
@@ -146,10 +134,9 @@ export default function RouteList() {
       setNewRoute({
         pickup: "",
         drop: "",
-        price: "",
         distance: "",
         cabs: "",
-        per_kms_extra_charge: "",
+        per_kms_charge: "",
       });
       mutate();
     }
@@ -204,24 +191,42 @@ export default function RouteList() {
       </div>
 
       {/* Add new route */}
-      <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2">
-        {[
-          "pickup",
-          "drop",
-          "price",
-          "distance",
-          "cabs",
-          "per_kms_extra_charge",
-        ].map((field) => (
-          <input
-            key={field}
-            name={field}
-            placeholder={field.replace(/_/g, " ")}
-            value={(newRoute as any)[field]}
-            onChange={handleNewChange}
-            className="border p-2 rounded"
-          />
-        ))}
+      <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
+        <input
+          name="pickup"
+          placeholder="Pickup"
+          value={newRoute.pickup}
+          onChange={handleNewChange}
+          className="border p-2 rounded"
+        />
+        <input
+          name="drop"
+          placeholder="Drop"
+          value={newRoute.drop}
+          onChange={handleNewChange}
+          className="border p-2 rounded"
+        />
+        <input
+          name="distance"
+          placeholder="Distance"
+          value={newRoute.distance}
+          onChange={handleNewChange}
+          className="border p-2 rounded"
+        />
+        <input
+          name="cabs"
+          placeholder="Cab"
+          value={newRoute.cabs}
+          onChange={handleNewChange}
+          className="border p-2 rounded"
+        />
+        <input
+          name="per_kms_charge"
+          placeholder="Per Km Charge"
+          value={newRoute.per_kms_charge}
+          onChange={handleNewChange}
+          className="border p-2 rounded"
+        />
         <Button onClick={handleAddNew}>Add</Button>
       </div>
 
@@ -230,16 +235,14 @@ export default function RouteList() {
         <table className="min-w-full border rounded shadow-sm text-sm">
           <thead className="bg-gray-100">
             <tr>
-              {["Pickup", "Drop", "Price", "Distance", "Cab", "Actions"].map(
-                (header) => (
-                  <th
-                    key={header}
-                    className="p-1 sm:p-2 border whitespace-nowrap text-xs sm:text-sm"
-                  >
-                    {header}
-                  </th>
-                )
-              )}
+              <th className="p-1 sm:p-2 border text-xs sm:text-sm">Pickup</th>
+              <th className="p-1 sm:p-2 border text-xs sm:text-sm">Drop</th>
+              <th className="p-1 sm:p-2 border text-xs sm:text-sm">
+                Per Km Price
+              </th>
+              <th className="p-1 sm:p-2 border text-xs sm:text-sm">Distance</th>
+              <th className="p-1 sm:p-2 border text-xs sm:text-sm">Cab</th>
+              <th className="p-1 sm:p-2 border text-xs sm:text-sm">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -247,27 +250,49 @@ export default function RouteList() {
               <tr key={route._id} className="odd:bg-white even:bg-gray-50">
                 {editIndex === index ? (
                   <>
-                    {["pickup", "drop", "price", "distance", "cabs"].map(
-                      (field) => (
-                        <td
-                          key={field}
-                          className="p-1 sm:p-2 border text-xs sm:text-sm"
-                        >
-                          <input
-                            name={field}
-                            type={
-                              field === "price" || field === "distance"
-                                ? "number"
-                                : "text"
-                            }
-                            value={(form as any)[field]}
-                            onChange={handleChange}
-                            className="w-full border p-1 rounded"
-                          />
-                        </td>
-                      )
-                    )}
-                    <td className="p-1 sm:p-2 border flex flex-col gap-2 sm:flex-row text-xs sm:text-sm">
+                    <td className="p-1 sm:p-2 border">
+                      <input
+                        name="pickup"
+                        value={form.pickup}
+                        onChange={handleChange}
+                        className="w-full border p-1 rounded"
+                      />
+                    </td>
+                    <td className="p-1 sm:p-2 border">
+                      <input
+                        name="drop"
+                        value={form.drop}
+                        onChange={handleChange}
+                        className="w-full border p-1 rounded"
+                      />
+                    </td>
+                    <td className="p-1 sm:p-2 border">
+                      <input
+                        name="per_kms_charge"
+                        type="number"
+                        value={form.per_kms_charge}
+                        onChange={handleChange}
+                        className="w-full border p-1 rounded"
+                      />
+                    </td>
+                    <td className="p-1 sm:p-2 border">
+                      <input
+                        name="distance"
+                        type="number"
+                        value={form.distance}
+                        onChange={handleChange}
+                        className="w-full border p-1 rounded"
+                      />
+                    </td>
+                    <td className="p-1 sm:p-2 border">
+                      <input
+                        name="cabs"
+                        value={form.cabs}
+                        onChange={handleChange}
+                        className="w-full border p-1 rounded"
+                      />
+                    </td>
+                    <td className="p-1 sm:p-2 border flex flex-col gap-2 sm:flex-row">
                       <Button onClick={handleSave}>Save</Button>
                       <Button
                         variant="secondary"
@@ -279,22 +304,22 @@ export default function RouteList() {
                   </>
                 ) : (
                   <>
-                    <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm">
+                    <td className="p-1 sm:p-2 border text-center">
                       {route.pickup}
                     </td>
-                    <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm">
+                    <td className="p-1 sm:p-2 border text-center">
                       {route.drop}
                     </td>
-                    <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm">
-                      ₹{route.price}
+                    <td className="p-1 sm:p-2 border text-center">
+                      ₹{route.per_kms_charge}
                     </td>
-                    <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm">
+                    <td className="p-1 sm:p-2 border text-center">
                       {route.distance}
                     </td>
-                    <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm">
+                    <td className="p-1 sm:p-2 border text-center">
                       {route.cabs}
                     </td>
-                    <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm flex gap-2 justify-center">
+                    <td className="p-1 sm:p-2 border flex gap-2 justify-center">
                       <Button onClick={() => handleEditClick(route, index)}>
                         Edit
                       </Button>
@@ -313,17 +338,6 @@ export default function RouteList() {
         </table>
       </div>
 
-      {/* Infinite Scroll Loader */}
-      {!pickup && !drop && (
-        <div
-          ref={bottomRef}
-          className="h-12 flex items-center justify-center text-gray-500"
-        >
-          {isValidating && "Loading more..."}
-        </div>
-      )}
-
-      {/* Search state feedback */}
       {searchLoading && (
         <p className="text-center text-gray-500 mt-4">Searching...</p>
       )}

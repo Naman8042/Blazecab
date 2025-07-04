@@ -7,12 +7,12 @@ import { Button } from "@/components/ui/button";
 
 type Route = {
   _id: string;
-  pickup: string;
-  drop: string;
+  cities: string;
   price: number;
   distance: number;
   cabs: string;
-  per_kms_extra_charge?: string;
+  time:number;
+  perkmextra_charge: string;
 };
 
 type PaginatedResponse = {
@@ -29,29 +29,24 @@ const getKey = (
   previousPageData: PaginatedResponse | null
 ) => {
   if (previousPageData && previousPageData.routes.length === 0) return null;
-  return `/api/onewayroutes?page=${pageIndex + 1}&limit=${PAGE_LIMIT}`;
+  return `/api/localpagination?page=${pageIndex + 1}&limit=${PAGE_LIMIT}`;
 };
 
 export default function RouteList() {
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   const [pickupInput, setPickupInput] = useState("");
-  const [dropInput, setDropInput] = useState("");
   const [pickup, setPickup] = useState("");
-  const [drop, setDrop] = useState("");
 
-  const {
-    data: searchData,
-    isValidating: searchLoading,
-    mutate: mutateSearch,
-  } = useSWR<SearchResponse>(
-    pickup && drop
-      ? `/api/routes?pickup=${encodeURIComponent(
-          pickup
-        )}&drop=${encodeURIComponent(drop)}`
-      : null,
-    fetcher
-  );
+  const { data: searchData, isValidating: searchLoading , mutate: mutateSearch, } =
+    useSWR<SearchResponse>(
+      pickup 
+        ? `/api/localroutesearch?pickup=${encodeURIComponent(
+            pickup
+          )}`
+        : null,
+      fetcher
+    );
 
   const {
     data: paginatedData,
@@ -62,7 +57,7 @@ export default function RouteList() {
   } = useSWRInfinite<PaginatedResponse>(getKey, fetcher);
 
   const routes: Route[] =
-    pickup && drop
+    pickup
       ? searchData || []
       : paginatedData?.flatMap((page) => page.routes) || [];
 
@@ -78,7 +73,7 @@ export default function RouteList() {
   });
 
   useEffect(() => {
-    if (!bottomRef.current || pickup || drop) return;
+    if (!bottomRef.current || pickup ) return;
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !isValidating) {
@@ -90,7 +85,7 @@ export default function RouteList() {
 
     observer.observe(bottomRef.current);
     return () => observer.disconnect();
-  }, [isValidating, setSize, pickup, drop]);
+  }, [isValidating, setSize, pickup]);
 
   const handleEditClick = (route: Route, index: number) => {
     setEditIndex(index);
@@ -102,34 +97,29 @@ export default function RouteList() {
   };
 
   const handleSave = async () => {
-    const res = await fetch(`/api/onewayroutes/?id=${form._id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-    if (res.ok) {
-      setEditIndex(null);
-      if (pickup && drop) {
-        mutateSearch(); // Revalidate search results
-      } else {
-        mutate(); // Revalidate paginated list
-      }
+  const res = await fetch(`/api/localroute/?id=${form._id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(form),
+  });
+
+  if (res.ok) {
+    setEditIndex(null);
+    if (pickup) {
+      mutateSearch(); 
+    } else {
+      mutate(); // paginated data
     }
-  };
+  }
+};
+
 
   const handleDelete = async (_id: string) => {
     if (!confirm("Delete this route?")) return;
-    const res = await fetch(`/api/onewayroutes/?id=${_id}`, {
+    const res = await fetch(`/api/localroute/?id=${_id}`, {
       method: "DELETE",
     });
-    if (res.ok) {
-      setEditIndex(null);
-      if (pickup && drop) {
-        mutateSearch();
-      } else {
-        mutate();
-      }
-    }
+    if (res.ok) mutate();
   };
 
   const handleNewChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,7 +127,7 @@ export default function RouteList() {
   };
 
   const handleAddNew = async () => {
-    const res = await fetch("/api/onewayroutes", {
+    const res = await fetch("/api/localroute", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newRoute),
@@ -156,17 +146,14 @@ export default function RouteList() {
   };
 
   const handleSearch = () => {
-    if (pickupInput.trim() && dropInput.trim()) {
+    if (pickupInput.trim()) {
       setPickup(pickupInput.trim());
-      setDrop(dropInput.trim());
     }
   };
 
   const clearSearch = () => {
     setPickupInput("");
-    setDropInput("");
     setPickup("");
-    setDrop("");
   };
 
   if (error) return <p className="text-red-600">Failed to load routes</p>;
@@ -187,16 +174,9 @@ export default function RouteList() {
           className="border p-2 rounded w-full"
         />
 
-        <input
-          type="text"
-          value={dropInput}
-          onChange={(e) => setDropInput(e.target.value)}
-          placeholder="Drop city"
-          className="border p-2 rounded w-full"
-        />
 
         <Button onClick={handleSearch}>Search</Button>
-        {(pickup || drop) && (
+        {(pickup) && (
           <Button variant="secondary" onClick={clearSearch}>
             Clear
           </Button>
@@ -205,14 +185,7 @@ export default function RouteList() {
 
       {/* Add new route */}
       <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2">
-        {[
-          "pickup",
-          "drop",
-          "price",
-          "distance",
-          "cabs",
-          "per_kms_extra_charge",
-        ].map((field) => (
+        {["cities", "price", "distance", "cabs", "perkmextra_charge","time"].map((field) => (
           <input
             key={field}
             name={field}
@@ -230,16 +203,14 @@ export default function RouteList() {
         <table className="min-w-full border rounded shadow-sm text-sm">
           <thead className="bg-gray-100">
             <tr>
-              {["Pickup", "Drop", "Price", "Distance", "Cab", "Actions"].map(
-                (header) => (
-                  <th
-                    key={header}
-                    className="p-1 sm:p-2 border whitespace-nowrap text-xs sm:text-sm"
-                  >
-                    {header}
-                  </th>
-                )
-              )}
+              {["cities", "price", "distance", "time", "cabs","per_km_extra_charge", "Actions"].map((header) => (
+                <th
+                  key={header}
+                  className="p-1 sm:p-2 border whitespace-nowrap text-xs sm:text-sm"
+                >
+                  {header}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -247,43 +218,32 @@ export default function RouteList() {
               <tr key={route._id} className="odd:bg-white even:bg-gray-50">
                 {editIndex === index ? (
                   <>
-                    {["pickup", "drop", "price", "distance", "cabs"].map(
-                      (field) => (
-                        <td
-                          key={field}
-                          className="p-1 sm:p-2 border text-xs sm:text-sm"
-                        >
-                          <input
-                            name={field}
-                            type={
-                              field === "price" || field === "distance"
-                                ? "number"
-                                : "text"
-                            }
-                            value={(form as any)[field]}
-                            onChange={handleChange}
-                            className="w-full border p-1 rounded"
-                          />
-                        </td>
-                      )
-                    )}
+                    {["cities", "price", "distance", "time", "cabs","perkmextra_charge"].map((field) => (
+                      <td
+                        key={field}
+                        className="p-1 sm:p-2 border text-xs sm:text-sm"
+                      >
+                        <input
+                          name={field}
+                          type={field === "price" || field === "distance" ? "number" : "text"}
+                          value={(form as any)[field]}
+                          onChange={handleChange}
+                          className="w-full border p-1 rounded"
+                        />
+                      </td>
+                    ))}
                     <td className="p-1 sm:p-2 border flex flex-col gap-2 sm:flex-row text-xs sm:text-sm">
                       <Button onClick={handleSave}>Save</Button>
-                      <Button
-                        variant="secondary"
-                        onClick={() => setEditIndex(null)}
-                      >
+                      <Button variant="secondary" onClick={() => setEditIndex(null)}>
                         Cancel
                       </Button>
                     </td>
                   </>
                 ) : (
                   <>
+                    
                     <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm">
-                      {route.pickup}
-                    </td>
-                    <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm">
-                      {route.drop}
+                      {route.cities}
                     </td>
                     <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm">
                       ₹{route.price}
@@ -292,16 +252,19 @@ export default function RouteList() {
                       {route.distance}
                     </td>
                     <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm">
+                      {route.time}
+                    </td>
+                    <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm">
                       {route.cabs}
+                    </td>
+                    <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm">
+                      {route.perkmextra_charge}
                     </td>
                     <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm flex gap-2 justify-center">
                       <Button onClick={() => handleEditClick(route, index)}>
                         Edit
                       </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => handleDelete(route._id)}
-                      >
+                      <Button variant="outline" onClick={() => handleDelete(route._id)}>
                         Delete
                       </Button>
                     </td>
@@ -314,7 +277,7 @@ export default function RouteList() {
       </div>
 
       {/* Infinite Scroll Loader */}
-      {!pickup && !drop && (
+      {!pickup &&  (
         <div
           ref={bottomRef}
           className="h-12 flex items-center justify-center text-gray-500"
@@ -327,7 +290,7 @@ export default function RouteList() {
       {searchLoading && (
         <p className="text-center text-gray-500 mt-4">Searching...</p>
       )}
-      {pickup && drop && !searchLoading && routes.length === 0 && (
+      {pickup && !searchLoading && routes.length === 0 && (
         <p className="text-center text-gray-500 mt-4">No results found</p>
       )}
     </div>

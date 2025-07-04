@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connect } from "@/dbConfig/dbConfig";
-import OnewayRoute from '@/models/onewayroute';
+import TwowayRoute from '@/models/twowayroute';
 
 export async function GET(req: NextRequest) {
   const pickup = req.nextUrl.searchParams.get('pickup')?.toLowerCase();
@@ -16,11 +16,13 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const results = await OnewayRoute.find({
+    const results = await TwowayRoute.find({
       pickup: { $regex: new RegExp(pickup, 'i') },
       drop: { $regex: new RegExp(drop, 'i') },
     });
 
+    console.log(results)
+    
     return NextResponse.json(results);
   } catch (error) {
     console.error(error);

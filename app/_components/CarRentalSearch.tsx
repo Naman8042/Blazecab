@@ -1,5 +1,5 @@
 "use client";
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import DatePicker from "react-datepicker";
@@ -32,20 +32,33 @@ type FormData = {
 type CarRentalSearchProps = {
   initialValues?: Partial<FormData> & { rideType?: string };
   source?: "home" | "carride";
+  setShowForm?: Dispatch<SetStateAction<boolean>>;
+  showForm: boolean;
 };
 
-
-export const CarRentalSearch = ({ initialValues ,source}: CarRentalSearchProps) => {
-  const [rideType, setRideType] = useState<string>(initialValues?.rideType || "One Way");
+export const CarRentalSearch = ({
+  initialValues,
+  setShowForm,
+  showForm,
+  source,
+}: CarRentalSearchProps) => {
+  const [rideType, setRideType] = useState<string>(
+    initialValues?.rideType || "One Way"
+  );
 
   const [formData, setFormData] = useState<FormData>({
     pickupLocation: initialValues?.pickupLocation || "",
     dropoffLocation: initialValues?.dropoffLocation || "",
-    pickupDate: initialValues?.pickupDate ? new Date(initialValues.pickupDate) : new Date(),
-    pickupTime: initialValues?.pickupTime ? new Date(`1970-01-01T${initialValues.pickupTime}`) : new Date(),
-    dropoffDate: initialValues?.dropoffDate ? new Date(initialValues.dropoffDate) : new Date(Date.now() + 86400000),
+    pickupDate: initialValues?.pickupDate
+      ? new Date(initialValues.pickupDate)
+      : new Date(),
+    pickupTime: initialValues?.pickupTime
+      ? new Date(`1970-01-01T${initialValues.pickupTime}`)
+      : new Date(),
+    dropoffDate: initialValues?.dropoffDate
+      ? new Date(initialValues.dropoffDate)
+      : new Date(Date.now() + 86400000),
   });
-
 
   const [pickupSuggestions, setPickupSuggestions] = useState<PhotonFeature[]>(
     []
@@ -59,37 +72,40 @@ export const CarRentalSearch = ({ initialValues ,source}: CarRentalSearchProps) 
 
   const router = useRouter();
 
-const onNavigateHandler = (e: FormEvent) => {
-  e.preventDefault();
+  const onNavigateHandler = (e: FormEvent) => {
+    e.preventDefault();
 
-  const formattedData = {
-    pickupLocation: formData.pickupLocation,
-    dropoffLocation: formData.dropoffLocation,
-    pickupDate: formData.pickupDate.toISOString(),
-    pickupTime: formData.pickupTime.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    }),
-    dropoffDate:
-      rideType === "Round Trip"
-        ? formData.dropoffDate.toISOString()
-        : undefined,
-    rideType,
-  };
-
-  const query = new URLSearchParams(
-  Object.entries(formattedData).reduce((acc, [key, value]) => {
-    if (value !== undefined) {
-      acc[key] = String(value); // convert everything to string
+    if (showForm && typeof setShowForm === "function") {
+      setShowForm(!showForm);
     }
-    return acc;
-  }, {} as Record<string, string>)
-).toString();
 
+    const formattedData = {
+      pickupLocation: formData.pickupLocation,
+      dropoffLocation:
+        rideType === "Local" ? undefined : formData.dropoffLocation,
+      pickupDate: formData.pickupDate?.toISOString(),
+      pickupTime: formData.pickupTime?.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      dropoffDate:
+        rideType === "Round Trip"
+          ? formData.dropoffDate?.toISOString()
+          : undefined,
+      rideType,
+    };
 
-  router.push(`/carride?${query}`);
-};
+    const query = new URLSearchParams(
+      Object.entries(formattedData).reduce((acc, [key, value]) => {
+        if (value) {
+          acc[key] = String(value); // Only keep truthy values
+        }
+        return acc;
+      }, {} as Record<string, string>)
+    ).toString();
 
+    router.push(`/carride?${query}`);
+  };
 
   const handleDateChange = (date: Date | null, field: keyof FormData) => {
     if (date) {
@@ -113,7 +129,7 @@ const onNavigateHandler = (e: FormEvent) => {
       } else {
         setDropoffSuggestions([]);
       }
-      
+
       return;
     }
 
@@ -121,30 +137,28 @@ const onNavigateHandler = (e: FormEvent) => {
       const response = await axios.get<{ features: PhotonFeature[] }>(
         `https://photon.komoot.io/api/?q=${encodeURIComponent(query)}`
       );
-    
+
       const features = response?.data?.features ?? [];
-    
+
       const uniqueResults = features.filter((place, i, self) => {
         const osmId = place?.properties?.osm_id;
         return i === self.findIndex((p) => p?.properties?.osm_id === osmId);
       });
-    
+
       if (field === "pickup") {
         setPickupSuggestions(uniqueResults);
       } else {
         setDropoffSuggestions(uniqueResults);
       }
-    
     } catch (error) {
       console.error("Error fetching data from Photon API:", error);
-    
+
       if (field === "pickup") {
         setPickupSuggestions([]);
       } else {
         setDropoffSuggestions([]);
       }
     }
-    
   };
 
   const handleSubmit = (e: FormEvent) => {
@@ -170,186 +184,191 @@ const onNavigateHandler = (e: FormEvent) => {
   const inputCount = getVisibleInputCount();
 
   return (
-
-        <form onSubmit={handleSubmit} >
-          <div className={`bg-opacity-90 bg-white py-6 rounded-xl ${source==="home"?("shadow-2xl"):("border-2")} border w-full backdrop-blur-sm`}>
-            <div className="flex flex-wrap justify-between sm:justify-center gap-2 mb-6  px-3 sm:px-6">
-              {["One Way", "Round Trip", "Local"].map((type) => (
-                <button
-                  key={type}
-                  type="button"
-                  onClick={() => setRideType(type)}
-                  className={`px-2.5 md:px-4 py-1 md:py-2 rounded-full font-medium transition-all duration-200 ${
-                    rideType === type
-                      ? "bg-[#6aa4e0] text-white text-[13px] text-xs  sm:text-base cursor-pointer uppercase"
-                      : "bg-opacity-20 text-black hover:bg-opacity-30 text-[15px] text-xs  sm:text-base cursor-pointer uppercase"
-                  }`}
-                >
-                  {type}
-                </button>
-              ))}
-            </div>
-
-            <div
-              className="flex flex-col sm:grid gap-2 md:gap-4 px-6"
-              style={{
-                gridTemplateColumns: `repeat(${inputCount}, minmax(0, 1fr))`,
-              }}
+    <form onSubmit={handleSubmit}>
+      <div
+        className={`bg-opacity-90 bg-white py-6 rounded-xl ${
+          source === "home" ? "shadow-2xl" : "border-2"
+        } border w-full backdrop-blur-sm`}
+      >
+        <div className="flex flex-wrap justify-between sm:justify-center gap-2 mb-6  px-3 sm:px-6">
+          {["One Way", "Round Trip", "Local"].map((type) => (
+            <button
+              key={type}
+              type="button"
+              onClick={() => setRideType(type)}
+              className={`px-2.5 md:px-4 py-1 md:py-2 rounded-full font-medium transition-all duration-200 ${
+                rideType === type
+                  ? "bg-[#6aa4e0] text-white text-[13px] text-xs  sm:text-base cursor-pointer uppercase"
+                  : "bg-opacity-20 text-black hover:bg-opacity-30 text-[15px] text-xs  sm:text-base cursor-pointer uppercase"
+              }`}
             >
-              {/* Pickup Location */}
-              <div className="relative">
-                <label className="block text-sm font-medium mb-1">
-                  Pickup City
-                </label>
-                <input
-                  type="text"
-                  value={formData.pickupLocation}
-                  onChange={(e) => {
-                    setFormData({
-                      ...formData,
-                      pickupLocation: e.target.value,
-                    });
-                    handleAddressSearch(e.target.value, "pickup");
-                  }}
-                  onFocus={() => setActiveField("pickup")}
-                  onBlur={() => setTimeout(() => setActiveField(null), 200)}
-                  placeholder="Enter Pickup City"
-                  className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 placeholder-gray-500 border-2"
-                />
-                {activeField === "pickup" && pickupSuggestions.length > 0 && (
-                  <ul className="absolute top-full text-black left-0 w-full bg-white rounded-lg shadow-lg z-50">
-                    {pickupSuggestions.map((suggestion) => (
-                      <li
-                        key={suggestion.properties.osm_id}
-                        className="p-2 hover:bg-gray-100 cursor-pointer"
-                        onClick={() => {
-                          setFormData({
-                            ...formData,
-                            pickupLocation: suggestion.properties.name,
-                          });
-                          setPickupSuggestions([]);
-                          setActiveField(null);
-                        }}
-                      >
-                        {suggestion.properties.name},{" "}
-                        {suggestion.properties.city || ""}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+              {type}
+            </button>
+          ))}
+        </div>
 
-              {/* Dropoff Location */}
-              {rideType !== "Local" && (
-                <div className="relative">
-                  <label className="block text-sm font-medium mb-1">
-                    {rideType === "One Way" ? "Drop City" : "Destination City"}
-                  </label>
-
-                  <input
-                    type="text"
-                    value={formData.dropoffLocation}
-                    onChange={(e) => {
+        <div
+          className="flex flex-col sm:grid gap-2 md:gap-4 px-6"
+          style={{
+            gridTemplateColumns: `repeat(${inputCount}, minmax(0, 1fr))`,
+          }}
+        >
+          {/* Pickup Location */}
+          <div className="relative">
+            <label className="block text-sm font-medium mb-1">
+              Pickup City
+            </label>
+            <input
+              type="text"
+              value={formData.pickupLocation}
+              onChange={(e) => {
+                setFormData({
+                  ...formData,
+                  pickupLocation: e.target.value,
+                });
+                handleAddressSearch(e.target.value, "pickup");
+              }}
+              onFocus={() => setActiveField("pickup")}
+              onBlur={() => setTimeout(() => setActiveField(null), 200)}
+              placeholder="Enter Pickup City"
+              className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 placeholder-gray-500 border-2"
+            />
+            {activeField === "pickup" && pickupSuggestions.length > 0 && (
+              <ul className="absolute top-full text-black left-0 w-full bg-white rounded-lg shadow-lg z-50">
+                {pickupSuggestions.map((suggestion) => (
+                  <li
+                    key={suggestion.properties.osm_id}
+                    className="p-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => {
                       setFormData({
                         ...formData,
-                        dropoffLocation: e.target.value,
+                        pickupLocation: suggestion.properties.name,
                       });
-                      handleAddressSearch(e.target.value, "dropoff");
+                      setPickupSuggestions([]);
+                      setActiveField(null);
                     }}
-                    onFocus={() => setActiveField("dropoff")}
-                    onBlur={() => setTimeout(() => setActiveField(null), 200)}
-                    placeholder={
-                      rideType == "One Way"
-                        ? "Enter Your Drop City"
-                        : "Enter Your Destination City"
-                    }
-                    className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 placeholder-gray-500 border-2"
-                  />
-                  {activeField === "dropoff" &&
-                    dropoffSuggestions.length > 0 && (
-                      <ul className="absolute top-full text-black left-0 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-50">
-                        {dropoffSuggestions.map((suggestion) => (
-                          <li
-                            key={suggestion.properties.osm_id}
-                            className="p-2 hover:bg-gray-100 cursor-pointer"
-                            onClick={() => {
-                              setFormData({
-                                ...formData,
-                                dropoffLocation: suggestion.properties.name,
-                              });
-                              setDropoffSuggestions([]);
-                              setActiveField(null);
-                            }}
-                          >
-                            {suggestion.properties.name},{" "}
-                            {suggestion.properties.city || ""}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                </div>
-              )}
-
-              {/* Pickup Date */}
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Pickup date
-                </label>
-                <DatePicker
-                  selected={formData.pickupDate}
-                  onChange={(date) => handleDateChange(date, "pickupDate")}
-                  className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2"
-                  wrapperClassName="w-full"
-                />
-              </div>
-
-              {/* Pickup Time */}
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Pickup time
-                </label>
-                <DatePicker
-                  selected={formData.pickupTime}
-                  onChange={(time) => handleTimeChange(time)}
-                  showTimeSelect
-                  showTimeSelectOnly
-                  timeIntervals={30}
-                  timeCaption="Time"
-                  dateFormat="h:mm aa"
-                  className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2"
-                  wrapperClassName="w-full"
-                />
-              </div>
-
-              {/* Dropoff Date (if Round Trip) */}
-              {rideType === "Round Trip" && (
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Return date
-                  </label>
-                  <DatePicker
-                    selected={formData.dropoffDate}
-                    onChange={(date) => handleDateChange(date, "dropoffDate")}
-                    className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2"
-                    wrapperClassName="w-full"
-                  />
-                </div>
-              )}
-            </div>
-
-            <div className="mt-6 flex justify-center">
-              <Button type="submit" className="font-semibold py-3 px-8" onClick={onNavigateHandler}>
-                Search Cars
-              </Button>
-            </div>
+                  >
+                    {suggestion.properties.name},{" "}
+                    {suggestion.properties.city || ""}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
-        </form>
-      
+
+          {/* Dropoff Location */}
+          {rideType !== "Local" && (
+            <div className="relative">
+              <label className="block text-sm font-medium mb-1">
+                {rideType === "One Way" ? "Drop City" : "Destination City"}
+              </label>
+
+              <input
+                type="text"
+                value={formData.dropoffLocation}
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    dropoffLocation: e.target.value,
+                  });
+                  handleAddressSearch(e.target.value, "dropoff");
+                }}
+                onFocus={() => setActiveField("dropoff")}
+                onBlur={() => setTimeout(() => setActiveField(null), 200)}
+                placeholder={
+                  rideType == "One Way"
+                    ? "Enter Your Drop City"
+                    : "Enter Your Destination City"
+                }
+                className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 placeholder-gray-500 border-2"
+              />
+              {activeField === "dropoff" && dropoffSuggestions.length > 0 && (
+                <ul className="absolute top-full text-black left-0 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-50">
+                  {dropoffSuggestions.map((suggestion) => (
+                    <li
+                      key={suggestion.properties.osm_id}
+                      className="p-2 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => {
+                        setFormData({
+                          ...formData,
+                          dropoffLocation: suggestion.properties.name,
+                        });
+                        setDropoffSuggestions([]);
+                        setActiveField(null);
+                      }}
+                    >
+                      {suggestion.properties.name},{" "}
+                      {suggestion.properties.city || ""}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+
+          {/* Pickup Date */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Pickup date
+            </label>
+            <DatePicker
+              selected={formData.pickupDate}
+              onChange={(date) => handleDateChange(date, "pickupDate")}
+              className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2"
+              wrapperClassName="w-full"
+            />
+          </div>
+
+          {/* Pickup Time */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Pickup time
+            </label>
+            <DatePicker
+              selected={formData.pickupTime}
+              onChange={(time) => handleTimeChange(time)}
+              showTimeSelect
+              showTimeSelectOnly
+              timeIntervals={30}
+              timeCaption="Time"
+              dateFormat="h:mm aa"
+              className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2"
+              wrapperClassName="w-full"
+            />
+          </div>
+
+          {/* Dropoff Date (if Round Trip) */}
+          {rideType === "Round Trip" && (
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Return date
+              </label>
+              <DatePicker
+                selected={formData.dropoffDate}
+                onChange={(date) => handleDateChange(date, "dropoffDate")}
+                className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2"
+                wrapperClassName="w-full"
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="mt-6 flex justify-center">
+          <Button
+            type="submit"
+            className="font-semibold py-3 px-8"
+            onClick={onNavigateHandler}
+          >
+            Search Cars
+          </Button>
+        </div>
+      </div>
+    </form>
   );
 };
 
-function CarSearch(){
-  return(
+function CarSearch() {
+  return (
     <section className="relative w-full bg-gray-100 h-[83vh] sm:h-[91vh] flex items-center py-6 md:py-12 lg:py-24 overflow-hidden">
       <div className="absolute inset-0 bg-opacity-50 -z-10"></div>
 
@@ -364,11 +383,10 @@ function CarSearch(){
           </p>
         </div>
 
-        <CarRentalSearch/>
-        
+        <CarRentalSearch />
       </div>
     </section>
-  )
+  );
 }
 
 export default CarSearch;

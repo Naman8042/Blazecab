@@ -4,21 +4,23 @@ import { Book, Menu } from "lucide-react";
 import axios from "axios";
 import Image from "next/image";
 import Loading from "../../loading";
-import OnewayRoute from '@/app/_components/OnewayRoute'
+import OnewayRoute from "@/app/_components/OnewayRoute";
+import RoundtripRoute from "@/app/_components/TwowayRoute";
+import LocalRoute from "@/app/_components/LocalRoute";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Sidebar = ({ setActive }: { setActive: (val: string) => void }) => {
   return (
     <div className="w-80 h-full bg-[#6aa4e0] text-white p-4 hidden sm:block overflow-y-auto">
       <h2 className="text-xl font-bold mb-6">Admin Dashboard</h2>
       <nav className="space-y-8">
-       
         <button
-        onClick={() => setActive("routes")}
-        className="flex items-center gap-2 hover:text-gray-300"
+          onClick={() => setActive("routes")}
+          className="flex items-center gap-2 hover:text-gray-300"
         >
-         <Menu size={20} /> Routes
-        </button> 
+          <Menu size={20} /> Routes
+        </button>
         <button
           onClick={() => setActive("bookings")}
           className="flex items-center gap-2 hover:text-gray-300"
@@ -37,146 +39,174 @@ const Sidebar = ({ setActive }: { setActive: (val: string) => void }) => {
 };
 
 const Content = ({ active }: { active: string }) => {
+  const [routeType, setRouteType] = useState<
+    "oneway" | "roundtrip" | "localtrip"
+  >("oneway");
+
   return (
     <div className=" w-full">
       {/* {active === "home" && <div>Welcome to the Admin Dashboard</div>} */}
-      {active === "routes" && <OnewayRoute/>}
+      {active === "routes" && (
+        <div className="p-4 h-full ">
+          <Tabs
+            defaultValue="oneway"
+            className=" w-full flex   items-center sm:items-start"
+            onValueChange={(val) =>
+              setRouteType(val as "oneway" | "roundtrip" | "localtrip")
+            }
+          >
+            <TabsList className="mb-4">
+              <TabsTrigger value="oneway">One Way</TabsTrigger>
+              <TabsTrigger value="roundtrip">Round Trip</TabsTrigger>
+              <TabsTrigger value="localtrip">Local Trip</TabsTrigger>
+            </TabsList>
+          </Tabs>
+
+          {routeType === "oneway" && <OnewayRoute />}
+          {routeType === "roundtrip" && <RoundtripRoute />}
+          {routeType === "localtrip" && <LocalRoute />}
+        </div>
+      )}
+
       {active === "bookings" && <BookingsView />}
       {active === "cars" && <CarsView />}
     </div>
   );
 };
 
-
 interface CarInterface {
-  _id?: string
-  category: string
-  name: string
-  capacity: string
-  image: string
-  price: string
-  inclusions: string[]
-  exclusions: string[]
-  termscondition: string[]
+  _id?: string;
+  category: string;
+  name: string;
+  capacity: string;
+  image: string;
+  inclusions: string[];
+  exclusions: string[];
+  termscondition: string[];
 }
 
- function CarsView() {
-  const [cars, setCars] = useState<CarInterface[]>([])
-  const [loading, setLoading] = useState(true)
+function CarsView() {
+  const [cars, setCars] = useState<CarInterface[]>([]);
+  const [loading, setLoading] = useState(true);
   const [form, setForm] = useState<CarInterface>({
-    category: '',
-    name: '',
-    capacity: '',
-    image: '',
-    price: '',
+    category: "",
+    name: "",
+    capacity: "",
+    image: "",
     inclusions: [],
     exclusions: [],
     termscondition: [],
-  })
-  const [editIndex, setEditIndex] = useState<number | null>(null)
+  });
+  const [editIndex, setEditIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const response = await axios.get('/api/car')
-        setCars(response.data)
+        const response = await axios.get("/api/car");
+        setCars(response.data);
       } catch (error) {
-        console.error('Error fetching cars:', error)
+        console.error("Error fetching cars:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
-    fetchCars()
-  }, [])
+    };
+    fetchCars();
+  }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
 
-    if (['inclusions', 'exclusions', 'termscondition'].includes(name)) {
-      setForm({ ...form, [name]: value.split(',').map(item => item.trim()) })
+    if (["inclusions", "exclusions", "termscondition"].includes(name)) {
+      setForm({ ...form, [name]: value.split(",").map((item) => item.trim()) });
     } else {
-      setForm({ ...form, [name]: value })
+      setForm({ ...form, [name]: value });
     }
-  }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     if (editIndex !== null && cars[editIndex]._id) {
-      await axios.put(`/api/car?id=${cars[editIndex]._id}`, form)
-      const updated = [...cars]
-      updated[editIndex] = form
-      setCars(updated)
+      await axios.put(`/api/car?id=${cars[editIndex]._id}`, form);
+      const updated = [...cars];
+      updated[editIndex] = form;
+      setCars(updated);
     } else {
-      const response = await axios.post('/api/cars', form)
-      setCars([...cars, response.data])
+      const response = await axios.post("/api/cars", form);
+      setCars([...cars, response.data]);
     }
 
     setForm({
-      category: '',
-      name: '',
-      capacity: '',
-      image: '',
-      price: '',
+      category: "",
+      name: "",
+      capacity: "",
+      image: "",
       inclusions: [],
       exclusions: [],
       termscondition: [],
-    })
-    setEditIndex(null)
-  }
+    });
+    setEditIndex(null);
+  };
 
   const handleEdit = (car: CarInterface, index: number) => {
-    setForm(car)
-    setEditIndex(index)
-  }
+    setForm(car);
+    setEditIndex(index);
+  };
 
   if (loading)
     return (
       <div className="flex justify-center h-full">
         <Loading />
       </div>
-    )
+    );
 
   return (
     <div className="overflow-y-auto h-full px-4 pt-4">
       <h2 className="text-xl font-semibold mb-4">Car Management</h2>
 
       {/* Car Form */}
-      <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded mb-6">
-        {(['category', 'name', 'capacity', 'image', 'price'] as Array<keyof CarInterface>).map(field => (
-  <input
-    key={field}
-    name={field}
-    value={form[field]}
-    onChange={handleChange}
-    placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-    className="p-2 border rounded"
-  />
-))}
+      <form
+        onSubmit={handleSubmit}
+        className="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded mb-6"
+      >
+        {(
+          ["category", "name", "capacity", "image"] as Array<keyof CarInterface>
+        ).map((field) => (
+          <input
+            key={field}
+            name={field}
+            value={form[field]}
+            onChange={handleChange}
+            placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+            className="p-2 border rounded"
+          />
+        ))}
 
         <textarea
           name="inclusions"
-          value={form.inclusions.join(', ')}
+          value={form.inclusions.join(", ")}
           onChange={handleChange}
           placeholder="Inclusions (comma separated)"
           className="p-2 border rounded col-span-2"
         />
         <textarea
           name="exclusions"
-          value={form.exclusions.join(', ')}
+          value={form.exclusions.join(", ")}
           onChange={handleChange}
           placeholder="Exclusions (comma separated)"
           className="p-2 border rounded col-span-2"
         />
         <textarea
           name="termscondition"
-          value={form.termscondition.join(', ')}
+          value={form.termscondition.join(", ")}
           onChange={handleChange}
           placeholder="Terms & Conditions (comma separated)"
           className="p-2 border rounded col-span-2"
         />
 
         <Button type="submit" className="col-span-2">
-          {editIndex !== null ? 'Update Car' : 'Add Car'}
+          {editIndex !== null ? "Update Car" : "Add Car"}
         </Button>
       </form>
 
@@ -189,22 +219,32 @@ interface CarInterface {
               <th className="p-2 border">Name</th>
               <th className="p-2 border">Category</th>
               <th className="p-2 border">Capacity</th>
-              <th className="p-2 border">Price/km</th>
               <th className="p-2 border">Actions</th>
             </tr>
           </thead>
           <tbody>
             {cars.map((car, index) => (
-              <tr key={car._id || index} className="odd:bg-white even:bg-gray-50">
+              <tr
+                key={car._id || index}
+                className="odd:bg-white even:bg-gray-50"
+              >
                 <td className="p-2 border text-center">
-                  <Image src={car.image} alt={car.name} width={80} height={50} className="mx-auto rounded" />
+                  <Image
+                    src={car.image}
+                    alt={car.name}
+                    width={80}
+                    height={50}
+                    className="mx-auto rounded"
+                  />
                 </td>
                 <td className="p-2 border text-center">{car.name}</td>
                 <td className="p-2 border text-center">{car.category}</td>
                 <td className="p-2 border text-center">{car.capacity}</td>
-                <td className="p-2 border text-center">₹{car.price}</td>
                 <td className="p-2 border text-center">
-                  <button onClick={() => handleEdit(car, index)} className="text-[#6aa4e0] hover:underline">
+                  <button
+                    onClick={() => handleEdit(car, index)}
+                    className="text-[#6aa4e0] hover:underline"
+                  >
                     Edit
                   </button>
                 </td>
@@ -214,9 +254,8 @@ interface CarInterface {
         </table>
       </div>
     </div>
-  )
+  );
 }
-
 
 interface Booking {
   id: string;
@@ -299,7 +338,12 @@ const BookingsView = () => {
     );
   };
 
-  if (loading) return <div className="flex items-center justify-center">Loading bookings...</div>;
+  if (loading)
+    return (
+      <div className="flex items-center justify-center">
+        Loading bookings...
+      </div>
+    );
 
   return (
     <div className="h-full  p-4">
