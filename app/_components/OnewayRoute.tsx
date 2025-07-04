@@ -217,7 +217,7 @@ export default function RouteList() {
             key={field}
             name={field}
             placeholder={field.replace(/_/g, " ")}
-            value={(newRoute as any)[field]}
+            value={newRoute[field as keyof typeof newRoute] ?? ""}
             onChange={handleNewChange}
             className="border p-2 rounded"
           />
@@ -260,7 +260,7 @@ export default function RouteList() {
                                 ? "number"
                                 : "text"
                             }
-                            value={(form as any)[field]}
+                            value={form[field as keyof Route] ?? ""}
                             onChange={handleChange}
                             className="w-full border p-1 rounded"
                           />
