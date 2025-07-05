@@ -17,7 +17,7 @@ function restoreISODate(dateStr: string) {
 
 
 export default async function Page({ params }: PageProps) {
-  const newParams = await params
+  const newParams = params
   console.log(newParams)
   
   const [
