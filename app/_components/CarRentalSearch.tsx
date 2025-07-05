@@ -96,13 +96,9 @@ export const CarRentalSearch = ({
     pathSegments.push(formData.pickupDate.toISOString().replace(/:/g, "-"));
   }
 
-  if (formData.pickupTime) {
-    const timeStr = formData.pickupTime
-      .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true })
-      .replace(/[:\s]/g, "");
-    pathSegments.push(timeStr);
-  }
-
+ if (formData.pickupTime) {
+  pathSegments.push(formData.pickupTime.getTime().toString());
+}
   if (rideType === "Round Trip" && formData.dropoffDate) {
     pathSegments.push(formData.dropoffDate.toISOString().replace(/:/g, "-"));
   }

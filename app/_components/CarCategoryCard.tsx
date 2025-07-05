@@ -69,8 +69,17 @@ const CarCategoryCard = ({
                   ? initialValues.pickupDateUpdated.toISOString()
                   : "",
                 time: initialValues.pickupTime
-                  ? initialValues.pickupTime.toISOString()
-                  : "",
+                  ? initialValues.pickupTime instanceof Date
+                    ? initialValues.pickupTime
+                        .toLocaleTimeString("en-US", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: false,
+                        })
+                        .replace(":", "") +
+                      (initialValues.pickupTime.getHours() >= 12 ? "PM" : "AM")
+                    : initialValues.pickupTime
+                  : "0900AM", // Default time if not specified
                 carType: name,
                 totalKm: distance?.toFixed(2) || "0",
                 price: price.toString(),
@@ -81,9 +90,7 @@ const CarCategoryCard = ({
             }}
             className="w-full sm:w-2/5 flex justify-center "
           >
-            <Button className="w-full  px-6 py-2">
-              Select Car
-            </Button>
+            <Button className="w-full  px-6 py-2">Select Car</Button>
           </Link>
         </div>
 

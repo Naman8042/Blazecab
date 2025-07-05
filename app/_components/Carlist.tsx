@@ -179,7 +179,7 @@ export default async function CarList({initialValues}:PageProps){
       </div>
     );
   }
-
+  console.log(initialValues)
   return (
     <div className="grid gap-6">
       {[...cars]
