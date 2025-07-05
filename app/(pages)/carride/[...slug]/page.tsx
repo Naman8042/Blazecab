@@ -1,13 +1,10 @@
 import { Suspense } from "react";
+import { JSX } from "react";
 import Editcar from "@/app/_components/Editcar";
 import Loading from "../loading";
 import CarList from "@/app/_components/Carlist"; // adjust import if needed
 
-interface PageProps {
-  params: {
-    params: string[]; // the catch-all params as array
-  };
-}
+
 function restoreISODate(dateStr: string) {
   if (!dateStr) return null;
 
@@ -15,13 +12,13 @@ function restoreISODate(dateStr: string) {
   return dateStr.replace(/T(\d{2})-(\d{2})-(\d{2})/, "T$1:$2:$3");
 }
 
-interface CatchAllPageParams {
-  slug: string[];
-}
 
-export default async function Page({ params }: { params: CatchAllPageParams }) {
-  const { slug } = params;
-  console.log(slug)
+
+type Params = Promise<{ slug:string }>;
+
+
+export default async function Page(props: { params: Params }): Promise<JSX.Element> {
+   const {slug} = await props.params;
  
   const [
     rideTypeRaw = "",
