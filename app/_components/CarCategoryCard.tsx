@@ -68,18 +68,7 @@ const CarCategoryCard = ({
                 date: initialValues.pickupDateUpdated
                   ? initialValues.pickupDateUpdated.toISOString()
                   : "",
-                time: initialValues.pickupTime
-                  ? initialValues.pickupTime instanceof Date
-                    ? initialValues.pickupTime
-                        .toLocaleTimeString("en-US", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          hour12: false,
-                        })
-                        .replace(":", "") +
-                      (initialValues.pickupTime.getHours() >= 12 ? "PM" : "AM")
-                    : initialValues.pickupTime
-                  : "0900AM", // Default time if not specified
+               time: initialValues.pickupTime ? initialValues.pickupTime.getTime().toString() : "",
                 carType: name,
                 totalKm: distance?.toFixed(2) || "0",
                 price: price.toString(),

@@ -25,23 +25,16 @@ export default function BookingPage() {
   // Date formatting
   const formattedDate = date ? new Date(date).toLocaleDateString("en-US") : "";
 
-  // Time handling (raw is like "2230PM")
-  const rawTime = searchParams.get("time") || "";
-  let formattedTime = "";
+const rawTime = searchParams.get("time") || "";
+const formattedTime = rawTime
+  ? new Date(Number(rawTime)).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    })
+  : "";
 
-  const match = rawTime.match(/^(\d{1,2})(\d{2})(AM|PM)$/i);
-  if (match) {
-    let hour = parseInt(match[1], 10);
-    const minute = parseInt(match[2], 10);
-    const ampm = match[3].toUpperCase();
 
-    if (ampm === "PM" && hour < 12) hour += 12;
-    if (ampm === "AM" && hour === 12) hour = 0;
-
-    const dateObj = new Date();
-    dateObj.setHours(hour, minute, 0);
-    formattedTime = dateObj.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
-  }
 
   return (
     <div className="w-full sm:h-[89.75vh] flex items-center justify-center p-4">
