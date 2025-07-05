@@ -20,8 +20,7 @@ export default function BookingPage() {
   const termscondition = JSON.parse(searchParams.get("termscondition") || "[]");
 
   const formattedDate = date ? new Date(date).toLocaleDateString("en-US") : "";
-  const newDate = date ? new Date(date) : null;
-  let formattedTime = searchParams.get("time");
+  const formattedTime = searchParams.get("time");
   // if (newDate) {
   //   const hours = newDate.getHours();
   //   const minutes = newDate.getMinutes();
