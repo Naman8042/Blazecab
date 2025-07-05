@@ -62,7 +62,7 @@ export const CarRentalSearch = ({
       ? new Date(initialValues.dropoffDate)
       : new Date(Date.now() + 86400000),
   });
-  
+  console.log(formData)
   const [pickupSuggestions, setPickupSuggestions] = useState<PhotonFeature[]>(
     []
   );
