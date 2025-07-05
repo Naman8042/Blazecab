@@ -15,11 +15,14 @@ function restoreISODate(dateStr: string) {
   return dateStr.replace(/T(\d{2})-(\d{2})-(\d{2})/, "T$1:$2:$3");
 }
 
+interface CatchAllPageParams {
+  slug: string[];
+}
 
-export default async function Page({ params }: PageProps) {
-  const newParams = params
-  console.log(newParams)
-  
+export default async function Page({ params }: { params: CatchAllPageParams }) {
+  const { slug } = params;
+  console.log(slug)
+ 
   const [
     rideTypeRaw = "",
     pickupLocation = "",
@@ -27,7 +30,7 @@ export default async function Page({ params }: PageProps) {
     pickupDate = "",
     pickupTime = "",
     dropoffDate = ""
-  ] = newParams.params;
+  ] = slug;
 
 
   const rideType = rideTypeRaw.replace(/-/g, " ");
