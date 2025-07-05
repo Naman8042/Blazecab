@@ -3,20 +3,25 @@ import Editcar from "@/app/_components/Editcar";
 import Loading from "../../loading";
 import CarList from "@/app/_components/Carlist"; // adjust import if needed
 
-export default async function Page({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
+interface PageProps {
+  searchParams: {
+    [key: string]: string | string[] | undefined;
+  };
+}
 
-  const params = await searchParams;
+export default function Page({ searchParams }:PageProps) {
+  
   // Basic params for Editcar
-  const rideType = Array.isArray(params.rideType) ? params.rideType[0] : params.rideType || "";
-  const pickupLocation = Array.isArray(params.pickupLocation) ? params.pickupLocation[0] : params.pickupLocation || "";
-  const dropoffLocation = Array.isArray(params.dropoffLocation) ? params.dropoffLocation[0] : params.dropoffLocation || "";
+  const rideType = Array.isArray(searchParams.rideType) ? searchParams.rideType[0] : searchParams.rideType || "";
+  const pickupLocation = Array.isArray(searchParams.pickupLocation) ? searchParams.pickupLocation[0] : searchParams.pickupLocation || "";
+  const dropoffLocation = Array.isArray(searchParams.dropoffLocation) ? searchParams.dropoffLocation[0] : searchParams.dropoffLocation || "";
 
   const initialValues = {
     pickupLocation,
     dropoffLocation,
-    pickupDate: params.pickupDate ? new Date(params.pickupDate as string) : undefined,
-    pickupTime: params.pickupTime ? new Date(params.pickupTime as string) : undefined,
-    dropoffDate: params.dropoffDate ? new Date(params.dropoffDate as string) : undefined,
+    pickupDate: searchParams.pickupDate ? new Date(searchParams.pickupDate as string) : undefined,
+    pickupTime: searchParams.pickupTime ? new Date(searchParams.pickupTime as string) : undefined,
+    dropoffDate: searchParams.dropoffDate ? new Date(searchParams.dropoffDate as string) : undefined,
     rideType,
   };
 
@@ -35,8 +40,8 @@ export default async function Page({ searchParams }: { searchParams: { [key: str
         Explore Our Car Categories
       </h1>
 
-      <Suspense key={JSON.stringify(params)} fallback={<Loading />}>
-        <CarList params={params} />
+      <Suspense key={JSON.stringify(searchParams)} fallback={<Loading />}>
+        <CarList searchParams={searchParams} />
       </Suspense>
     </div>
   );
