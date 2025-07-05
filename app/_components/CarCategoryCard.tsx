@@ -3,6 +3,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
+interface initialValues {
+  pickupLocation: string;
+  dropoffLocation: string;
+  pickupDateUpdated: Date | undefined;
+  pickupTimeUpdated: Date | undefined;
+  dropOffDateUpdated: Date | undefined;
+  rideType: string;
+}
+
 interface CarCategoryCardProps {
   category: string;
   image: string;
@@ -12,9 +21,8 @@ interface CarCategoryCardProps {
   exclusions: string[];
   termscondition: string[];
   distance?: number | null;
-  searchParams: { [key: string]: string | string[] | undefined };
+  initialValues: initialValues;
 }
-
 
 const CarCategoryCard = ({
   category,
@@ -24,7 +32,7 @@ const CarCategoryCard = ({
   inclusions,
   exclusions,
   termscondition,
-  searchParams,
+  initialValues,
   distance,
 }: CarCategoryCardProps) => (
   <div className="mb-12">
@@ -55,10 +63,14 @@ const CarCategoryCard = ({
             href={{
               pathname: "/bookingpage",
               query: {
-                startLocation: searchParams.pickupLocation || "",
-                endLocation: searchParams.dropoffLocation || "",
-                date: searchParams.pickupDate,
-                time:searchParams.pickupTime,
+                startLocation: initialValues.pickupLocation || "",
+                endLocation: initialValues.dropoffLocation || "",
+                date: initialValues.pickupDateUpdated
+                  ? initialValues.pickupDateUpdated.toISOString()
+                  : "",
+                time: initialValues.pickupTimeUpdated
+                  ? initialValues.pickupTimeUpdated.toISOString()
+                  : "",
                 carType: name,
                 totalKm: distance?.toFixed(2) || "0",
                 price: price.toString(),

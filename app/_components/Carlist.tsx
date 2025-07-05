@@ -11,7 +11,7 @@ interface CarCategoryCardProps {
   exclusions: string[];
   termscondition: string[];
   distance?: number | null;
-  params: URLSearchParams;
+  params: string[]; 
 }
 
 type FixedPrice = {
@@ -35,26 +35,26 @@ type LocalTrip = {
   price: number;
 };
 
-export default async function CarList({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+interface initialValues{
+    pickupLocation: string;
+    dropoffLocation: string;
+    pickupDateUpdated: Date | undefined;
+    pickupTimeUpdated: Date | undefined;
+    dropOffDateUpdated: Date | undefined;
+    rideType: string;
+}
+
+interface PageProps {
+  initialValues:initialValues
+}
+
+export default async function CarList({initialValues}:PageProps){
   
-  const params = await searchParams;
-  console.log(params)
+  const rideType = initialValues.rideType;
 
-  const rideType = Array.isArray(params.rideType)
-    ? params.rideType[0]
-    : params.rideType || "";
+  const pickupLocation = initialValues.pickupLocation;
 
-  const pickupLocation = Array.isArray(params.pickupLocation)
-    ? params.pickupLocation[0]
-    : params.pickupLocation || "";
-
-  const dropoffLocation = Array.isArray(params.dropoffLocation)
-    ? params.dropoffLocation[0]
-    : params.dropoffLocation || "";
+  const dropoffLocation = initialValues.dropoffLocation;
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
@@ -195,7 +195,7 @@ export default async function CarList({
             exclusions={car.exclusions}
             termscondition={car.termscondition}
             distance={car.distance}
-            searchParams={params}
+            initialValues={initialValues}
           />
         ))}
     </div>

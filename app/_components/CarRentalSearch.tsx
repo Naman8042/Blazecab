@@ -76,39 +76,42 @@ export const CarRentalSearch = ({
   const router = useRouter();
 
   const onNavigateHandler = (e: FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (showForm && typeof setShowForm === "function") {
-      setShowForm(!showForm);
-    }
+  if (showForm && typeof setShowForm === "function") {
+    setShowForm(!showForm);
+  }
 
-    const formattedData = {
-      pickupLocation: formData.pickupLocation,
-      dropoffLocation:
-        rideType === "Local" ? undefined : formData.dropoffLocation,
-      pickupDate: formData.pickupDate?.toISOString(),
-      pickupTime: formData.pickupTime?.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      dropoffDate:
-        rideType === "Round Trip"
-          ? formData.dropoffDate?.toISOString()
-          : undefined,
-      rideType,
-    };
+  const safeRideType = (rideType || "").replace(/\s+/g, "-");
+  const safePickupLocation = formData.pickupLocation || "";
+  const safeDropoffLocation = formData.dropoffLocation || "";
 
-    const query = new URLSearchParams(
-      Object.entries(formattedData).reduce((acc, [key, value]) => {
-        if (value) {
-          acc[key] = String(value); // Only keep truthy values
-        }
-        return acc;
-      }, {} as Record<string, string>)
-    ).toString();
+  const pathSegments = [safeRideType, safePickupLocation];
 
-    router.push(`/carride?${query}`);
-  };
+  if (rideType !== "Local" && safeDropoffLocation) {
+    pathSegments.push(safeDropoffLocation);
+  }
+
+  if (formData.pickupDate) {
+    pathSegments.push(formData.pickupDate.toISOString().replace(/:/g, "-"));
+  }
+
+  if (formData.pickupTime) {
+    const timeStr = formData.pickupTime
+      .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true })
+      .replace(/[:\s]/g, "");
+    pathSegments.push(timeStr);
+  }
+
+  if (rideType === "Round Trip" && formData.dropoffDate) {
+    pathSegments.push(formData.dropoffDate.toISOString().replace(/:/g, "-"));
+  }
+
+  const url = "/carride/" + pathSegments.map(encodeURIComponent).join("/");
+
+  router.push(url);
+};
+
 
   const handleDateChange = (date: Date | null, field: keyof FormData) => {
     if (date) {
