@@ -41,11 +41,10 @@ console.log(pickupTime)
 // pickupTime was encoded like "1121AM" (no colon or spaces), parse manually:
 function parseTime(timeStr: string) {
   if (!timeStr) return undefined;
-  
-  // Example: "1121AM" or "0925PM"
+
   const match = timeStr.match(/^(\d{1,2})(\d{2})(AM|PM)$/i);
   if (!match) return undefined;
-  
+
   let hour = parseInt(match[1], 10);
   const minute = parseInt(match[2], 10);
   const ampm = match[3].toUpperCase();
@@ -53,19 +52,24 @@ function parseTime(timeStr: string) {
   if (ampm === "PM" && hour < 12) hour += 12;
   if (ampm === "AM" && hour === 12) hour = 0;
 
-  const date = new Date();
-  date.setHours(hour, minute, 0, 0);
-  return date;
+  // Create a new local date explicitly (year, month, day, hour, minute)
+  const now = new Date();
+  const localDate = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    hour,
+    minute,
+    0,
+    0
+  );
+
+  return localDate;
 }
 
-const pickupTimeUpdated = parseTime(pickupTime);
-const pickupTimeFormatted = pickupTimeUpdated?.toLocaleTimeString([], {
-  hour: "2-digit",
-  minute: "2-digit",
-  hour12: true,
-});
 
-console.log(pickupTimeFormatted); // e.g., "07:30 PM"
+const pickupTimeUpdated = parseTime(pickupTime);
+
 
 
 const initialValues = {
