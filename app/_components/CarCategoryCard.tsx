@@ -12,8 +12,9 @@ interface CarCategoryCardProps {
   exclusions: string[];
   termscondition: string[];
   distance?: number | null;
-  searchParams: URLSearchParams;
+  searchParams: { [key: string]: string | string[] | undefined };
 }
+
 
 const CarCategoryCard = ({
   category,
@@ -54,9 +55,10 @@ const CarCategoryCard = ({
             href={{
               pathname: "/bookingpage",
               query: {
-                startLocation: searchParams.get("pickupLocation") || "",
-                endLocation: searchParams.get("dropoffLocation") || "",
-                date: searchParams.get("pickupDate") || "",
+                startLocation: searchParams.pickupLocation || "",
+                endLocation: searchParams.dropoffLocation || "",
+                date: searchParams.pickupDate,
+                time:searchParams.pickupTime,
                 carType: name,
                 totalKm: distance?.toFixed(2) || "0",
                 price: price.toString(),

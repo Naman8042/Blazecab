@@ -20,6 +20,15 @@ export default function BookingPage() {
   const termscondition = JSON.parse(searchParams.get("termscondition") || "[]");
 
   const formattedDate = date ? new Date(date).toLocaleDateString("en-US") : "";
+  const newDate = date ? new Date(date) : null;
+  let formattedTime = searchParams.get("time");
+  // if (newDate) {
+  //   const hours = newDate.getHours();
+  //   const minutes = newDate.getMinutes();
+  //   formattedTime = `${hours.toString().padStart(2, "0")}:${minutes
+  //     .toString()
+  //     .padStart(2, "0")}`;
+  // }
 
   return (
     <div className="w-full sm:h-[89.75vh] flex items-center justify-center  p-4">
@@ -91,7 +100,8 @@ export default function BookingPage() {
                 {endLocation && `→ ${endLocation}`}
               </p>
               <p>
-                <strong>Pickup Date:</strong> {formattedDate}
+                <strong>Pickup Date and Time:</strong> {formattedDate} at{" "}
+                {formattedTime}
               </p>
               <p>
                 <strong>Car Type:</strong> {carType}
@@ -107,37 +117,36 @@ export default function BookingPage() {
 
           {/* Bottom Box - Fixed Height for Consistency */}
           <Card className="shadow-lg rounded-lg bg-white p-4 md:p-6 relative">
-  <Tabs defaultValue="inclusions">
-    <TabsList className="flex justify-between bg-gray-200 rounded-lg p-1 w-full text-xs md:text-sm">
-      <TabsTrigger value="inclusions">Inclusions</TabsTrigger>
-      <TabsTrigger value="exclusions">Exclusions</TabsTrigger>
-      <TabsTrigger value="tac">T&C</TabsTrigger>
-    </TabsList>
+            <Tabs defaultValue="inclusions">
+              <TabsList className="flex justify-between bg-gray-200 rounded-lg p-1 w-full text-xs md:text-sm">
+                <TabsTrigger value="inclusions">Inclusions</TabsTrigger>
+                <TabsTrigger value="exclusions">Exclusions</TabsTrigger>
+                <TabsTrigger value="tac">T&C</TabsTrigger>
+              </TabsList>
 
-    {/* Keep height consistent and scroll if needed */}
-    <CardContent className="mt-4 text-sm md:text-base max-h-64 overflow-y-auto space-y-2">
-      <TabsContent value="inclusions">
-        {Array.isArray(inclusions) &&
-          inclusions.map((item, index) => (
-            <p key={index}>✅ {item}</p>
-          ))}
-      </TabsContent>
-      <TabsContent value="exclusions">
-        {Array.isArray(exclusions) &&
-          exclusions.map((item, index) => (
-            <p key={index}>❌ {item}</p>
-          ))}
-      </TabsContent>
-      <TabsContent value="tac">
-        {Array.isArray(termscondition) &&
-          termscondition.map((item, index) => (
-            <p key={index}>📜 {item}</p>
-          ))}
-      </TabsContent>
-    </CardContent>
-  </Tabs>
-</Card>
-
+              {/* Keep height consistent and scroll if needed */}
+              <CardContent className="mt-4 text-sm md:text-base max-h-64 overflow-y-auto space-y-2">
+                <TabsContent value="inclusions">
+                  {Array.isArray(inclusions) &&
+                    inclusions.map((item, index) => (
+                      <p key={index}>✅ {item}</p>
+                    ))}
+                </TabsContent>
+                <TabsContent value="exclusions">
+                  {Array.isArray(exclusions) &&
+                    exclusions.map((item, index) => (
+                      <p key={index}>❌ {item}</p>
+                    ))}
+                </TabsContent>
+                <TabsContent value="tac">
+                  {Array.isArray(termscondition) &&
+                    termscondition.map((item, index) => (
+                      <p key={index}>📜 {item}</p>
+                    ))}
+                </TabsContent>
+              </CardContent>
+            </Tabs>
+          </Card>
         </div>
       </div>
     </div>

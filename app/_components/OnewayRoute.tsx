@@ -12,7 +12,7 @@ type Route = {
   price: number;
   distance: number;
   cabs: string;
-  per_kms_extra_charge?: string;
+  per_kms_extra_charge: string;
 };
 
 type PaginatedResponse = {
@@ -230,7 +230,7 @@ export default function RouteList() {
         <table className="min-w-full border rounded shadow-sm text-sm">
           <thead className="bg-gray-100">
             <tr>
-              {["Pickup", "Drop", "Price", "Distance", "Cab", "Actions"].map(
+              {["Pickup", "Drop", "Price", "Distance", "Cab", "Per kms extra charge","Actions"].map(
                 (header) => (
                   <th
                     key={header}
@@ -247,7 +247,7 @@ export default function RouteList() {
               <tr key={route._id} className="odd:bg-white even:bg-gray-50">
                 {editIndex === index ? (
                   <>
-                    {["pickup", "drop", "price", "distance", "cabs"].map(
+                    {["pickup", "drop", "price", "distance", "cabs","per_kms_extra_charge"].map(
                       (field) => (
                         <td
                           key={field}
@@ -293,6 +293,9 @@ export default function RouteList() {
                     </td>
                     <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm">
                       {route.cabs}
+                    </td>
+                    <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm">
+                      {route.per_kms_extra_charge}
                     </td>
                     <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm flex gap-2 justify-center">
                       <Button onClick={() => handleEditClick(route, index)}>

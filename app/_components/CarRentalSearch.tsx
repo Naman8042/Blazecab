@@ -45,7 +45,7 @@ export const CarRentalSearch = ({
   const [rideType, setRideType] = useState<string>(
     initialValues?.rideType || "One Way"
   );
-
+  
   const [formData, setFormData] = useState<FormData>({
     pickupLocation: initialValues?.pickupLocation || "",
     dropoffLocation: initialValues?.dropoffLocation || "",
@@ -53,13 +53,16 @@ export const CarRentalSearch = ({
       ? new Date(initialValues.pickupDate)
       : new Date(),
     pickupTime: initialValues?.pickupTime
-      ? new Date(`1970-01-01T${initialValues.pickupTime}`)
-      : new Date(),
+  ? typeof initialValues.pickupTime === "string"
+    ? new Date(`1970-01-01T${initialValues.pickupTime}`)
+    : new Date(initialValues.pickupTime)
+  : new Date(),
+
     dropoffDate: initialValues?.dropoffDate
       ? new Date(initialValues.dropoffDate)
       : new Date(Date.now() + 86400000),
   });
-
+  
   const [pickupSuggestions, setPickupSuggestions] = useState<PhotonFeature[]>(
     []
   );
