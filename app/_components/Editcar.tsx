@@ -34,7 +34,7 @@ const Editcar = ({
         <CarRentalSearch initialValues={initialValues} source="carride" setShowForm={setShowForm} showForm={showForm}/>
       ) : (
         <div className="bg-white shadow-md rounded-2xl px-6 py-5 mb-8 border border-gray-200">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-y-4 gap-x-6 w-full">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-y-4  w-full">
             <div className={`grid grid-cols-2 ${rideType === "Local" ? "sm:grid-cols-3" : "sm:grid-cols-4"}  gap-x-8 gap-y-2 text-sm sm:text-base text-gray-800  w-full sm:w-1/2`}>
               <div>
                 <p className="font-medium text-gray-500">Pickup</p>

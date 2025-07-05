@@ -35,6 +35,7 @@ const restoredPickupDate = restoreISODate(pickupDate);
 const pickupDateUpdated = restoredPickupDate ? new Date(restoredPickupDate) : undefined;
 const restoreddropOffDate = restoreISODate(dropoffDate);
 const dropOffDateUpdated = restoreddropOffDate ? new Date(restoreddropOffDate) : undefined;
+console.log(pickupTime)
 
 
 // pickupTime was encoded like "1121AM" (no colon or spaces), parse manually:
@@ -58,12 +59,20 @@ function parseTime(timeStr: string) {
 }
 
 const pickupTimeUpdated = parseTime(pickupTime);
+const pickupTimeFormatted = pickupTimeUpdated?.toLocaleTimeString([], {
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: true,
+});
+
+console.log(pickupTimeFormatted); // e.g., "07:30 PM"
+
 
 const initialValues = {
   pickupLocation,
   dropoffLocation,
   pickupDateUpdated,
-  pickupTimeUpdated,
+  pickupTime:pickupTimeUpdated,
   dropOffDateUpdated,
   rideType,
 };

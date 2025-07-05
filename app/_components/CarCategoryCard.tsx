@@ -7,7 +7,7 @@ interface initialValues {
   pickupLocation: string;
   dropoffLocation: string;
   pickupDateUpdated: Date | undefined;
-  pickupTimeUpdated: Date | undefined;
+  pickupTime: Date | undefined;
   dropOffDateUpdated: Date | undefined;
   rideType: string;
 }
@@ -48,8 +48,8 @@ const CarCategoryCard = ({
 
       {/* Car Info and Tabs */}
       <div className="flex-1 w-full sm:w-2/3">
-        <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start mb-4">
-          <div className="text-center sm:text-left">
+        <div className="flex flex-col sm:flex-row gap-3 justify-between items-center sm:items-start mb-4 ">
+          <div className="text-center sm:text-left  w-3/5">
             <h3 className="text-xl font-semibold text-gray-800">{name}</h3>
             <p className="text-[#6aa4e0] font-bold text-xl flex items-center gap-2 justify-center sm:justify-start">
               ₹{price}{" "}
@@ -68,8 +68,8 @@ const CarCategoryCard = ({
                 date: initialValues.pickupDateUpdated
                   ? initialValues.pickupDateUpdated.toISOString()
                   : "",
-                time: initialValues.pickupTimeUpdated
-                  ? initialValues.pickupTimeUpdated.toISOString()
+                time: initialValues.pickupTime
+                  ? initialValues.pickupTime.toISOString()
                   : "",
                 carType: name,
                 totalKm: distance?.toFixed(2) || "0",
@@ -79,9 +79,9 @@ const CarCategoryCard = ({
                 termscondition: JSON.stringify(termscondition),
               },
             }}
-            className="mt-4 sm:mt-0 sm:ml-4 w-full sm:w-auto"
+            className="w-full sm:w-2/5 flex justify-center "
           >
-            <Button className="w-full sm:w-64 md:w-72 lg:w-80 px-6 py-2">
+            <Button className="w-full  px-6 py-2">
               Select Car
             </Button>
           </Link>

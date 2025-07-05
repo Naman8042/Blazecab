@@ -20,7 +20,15 @@ export default function BookingPage() {
   const termscondition = JSON.parse(searchParams.get("termscondition") || "[]");
 
   const formattedDate = date ? new Date(date).toLocaleDateString("en-US") : "";
-  const formattedTime = searchParams.get("time");
+ const timeStr = searchParams.get("time");
+ console.log(timeStr)
+const time = timeStr ? new Date(timeStr) : null;
+
+const formattedTime = time
+  ? time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  : '';
+
+  
   // if (newDate) {
   //   const hours = newDate.getHours();
   //   const minutes = newDate.getMinutes();

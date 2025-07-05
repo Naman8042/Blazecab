@@ -39,7 +39,7 @@ interface initialValues{
     pickupLocation: string;
     dropoffLocation: string;
     pickupDateUpdated: Date | undefined;
-    pickupTimeUpdated: Date | undefined;
+    pickupTime: Date | undefined;
     dropOffDateUpdated: Date | undefined;
     rideType: string;
 }
@@ -90,7 +90,7 @@ export default async function CarList({initialValues}:PageProps){
                   ],
                   exclusions: [
                     ...car.exclusions,
-                    `₹${match.per_kms_extra_charge} per extra km`,
+                     `If you exceed the given kms limit, you will have to pay ₹${match.per_kms_extra_charge} per km as extra charge`,
                     "Airport Entry/Parking",
                   ],
                   termscondition: [
