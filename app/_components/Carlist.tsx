@@ -11,7 +11,7 @@ interface CarCategoryCardProps {
   exclusions: string[];
   termscondition: string[];
   distance?: number | null;
-  params: string[]; 
+  params: string[];
 }
 
 type FixedPrice = {
@@ -35,21 +35,20 @@ type LocalTrip = {
   price: number;
 };
 
-interface initialValues{
-    pickupLocation: string;
-    dropoffLocation: string;
-    pickupDateUpdated: Date | undefined;
-    pickupTime: Date | undefined;
-    dropOffDateUpdated: Date | undefined;
-    rideType: string;
+interface initialValues {
+  pickupLocation: string;
+  dropoffLocation: string;
+  pickupDateUpdated: Date | undefined;
+  pickupTime: Date | undefined;
+  dropOffDateUpdated: Date | undefined;
+  rideType: string;
 }
 
 interface PageProps {
-  initialValues:initialValues
+  initialValues: initialValues;
 }
 
-export default async function CarList({initialValues}:PageProps){
-  
+export default async function CarList({ initialValues }: PageProps) {
   const rideType = initialValues.rideType;
 
   const pickupLocation = initialValues.pickupLocation;
@@ -86,11 +85,12 @@ export default async function CarList({initialValues}:PageProps){
                   price: match.price,
                   inclusions: [
                     ...car.inclusions,
+                    "State Tax & Toll",
                     `${match.distance} km included`,
                   ],
                   exclusions: [
                     ...car.exclusions,
-                     `If you exceed the given kms limit, you will have to pay ₹${match.per_kms_extra_charge} per km as extra charge`,
+                    `If you exceed the given kms limit, you will have to pay ₹${match.per_kms_extra_charge} per km as extra charge`,
                     "Airport Entry/Parking",
                   ],
                   termscondition: [
@@ -119,18 +119,41 @@ export default async function CarList({initialValues}:PageProps){
               (r: RoundTrip) =>
                 r.cabs.toLowerCase() === car.category.toLowerCase()
             );
-            return match
-              ? {
-                  ...car,
-                  price: match.distance * 2 * match.per_kms_charge,
-                  inclusions: [
-                    ...car.inclusions,
-                    `${match.distance * 2} km round trip`,
-                    `Extra: ₹${match.per_kms_charge}/km`,
-                  ],
-                  distance: match.distance * 2,
-                }
-              : null;
+
+            if (!match) return null;
+
+            const roundTripDistance = match.distance * 2;
+            const chargeableDistance = Math.max(
+              roundTripDistance,
+              match.minimum_per_day_km
+            );
+            const distanceCost = chargeableDistance * match.per_kms_charge;
+            const totalPrice = distanceCost + match.driver_allowance;
+
+            return {
+              ...car,
+              price: totalPrice,
+              inclusions: [
+                ...car.inclusions,
+                `${chargeableDistance} km billed (${roundTripDistance} km actual round trip)`,
+              ],
+              exclusions: [
+                "Toll",
+                "State Tax",
+                "Parking",
+                `Extra: ₹${match.per_kms_charge}/km`,
+              ],
+              termscondition: [
+                "AC Usage: Air Conditioner (AC) will be turned off in hilly areas to ensure vehicle performance and passenger safety.",
+
+                `Minimum Kilometers per Day: A minimum billing of ${match.minimum_per_day_km} kilometers per day is applicable, even if the vehicle travels less than ${match.minimum_per_day_km} km`,
+
+                `Night Driving Charges: If the driver is required to drive between 10:00 PM and 6:00 AM, an additional ₹${match.driver_allowance} night charge must be paid directly to the driver.`,
+
+                "One Day Means: One day means one calendar day — i.e., from 12:00 AM to 11:59 PM. If the vehicle runs beyond 11:59 PM, it will be counted as the next day and additional day charges will apply.",
+              ],
+              distance: roundTripDistance,
+            };
           })
           .filter(Boolean) as CarCategoryCardProps[];
       }
@@ -179,7 +202,7 @@ export default async function CarList({initialValues}:PageProps){
       </div>
     );
   }
-  console.log(initialValues)
+  console.log(initialValues);
   return (
     <div className="grid gap-6">
       {[...cars]

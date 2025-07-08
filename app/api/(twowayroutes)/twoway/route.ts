@@ -38,8 +38,10 @@ export async function POST(req: NextRequest) {
   try {
     await connect()
     const body = await req.json()
+    console.log(body)
     const route = new TwowayRoute(body)
     const saved = await route.save()
+    console.log(saved)
     return NextResponse.json(saved)
   } catch (error) {
     console.error('POST error:', error)

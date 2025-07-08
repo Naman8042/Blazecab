@@ -37,10 +37,10 @@ const formattedTime = rawTime
 
 
   return (
-    <div className="w-full sm:h-[89.75vh] flex items-center justify-center p-4">
+    <div className="w-full sm:min-h-[89.75vh] flex items-center justify-center p-4">
       <div className="max-w-7xl w-full flex flex-col md:flex-row gap-6">
         {/* Left Form Section */}
-        <Card className="md:w-[60%] w-full shadow-lg rounded-lg bg-white flex flex-col justify-center">
+        <Card className="md:w-[58%] w-full shadow-lg rounded-lg bg-white flex flex-col justify-center">
           <CardHeader>
             <h2 className="text-2xl font-bold text-center">Contact & Pickup Details</h2>
           </CardHeader>
@@ -72,7 +72,7 @@ const formattedTime = rawTime
         </Card>
 
         {/* Right Booking Summary Section */}
-        <div className="flex flex-col gap-4 justify-between w-full md:w-[35%] h-full">
+        <div className="flex flex-col gap-4 justify-between w-full md:w-[39%] h-full">
           <Card className="shadow-lg rounded-lg bg-white p-4 md:p-6 h-auto">
             <CardHeader>
               <h2 className="text-xl font-semibold text-center">YOUR BOOKING DETAILS</h2>
@@ -95,7 +95,7 @@ const formattedTime = rawTime
                 <TabsTrigger value="tac">T&C</TabsTrigger>
               </TabsList>
 
-              <CardContent className="mt-4 text-sm md:text-base max-h-64 overflow-y-auto space-y-2">
+              <CardContent className="mt-4 text-sm  max-h-64 overflow-y-auto space-y-2">
                 <TabsContent value="inclusions">
                   {inclusions.map((item: string, index: number) => (
                     <p key={index}>✅ {item}</p>

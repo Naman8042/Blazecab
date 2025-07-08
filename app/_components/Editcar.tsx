@@ -42,7 +42,7 @@ const Editcar = ({
               </div>
               {
                 dropoffLocation && <div>
-              <p className="font-medium text-gray-500">Dropoff</p>
+              <p className="font-medium text-gray-500">{rideType == "Round Trip"? ("Destination"):("Dropoff") }</p>
                 <p className="font-semibold">{dropoffLocation}</p>
                 
               </div>

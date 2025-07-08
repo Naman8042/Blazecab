@@ -7,9 +7,12 @@ type Route = {
   _id: string;
   pickup: string;
   drop: string;
-  distance: number;
   cabs: string;
-  per_kms_charge: string;
+  distance: number;
+  per_kms_charge: number;
+  minimum_per_day_km: number;
+  limit: number;
+  driver_allowance: number;
 };
 
 type PaginatedResponse = {
@@ -71,6 +74,9 @@ export default function RouteList() {
     distance: "",
     cabs: "",
     per_kms_charge: "",
+    minimum_per_day_km: "",
+    limit: "",
+    driver_allowance: "",
   });
   useEffect(() => {
     if (!bottomRef.current || pickup || drop) return;
@@ -125,6 +131,7 @@ export default function RouteList() {
   };
 
   const handleAddNew = async () => {
+    console.log(newRoute)
     const res = await fetch("/api/twoway", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -137,6 +144,9 @@ export default function RouteList() {
         distance: "",
         cabs: "",
         per_kms_charge: "",
+        minimum_per_day_km: "",
+        limit: "",
+        driver_allowance: "",
       });
       mutate();
     }
@@ -191,7 +201,7 @@ export default function RouteList() {
       </div>
 
       {/* Add new route */}
-      <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
+      <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-9 gap-2">
         <input
           name="pickup"
           placeholder="Pickup"
@@ -227,6 +237,27 @@ export default function RouteList() {
           onChange={handleNewChange}
           className="border p-2 rounded"
         />
+        <input
+          name="minimum_per_day_km"
+          placeholder="Minimum Per Day Km"
+          value={newRoute.minimum_per_day_km}
+          onChange={handleNewChange}
+          className="border p-2 rounded"
+        />
+        <input
+          name="limit"
+          placeholder="Limit"
+          value={newRoute.limit}
+          onChange={handleNewChange}
+          className="border p-2 rounded"
+        />
+        <input
+          name="driver_allowance"
+          placeholder="Driver Allowance"
+          value={newRoute.driver_allowance}
+          onChange={handleNewChange}
+          className="border p-2 rounded"
+        />
         <Button onClick={handleAddNew}>Add</Button>
       </div>
 
@@ -242,6 +273,13 @@ export default function RouteList() {
               </th>
               <th className="p-1 sm:p-2 border text-xs sm:text-sm">Distance</th>
               <th className="p-1 sm:p-2 border text-xs sm:text-sm">Cab</th>
+              <th className="p-1 sm:p-2 border text-xs sm:text-sm">
+                Minimum Per Day Km
+              </th>
+              <th className="p-1 sm:p-2 border text-xs sm:text-sm">limit</th>
+              <th className="p-1 sm:p-2 border text-xs sm:text-sm">
+                Driver Allowance
+              </th>
               <th className="p-1 sm:p-2 border text-xs sm:text-sm">Actions</th>
             </tr>
           </thead>
@@ -292,6 +330,31 @@ export default function RouteList() {
                         className="w-full border p-1 rounded"
                       />
                     </td>
+                    <td className="p-1 sm:p-2 border">
+                      <input
+                        name="minimum_per_day_km"
+                        value={form.minimum_per_day_km}
+                        onChange={handleChange}
+                        className="w-full border p-1 rounded"
+                      />
+                    </td>
+                    <td className="p-1 sm:p-2 border">
+                      <input
+                        name="limit"
+                        value={form.limit}
+                        onChange={handleChange}
+                        className="w-full border p-1 rounded"
+                      />
+                    </td>
+
+                    <td className="p-1 sm:p-2 border">
+                      <input
+                        name="driver_allowance"
+                        value={form.driver_allowance}
+                        onChange={handleChange}
+                        className="w-full border p-1 rounded"
+                      />
+                    </td>
                     <td className="p-1 sm:p-2 border flex flex-col gap-2 sm:flex-row">
                       <Button onClick={handleSave}>Save</Button>
                       <Button
@@ -318,6 +381,15 @@ export default function RouteList() {
                     </td>
                     <td className="p-1 sm:p-2 border text-center">
                       {route.cabs}
+                    </td>
+                    <td className="p-1 sm:p-2 border text-center">
+                      {route.minimum_per_day_km}
+                    </td>
+                    <td className="p-1 sm:p-2 border text-center">
+                      {route.limit}
+                    </td>
+                    <td className="p-1 sm:p-2 border text-center">
+                      {route.driver_allowance}
                     </td>
                     <td className="p-1 sm:p-2 border flex gap-2 justify-center">
                       <Button onClick={() => handleEditClick(route, index)}>
