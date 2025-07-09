@@ -78,7 +78,7 @@ const formattedTime = rawTime
               <h2 className="text-xl font-semibold text-center">YOUR BOOKING DETAILS</h2>
             </CardHeader>
             <CardContent className="space-y-2 text-sm md:text-base">
-              <p><strong>Itinerary:</strong> {startLocation} → {endLocation}</p>
+              <p><strong>Itinerary:</strong> {startLocation} {endLocation !== "Not%20Available" && ` → ${endLocation}`}</p>
               <p><strong>Pickup Date and Time:</strong> {formattedDate} at {formattedTime}</p>
               <p><strong>Car Type:</strong> {carType}</p>
               <p><strong>KMs Included:</strong> {Math.floor(Number(totalKm))} Km</p>

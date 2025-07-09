@@ -9,6 +9,7 @@ export interface IShowRoute extends Document {
   distance:number;
   time:number;
   perkmextra_charge:number
+  per_hour_charge:number
 }
 
 const ShowRouteSchema = new Schema<IShowRoute>({
@@ -18,6 +19,7 @@ const ShowRouteSchema = new Schema<IShowRoute>({
   price: { type: Number, required: true },
   perkmextra_charge: { type: Number, required: true },
   distance: { type: Number, required: true },
+  per_hour_charge: { type: Number, required: true },
 });
 
 

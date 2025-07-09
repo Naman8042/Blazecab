@@ -46,23 +46,27 @@ export const CarRentalSearch = ({
     initialValues?.rideType || "One Way"
   );
   
+  
+
   const [formData, setFormData] = useState<FormData>({
     pickupLocation: initialValues?.pickupLocation || "",
-    dropoffLocation: initialValues?.dropoffLocation || "",
+    dropoffLocation: initialValues?.dropoffLocation === "Not%20Available"
+  ? ""
+  : initialValues?.dropoffLocation ?? "",
     pickupDate: initialValues?.pickupDate
       ? new Date(initialValues.pickupDate)
       : new Date(),
     pickupTime: initialValues?.pickupTime
-  ? typeof initialValues.pickupTime === "string"
-    ? new Date(`1970-01-01T${initialValues.pickupTime}`)
-    : new Date(initialValues.pickupTime)
-  : new Date(),
+      ? typeof initialValues.pickupTime === "string"
+        ? new Date(`1970-01-01T${initialValues.pickupTime}`)
+        : new Date(initialValues.pickupTime)
+      : new Date(),
 
     dropoffDate: initialValues?.dropoffDate
       ? new Date(initialValues.dropoffDate)
       : new Date(Date.now() + 86400000),
   });
-  console.log(formData)
+  console.log(formData);
   const [pickupSuggestions, setPickupSuggestions] = useState<PhotonFeature[]>(
     []
   );
@@ -76,38 +80,39 @@ export const CarRentalSearch = ({
   const router = useRouter();
 
   const onNavigateHandler = (e: FormEvent) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (showForm && typeof setShowForm === "function") {
-    setShowForm(!showForm);
-  }
+    if (showForm && typeof setShowForm === "function") {
+      setShowForm(!showForm);
+    }
 
-  const safeRideType = (rideType || "").replace(/\s+/g, "-");
-  const safePickupLocation = formData.pickupLocation || "";
-  const safeDropoffLocation = formData.dropoffLocation || "";
+    const safeRideType = (rideType || "").replace(/\s+/g, "-");
+    const safePickupLocation = formData.pickupLocation || "";
+    const safeDropoffLocation = formData.dropoffLocation || "";
 
-  const pathSegments = [safeRideType, safePickupLocation];
+    const pathSegments = [safeRideType, safePickupLocation];
 
-  if (rideType !== "Local" && safeDropoffLocation) {
-    pathSegments.push(safeDropoffLocation);
-  }
+    if (rideType !== "Local" && safeDropoffLocation) {
+      pathSegments.push(safeDropoffLocation);
+    } else {
+      pathSegments.push("Not Available");
+    }
 
-  if (formData.pickupDate) {
-    pathSegments.push(formData.pickupDate.toISOString().replace(/:/g, "-"));
-  }
+    if (formData.pickupDate) {
+      pathSegments.push(formData.pickupDate.toISOString().replace(/:/g, "-"));
+    }
 
- if (formData.pickupTime) {
-  pathSegments.push(formData.pickupTime.getTime().toString());
-}
-  if (rideType === "Round Trip" && formData.dropoffDate) {
-    pathSegments.push(formData.dropoffDate.toISOString().replace(/:/g, "-"));
-  }
+    if (formData.pickupTime) {
+      pathSegments.push(formData.pickupTime.getTime().toString());
+    }
+    if (rideType === "Round Trip" && formData.dropoffDate) {
+      pathSegments.push(formData.dropoffDate.toISOString().replace(/:/g, "-"));
+    }
+    console.log(pathSegments);
+    const url = "/carride/" + pathSegments.map(encodeURIComponent).join("/");
 
-  const url = "/carride/" + pathSegments.map(encodeURIComponent).join("/");
-
-  router.push(url);
-};
-
+    router.push(url);
+  };
 
   const handleDateChange = (date: Date | null, field: keyof FormData) => {
     if (date) {

@@ -11,8 +11,9 @@ type Route = {
   price: number;
   distance: number;
   cabs: string;
-  time:number;
+  time: number;
   perkmextra_charge: string;
+  per_hour_charge: number;
 };
 
 type PaginatedResponse = {
@@ -38,15 +39,16 @@ export default function RouteList() {
   const [pickupInput, setPickupInput] = useState("");
   const [pickup, setPickup] = useState("");
 
-  const { data: searchData, isValidating: searchLoading , mutate: mutateSearch, } =
-    useSWR<SearchResponse>(
-      pickup 
-        ? `/api/localroutesearch?pickup=${encodeURIComponent(
-            pickup
-          )}`
-        : null,
-      fetcher
-    );
+  const {
+    data: searchData,
+    isValidating: searchLoading,
+    mutate: mutateSearch,
+  } = useSWR<SearchResponse>(
+    pickup
+      ? `/api/localroutesearch?pickup=${encodeURIComponent(pickup)}`
+      : null,
+    fetcher
+  );
 
   const {
     data: paginatedData,
@@ -56,10 +58,9 @@ export default function RouteList() {
     mutate,
   } = useSWRInfinite<PaginatedResponse>(getKey, fetcher);
 
-  const routes: Route[] =
-    pickup
-      ? searchData || []
-      : paginatedData?.flatMap((page) => page.routes) || [];
+  const routes: Route[] = pickup
+    ? searchData || []
+    : paginatedData?.flatMap((page) => page.routes) || [];
 
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [form, setForm] = useState<Partial<Route>>({});
@@ -70,10 +71,11 @@ export default function RouteList() {
     distance: "",
     cabs: "",
     per_kms_extra_charge: "",
+    per_hour_charge: "",
   });
 
   useEffect(() => {
-    if (!bottomRef.current || pickup ) return;
+    if (!bottomRef.current || pickup) return;
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !isValidating) {
@@ -97,22 +99,21 @@ export default function RouteList() {
   };
 
   const handleSave = async () => {
-  const res = await fetch(`/api/localroute/?id=${form._id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(form),
-  });
+    const res = await fetch(`/api/localroute/?id=${form._id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
 
-  if (res.ok) {
-    setEditIndex(null);
-    if (pickup) {
-      mutateSearch(); 
-    } else {
-      mutate(); // paginated data
+    if (res.ok) {
+      setEditIndex(null);
+      if (pickup) {
+        mutateSearch();
+      } else {
+        mutate(); // paginated data
+      }
     }
-  }
-};
-
+  };
 
   const handleDelete = async (_id: string) => {
     if (!confirm("Delete this route?")) return;
@@ -139,6 +140,7 @@ export default function RouteList() {
         price: "",
         distance: "",
         cabs: "",
+        per_hour_charge: "",
         per_kms_extra_charge: "",
       });
       mutate();
@@ -174,9 +176,8 @@ export default function RouteList() {
           className="border p-2 rounded w-full"
         />
 
-
         <Button onClick={handleSearch}>Search</Button>
-        {(pickup) && (
+        {pickup && (
           <Button variant="secondary" onClick={clearSearch}>
             Clear
           </Button>
@@ -185,16 +186,25 @@ export default function RouteList() {
 
       {/* Add new route */}
       <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2">
-        {["cities", "price", "distance", "cabs", "perkmextra_charge","time"].map((field) => (
+        {[
+          "cities",
+          "price",
+          "distance",
+          "cabs",
+          "perkmextra_charge",
+          "time",
+          "per_hour_charge",
+        ].map((field) => (
           <input
             key={field}
             name={field}
             placeholder={field.replace(/_/g, " ")}
-            value={form[field as keyof Route] ?? ""}
+            value={newRoute[field as keyof typeof newRoute] ?? ""}
             onChange={handleNewChange}
             className="border p-2 rounded"
           />
         ))}
+
         <Button onClick={handleAddNew}>Add</Button>
       </div>
 
@@ -203,7 +213,16 @@ export default function RouteList() {
         <table className="min-w-full border rounded shadow-sm text-sm">
           <thead className="bg-gray-100">
             <tr>
-              {["cities", "price", "distance", "time", "cabs","per_km_extra_charge", "Actions"].map((header) => (
+              {[
+                "cities",
+                "price",
+                "distance",
+                "time",
+                "cabs",
+                "per_km_extra_charge",
+                "per_hour_charge",
+                "Actions",
+              ].map((header) => (
                 <th
                   key={header}
                   className="p-1 sm:p-2 border whitespace-nowrap text-xs sm:text-sm"
@@ -218,30 +237,50 @@ export default function RouteList() {
               <tr key={route._id} className="odd:bg-white even:bg-gray-50">
                 {editIndex === index ? (
                   <>
-                    {["cities", "price", "distance", "time", "cabs","perkmextra_charge"].map((field) => (
+                    {[
+                      "cities",
+                      "price",
+                      "distance",
+                      "time",
+                      "cabs",
+                      "perkmextra_charge",
+                      "per_hour_charge",
+                    ].map((field) => (
                       <td
                         key={field}
                         className="p-1 sm:p-2 border text-xs sm:text-sm"
                       >
                         <input
                           name={field}
-                          type={field === "price" || field === "distance" ? "number" : "text"}
-                          value={newRoute[field as keyof typeof newRoute] ?? ""}
+                          type={
+                            [
+                              "price",
+                              "distance",
+                              "time",
+                              "per_hour_charge",
+                            ].includes(field)
+                              ? "number"
+                              : "text"
+                          }
+                          value={form[field as keyof Route] ?? ""}
                           onChange={handleChange}
                           className="w-full border p-1 rounded"
                         />
                       </td>
                     ))}
+
                     <td className="p-1 sm:p-2 border flex flex-col gap-2 sm:flex-row text-xs sm:text-sm">
                       <Button onClick={handleSave}>Save</Button>
-                      <Button variant="secondary" onClick={() => setEditIndex(null)}>
+                      <Button
+                        variant="secondary"
+                        onClick={() => setEditIndex(null)}
+                      >
                         Cancel
                       </Button>
                     </td>
                   </>
                 ) : (
                   <>
-                    
                     <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm">
                       {route.cities}
                     </td>
@@ -260,11 +299,17 @@ export default function RouteList() {
                     <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm">
                       {route.perkmextra_charge}
                     </td>
+                    <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm">
+                      {route.per_hour_charge}
+                    </td>
                     <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm flex gap-2 justify-center">
                       <Button onClick={() => handleEditClick(route, index)}>
                         Edit
                       </Button>
-                      <Button variant="outline" onClick={() => handleDelete(route._id)}>
+                      <Button
+                        variant="outline"
+                        onClick={() => handleDelete(route._id)}
+                      >
                         Delete
                       </Button>
                     </td>
@@ -277,7 +322,7 @@ export default function RouteList() {
       </div>
 
       {/* Infinite Scroll Loader */}
-      {!pickup &&  (
+      {!pickup && (
         <div
           ref={bottomRef}
           className="h-12 flex items-center justify-center text-gray-500"

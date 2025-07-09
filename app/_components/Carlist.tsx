@@ -135,7 +135,7 @@ export default async function CarList({ initialValues }: PageProps) {
               price: totalPrice,
               inclusions: [
                 ...car.inclusions,
-                `${chargeableDistance} km billed (${roundTripDistance} km actual round trip)`,
+                `${chargeableDistance} kms billed (${roundTripDistance} km actual round trip)`,
               ],
               exclusions: [
                 "Toll",
@@ -178,8 +178,21 @@ export default async function CarList({ initialValues }: PageProps) {
                   price: match.price,
                   inclusions: [
                     ...car.inclusions,
-                    `Includes ${match.distance} Km and ${match.time} hours`,
-                    `Extra: ₹${match.perkmextra_charge}/km`,
+                    `Includes ${match.distance} Kms and ${match.time} hours`,
+                    // `Extra: ₹${match.perkmextra_charge}/km`,
+                  ],
+                  exclusions: [
+                    `After 80 kms ${match.perkmextra_charge}/km will be charged `,
+                    `After 8 Hour ${match.per_hour_charge}rs/hour will be charged`,
+                    "Toll",
+                    "State Tax",
+                    "Parking",
+                    "Driver Night allowance between 10 pm to 6 am ",
+                  ],
+                  termscondition: [
+                    "Fare includes fixed KM and Hours limit. Extra KM or time will be chargeable.",
+                    "KM/Hour count will be from pick-up to pick-up location.",
+                    "Driving between 10 PM to 6:00 AM will attract night charges, payable to the driver.",
                   ],
                   distance: match.distance,
                 }
