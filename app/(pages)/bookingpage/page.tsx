@@ -36,8 +36,10 @@ interface Razorpay {
   open(): void;
 }
 
-interface Window {
-  Razorpay: new (options: RazorpayOptions) => Razorpay;
+declare global {
+  interface Window {
+    Razorpay: new (options: RazorpayOptions) => Razorpay;
+  }
 }
 
 export default function BookingPage() {
@@ -92,49 +94,55 @@ export default function BookingPage() {
   const handlePayment = async () => {
     const orderId = await createOrder();
 
+    const razorpayKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+
+    if (!razorpayKey) {
+      throw new Error("Missing NEXT_PUBLIC_RAZORPAY_KEY_ID env variable.");
+    }
+
     const options = {
-      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      key: razorpayKey,
       amount: parseFloat(price) * 100,
       currency: "INR",
       name: "Car Booking",
       description: "Trip Payment",
       order_id: orderId,
       handler: async function (response: RazorpayResponse) {
-  const res = await fetch("/api/verify", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      razorpayPaymentId: response.razorpay_payment_id,
-      razorpayOrderId: response.razorpay_order_id,
-      razorpaySignature: response.razorpay_signature,
-      booking: {
-        customerName: name,              // ✅ required
-        email,
-        phone,
-        pickupAddress,
-        dropAddress,
-        pickupCity: startLocation,       // ✅ required
-        destination: endLocation,        // ✅ required
-        pickupDate: date,
-        time: rawTime,
-        carType,
-        totalKm,
-        price,
-        inclusions,
-        exclusions,
-        termscondition,
-        type: "One Way",                 // ✅ default or from UI
-      },
-    }),
-  });
+        const res = await fetch("/api/verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            razorpayPaymentId: response.razorpay_payment_id,
+            razorpayOrderId: response.razorpay_order_id,
+            razorpaySignature: response.razorpay_signature,
+            booking: {
+              customerName: name, // ✅ required
+              email,
+              phone,
+              pickupAddress,
+              dropAddress,
+              pickupCity: startLocation, // ✅ required
+              destination: endLocation, // ✅ required
+              pickupDate: date,
+              time: rawTime,
+              carType,
+              totalKm,
+              price,
+              inclusions,
+              exclusions,
+              termscondition,
+              type: "One Way", // ✅ default or from UI
+            },
+          }),
+        });
 
-  const result = await res.json();
-  if (result.isOk) {
-    alert("Booking Confirmed ✅");
-  } else {
-    alert(result.message || "Payment failed ❌");
-  }
-},
+        const result = await res.json();
+        if (result.isOk) {
+          alert("Booking Confirmed ✅");
+        } else {
+          alert(result.message || "Payment failed ❌");
+        }
+      },
 
       prefill: { name, email, contact: phone },
       theme: { color: "#3399cc" },
@@ -213,7 +221,12 @@ export default function BookingPage() {
               </CardHeader>
               <CardContent className="space-y-2 text-sm md:text-base">
                 <p>
-                  <strong>Itinerary:</strong> {startLocation} {endLocation == "Not%20Available"?(<></>):(<>→ {endLocation}</>)}
+                  <strong>Itinerary:</strong> {startLocation}{" "}
+                  {endLocation == "Not%20Available" ? (
+                    <></>
+                  ) : (
+                    <>→ {endLocation}</>
+                  )}
                 </p>
                 <p>
                   <strong>Pickup:</strong> {formattedDate} at {formattedTime}
