@@ -276,50 +276,18 @@ const BookingsView = () => {
 
   useEffect(() => {
     const fetchBookings = async () => {
-      try {
-        const response = [
-          {
-            id: "BKG12345",
-            type: "Two Way",
-            pickupCity: "Delhi",
-            destinationCity: "Jaipur",
-            createdAt: "2024-06-27T09:30:00Z",
-            pickupDate: "2024-06-28T14:00:00Z",
-            customerName: "Rajesh Kumar",
-            customerPhone: "+91-9876543210",
-            status: "Confirmed",
-          },
-          {
-            id: "BKG12346",
-            type: "One Way",
-            pickupCity: "Delhi",
-            destinationCity: "Jaipur",
-            createdAt: "2024-06-27T09:30:00Z",
-            pickupDate: "2024-06-28T14:00:00Z",
-            customerName: "Rajesh Kumar",
-            customerPhone: "+91-9876543210",
-            status: "Confirmed",
-          },
-          {
-            id: "BKG12347",
-            type: "One Way",
-            pickupCity: "Delhi",
-            destinationCity: "Jaipur",
-            createdAt: "2024-06-27T09:30:00Z",
-            pickupDate: "2024-06-28T14:00:00Z",
-            customerName: "Rajesh Kumar",
-            customerPhone: "+91-9876543210",
-            status: "Confirmed",
-          },
-        ];
+  try {
+    const response = await fetch("/api/booking");
+    const json = await response.json();
+    console.log(json.data)
+    setBookings(json.data || []);
+  } catch (error) {
+    console.error("Error fetching bookings:", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
-        setBookings(response);
-      } catch (error) {
-        console.error("Error fetching bookings:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchBookings();
   }, []);
 
@@ -353,7 +321,7 @@ const BookingsView = () => {
 
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-200">
-          <thead className="bg-gray-100 text-xs sm:text-lg">
+          <thead className="bg-gray-100 text-xs sm:text-base">
             <tr>
               <th className="p-2 border text-center align-middle">
                 Booking ID
@@ -384,7 +352,7 @@ const BookingsView = () => {
               return [
                 <tr
                   key={`row-${index}`}
-                  className="odd:bg-white even:bg-gray-50 cursor-pointer hover:bg-gray-200 text-xs sm:text-lg"
+                  className="odd:bg-white even:bg-gray-50 cursor-pointer hover:bg-gray-200 text-xs sm:text-base"
                   onClick={() =>
                     setSelectedBooking(isSelected ? null : booking)
                   }

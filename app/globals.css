@@ -1,6 +1,11 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+svg[width="auto"] {
+  width: 1.5rem !important;
+}
+
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

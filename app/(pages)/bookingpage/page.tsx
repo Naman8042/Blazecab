@@ -1,121 +1,240 @@
 "use client";
-
+import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import Script from "next/script";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
-import { useSearchParams } from "next/navigation";
+
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
 
 export default function BookingPage() {
   const searchParams = useSearchParams();
 
+  // Extract search params
   const startLocation = searchParams.get("startLocation") || "";
   const endLocation = searchParams.get("endLocation") || "";
   const date = searchParams.get("date");
   const carType = searchParams.get("carType") || "";
   const totalKm = searchParams.get("totalKm") || "0";
   const price = searchParams.get("price") || "0";
+  const inclusions: string[] = JSON.parse(
+    searchParams.get("inclusions") || "[]"
+  );
+  const exclusions: string[] = JSON.parse(
+    searchParams.get("exclusions") || "[]"
+  );
+  const termscondition: string[] = JSON.parse(
+    searchParams.get("termscondition") || "[]"
+  );
+  const rawTime = searchParams.get("time") || "";
 
-  // Type-safe JSON parsing
-  const inclusions: string[] = JSON.parse(searchParams.get("inclusions") || "[]");
-  const exclusions: string[] = JSON.parse(searchParams.get("exclusions") || "[]");
-  const termscondition: string[] = JSON.parse(searchParams.get("termscondition") || "[]");
-
-  // Date formatting
   const formattedDate = date ? new Date(date).toLocaleDateString("en-US") : "";
+  const formattedTime = rawTime
+    ? new Date(Number(rawTime)).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      })
+    : "";
 
-const rawTime = searchParams.get("time") || "";
-const formattedTime = rawTime
-  ? new Date(Number(rawTime)).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    })
-  : "";
+  // Form state
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [pickupAddress, setPickupAddress] = useState("");
+  const [dropAddress, setDropAddress] = useState("");
 
+  // Create Razorpay order
+  const createOrder = async () => {
+    const res = await fetch("/api/order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount: parseFloat(price) * 100 }),
+    });
+    const data = await res.json();
+    return data.orderId;
+  };
 
+  // Handle payment
+  const handlePayment = async () => {
+    const orderId = await createOrder();
+
+    const options = {
+      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      amount: parseFloat(price) * 100,
+      currency: "INR",
+      name: "Car Booking",
+      description: "Trip Payment",
+      order_id: orderId,
+      handler: async function (response: any) {
+  const res = await fetch("/api/verify", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      razorpayPaymentId: response.razorpay_payment_id,
+      razorpayOrderId: response.razorpay_order_id,
+      razorpaySignature: response.razorpay_signature,
+      booking: {
+        customerName: name,              // ✅ required
+        email,
+        phone,
+        pickupAddress,
+        dropAddress,
+        pickupCity: startLocation,       // ✅ required
+        destination: endLocation,        // ✅ required
+        pickupDate: date,
+        time: rawTime,
+        carType,
+        totalKm,
+        price,
+        inclusions,
+        exclusions,
+        termscondition,
+        type: "One Way",                 // ✅ default or from UI
+      },
+    }),
+  });
+
+  const result = await res.json();
+  if (result.isOk) {
+    alert("Booking Confirmed ✅");
+  } else {
+    alert(result.message || "Payment failed ❌");
+  }
+},
+
+      prefill: { name, email, contact: phone },
+      theme: { color: "#3399cc" },
+    };
+
+    const razorpay = new window.Razorpay(options);
+    razorpay.open();
+  };
 
   return (
-    <div className="w-full sm:min-h-[89.75vh] flex items-center justify-center p-4">
-      <div className="max-w-7xl w-full flex flex-col md:flex-row gap-6">
-        {/* Left Form Section */}
-        <Card className="md:w-[58%] w-full shadow-lg rounded-lg bg-white flex flex-col justify-center">
-          <CardHeader>
-            <h2 className="text-2xl font-bold text-center">Contact & Pickup Details</h2>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="name" className="mb-1">Name</Label>
-                <Input id="name" placeholder="Enter your name here" />
-              </div>
-              <div>
-                <Label htmlFor="email" className="mb-1">Email</Label>
-                <Input id="email" placeholder="Enter your email here" type="email" />
-              </div>
-              <div>
-                <Label htmlFor="phone" className="mb-1">Mobile</Label>
-                <Input id="phone" placeholder="Enter your phone number here" type="tel" />
-              </div>
-              <div>
-                <Label htmlFor="pickup" className="mb-1">Pickup Address</Label>
-                <Input id="pickup" placeholder="Enter your pickup address" />
-              </div>
-              <div>
-                <Label htmlFor="drop" className="mb-1">Drop Address</Label>
-                <Input id="drop" placeholder="Enter your drop address" />
-              </div>
-              <Button className="w-full">PROCEED</Button>
-            </div>
-          </CardContent>
-        </Card>
+    <>
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" />
 
-        {/* Right Booking Summary Section */}
-        <div className="flex flex-col gap-4 justify-between w-full md:w-[39%] h-full">
-          <Card className="shadow-lg rounded-lg bg-white p-4 md:p-6 h-auto">
+      <div className="w-full sm:min-h-[89.75vh] flex items-center justify-center p-4">
+        <div className="max-w-7xl w-full flex flex-col md:flex-row gap-6">
+          {/* Left Form */}
+          <Card className="md:w-[58%] w-full shadow-lg bg-white">
             <CardHeader>
-              <h2 className="text-xl font-semibold text-center">YOUR BOOKING DETAILS</h2>
+              <h2 className="text-2xl font-bold text-center">
+                Contact & Pickup Details
+              </h2>
             </CardHeader>
-            <CardContent className="space-y-2 text-sm md:text-base">
-              <p><strong>Itinerary:</strong> {startLocation} {endLocation !== "Not%20Available" && ` → ${endLocation}`}</p>
-              <p><strong>Pickup Date and Time:</strong> {formattedDate} at {formattedTime}</p>
-              <p><strong>Car Type:</strong> {carType}</p>
-              <p><strong>KMs Included:</strong> {Math.floor(Number(totalKm))} Km</p>
-              <p><strong>Total Fare:</strong> ₹ {Math.floor(Number(price))}</p>
+            <CardContent>
+              <div className="space-y-4">
+                <div>
+                  <Label>Name</Label>
+                  <Input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label>Email</Label>
+                  <Input
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    type="email"
+                  />
+                </div>
+                <div>
+                  <Label>Phone</Label>
+                  <Input
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    type="tel"
+                  />
+                </div>
+                <div>
+                  <Label>Pickup Address</Label>
+                  <Input
+                    value={pickupAddress}
+                    onChange={(e) => setPickupAddress(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label>Drop Address</Label>
+                  <Input
+                    value={dropAddress}
+                    onChange={(e) => setDropAddress(e.target.value)}
+                  />
+                </div>
+                <Button onClick={handlePayment} className="w-full">
+                  PROCEED TO PAY
+                </Button>
+              </div>
             </CardContent>
           </Card>
 
-          {/* Tabs for Inclusions/Exclusions/T&C */}
-          <Card className="shadow-lg rounded-lg bg-white p-4 md:p-6 relative">
-            <Tabs defaultValue="inclusions">
-              <TabsList className="flex justify-between bg-gray-200 rounded-lg p-1 w-full text-xs md:text-sm">
-                <TabsTrigger value="inclusions">Inclusions</TabsTrigger>
-                <TabsTrigger value="exclusions">Exclusions</TabsTrigger>
-                <TabsTrigger value="tac">T&C</TabsTrigger>
-              </TabsList>
-
-              <CardContent className="mt-4 text-sm  max-h-64 overflow-y-auto space-y-2">
-                <TabsContent value="inclusions">
-                  {inclusions.map((item: string, index: number) => (
-                    <p key={index}>✅ {item}</p>
-                  ))}
-                </TabsContent>
-                <TabsContent value="exclusions">
-                  {exclusions.map((item: string, index: number) => (
-                    <p key={index}>❌ {item}</p>
-                  ))}
-                </TabsContent>
-                <TabsContent value="tac">
-                  {termscondition.map((item: string, index: number) => (
-                    <p key={index}>📜 {item}</p>
-                  ))}
-                </TabsContent>
+          {/* Right Booking Summary */}
+          <div className="flex flex-col gap-4 w-full md:w-[39%]">
+            <Card className="shadow-lg bg-white p-4 md:p-6">
+              <CardHeader>
+                <h2 className="text-xl font-semibold text-center">
+                  YOUR BOOKING DETAILS
+                </h2>
+              </CardHeader>
+              <CardContent className="space-y-2 text-sm md:text-base">
+                <p>
+                  <strong>Itinerary:</strong> {startLocation} {endLocation == "Not%20Available"?(<></>):(<>→ {endLocation}</>)}
+                </p>
+                <p>
+                  <strong>Pickup:</strong> {formattedDate} at {formattedTime}
+                </p>
+                <p>
+                  <strong>Car Type:</strong> {carType}
+                </p>
+                <p>
+                  <strong>KMs Included:</strong> {Math.floor(Number(totalKm))}{" "}
+                  Km
+                </p>
+                <p>
+                  <strong>Total Fare:</strong> ₹ {Math.floor(Number(price))}
+                </p>
               </CardContent>
-            </Tabs>
-          </Card>
+            </Card>
+
+            <Card className="shadow-lg bg-white p-4 md:p-6 relative">
+              <Tabs defaultValue="inclusions">
+                <TabsList className="flex justify-between bg-gray-200 rounded-lg p-1 w-full text-xs md:text-sm">
+                  <TabsTrigger value="inclusions">Inclusions</TabsTrigger>
+                  <TabsTrigger value="exclusions">Exclusions</TabsTrigger>
+                  <TabsTrigger value="tac">T&C</TabsTrigger>
+                </TabsList>
+
+                <CardContent className="mt-4 text-sm max-h-64 overflow-y-auto space-y-2">
+                  <TabsContent value="inclusions">
+                    {inclusions.map((item, idx) => (
+                      <p key={idx}>✅ {item}</p>
+                    ))}
+                  </TabsContent>
+                  <TabsContent value="exclusions">
+                    {exclusions.map((item, idx) => (
+                      <p key={idx}>❌ {item}</p>
+                    ))}
+                  </TabsContent>
+                  <TabsContent value="tac">
+                    {termscondition.map((item, idx) => (
+                      <p key={idx}>📜 {item}</p>
+                    ))}
+                  </TabsContent>
+                </CardContent>
+              </Tabs>
+            </Card>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
