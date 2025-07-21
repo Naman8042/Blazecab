@@ -1,11 +1,17 @@
 import Razorpay from "razorpay";
 import { NextRequest, NextResponse } from "next/server";
 
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID!,
-  key_secret: process.env.RAZORPAY_KEY_SECRET!,
-});
+const razorpayKeyId = process.env.RAZORPAY_KEY_ID;
+const razorpayKeySecret = process.env.RAZORPAY_KEY_SECRET;
 
+if (!razorpayKeyId || !razorpayKeySecret) {
+  throw new Error("Missing Razorpay environment variables. Please set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET.");
+}
+
+const razorpay = new Razorpay({
+  key_id: razorpayKeyId,
+  key_secret: razorpayKeySecret,
+});
 export async function POST(req: NextRequest) {
  
   try {
