@@ -2,6 +2,18 @@ import { connect } from "@/dbConfig/dbConfig";
 import Booking from "@/models/Booking";
 import { NextResponse } from "next/server";
 
+interface BookingDocument {
+  _id:string,  
+  type: string;
+  pickupCity: string;
+  destination: string;
+  createdAt: Date;
+  pickupDate: Date;
+  customerName: string;
+  phone: string;
+  status: string;
+}
+
 export async function GET() {
   try {
     await connect();
@@ -14,7 +26,7 @@ export async function GET() {
       pickupDate: { $gte: now }
     }).sort({ pickupDate: 1 });
 
-    const formatted = bookings.map((b: any) => ({
+    const formatted = bookings.map((b: BookingDocument) => ({
       id: b._id.toString(),
       type: b.type,
       pickupCity: b.pickupCity,

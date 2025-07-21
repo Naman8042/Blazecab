@@ -8,10 +8,36 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 
-declare global {
-  interface Window {
-    Razorpay: any;
-  }
+interface RazorpayResponse {
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
+}
+
+interface RazorpayOptions {
+  key: string;
+  amount: number;
+  currency: string;
+  name: string;
+  description: string;
+  order_id: string;
+  handler: (response: RazorpayResponse) => void;
+  prefill: {
+    name: string;
+    email: string;
+    contact: string;
+  };
+  theme: {
+    color: string;
+  };
+}
+
+interface Razorpay {
+  open(): void;
+}
+
+interface Window {
+  Razorpay: new (options: RazorpayOptions) => Razorpay;
 }
 
 export default function BookingPage() {
@@ -73,7 +99,7 @@ export default function BookingPage() {
       name: "Car Booking",
       description: "Trip Payment",
       order_id: orderId,
-      handler: async function (response: any) {
+      handler: async function (response: RazorpayResponse) {
   const res = await fetch("/api/verify", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
