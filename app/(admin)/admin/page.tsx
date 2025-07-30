@@ -257,18 +257,18 @@ function CarsView() {
   );
 }
 
-interface Booking {
-  id: string;
+export interface Booking {
+  id:string
   type: string;
   pickupCity: string;
-  destinationCity: string;
-  createdAt: string;
-  pickupDate: string;
+  destination: string;
+  createdAt: Date;
+  pickupDate: Date;
   customerName: string;
-  customerPhone: string;
+  phone: string;
   status: string;
+  bookingId: string; 
 }
-
 const BookingsView = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
@@ -358,7 +358,7 @@ const BookingsView = () => {
                   }
                 >
                   <td className="p-2 border text-[#6aa4e0] underline text-center align-middle">
-                    {booking.id}
+                    {booking.bookingId}
                   </td>
                   <td className="p-2 border text-center align-middle">
                     {booking.type}
@@ -367,7 +367,7 @@ const BookingsView = () => {
                     {booking.pickupCity}
                   </td>
                   <td className="p-2 border text-center align-middle">
-                    {booking.destinationCity}
+                    {booking.destination}
                   </td>
                   <td className="p-2 border text-center align-middle">
                     {new Date(booking.createdAt).toLocaleDateString()}
@@ -379,7 +379,7 @@ const BookingsView = () => {
                     {booking.customerName}
                   </td>
                   <td className="p-2 border text-center align-middle">
-                    {booking.customerPhone}
+                    {booking.phone}
                   </td>
                   <td className="p-2 border text-center align-middle">
                     {getStatusBadge(booking.status)}
@@ -391,7 +391,7 @@ const BookingsView = () => {
                       <div className="text-xs sm:text-lg">
                         <h3 className="font-bold mb-2">Booking Details</h3>
                         <p>
-                          <strong>Booking ID:</strong> {booking.id}
+                          <strong>Booking ID:</strong> {booking.bookingId}
                         </p>
                         <p>
                           <strong>Type:</strong> {booking.type}

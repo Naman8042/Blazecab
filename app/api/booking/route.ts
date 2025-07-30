@@ -12,6 +12,7 @@ interface BookingDocument {
   customerName: string;
   phone: string;
   status: string;
+  bookingId:string
 }
 
 export async function GET() {
@@ -30,12 +31,13 @@ export async function GET() {
       id: b._id.toString(),
       type: b.type,
       pickupCity: b.pickupCity,
-      destinationCity: b.destination,
+      destination: b.destination,
       createdAt: b.createdAt,
       pickupDate: b.pickupDate,
       customerName: b.customerName,
-      customerPhone: b.phone,
+      phone: b.phone,
       status: b.status,
+      bookingId:b.bookingId
     }));
 
     return NextResponse.json({ success: true, data: formatted });

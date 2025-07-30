@@ -26,6 +26,7 @@ export default async function Page(props: BookingPageProps): Promise<JSX.Element
   const endLocation = (resolvedSearchParams.endLocation || "") as string;
   // For 'date', it can be null, so cast to 'string | null'
   const date = (resolvedSearchParams.date || null) as string | null;
+  const rideType = (resolvedSearchParams.rideType || null) as string | null;
   const carType = (resolvedSearchParams.carType || "") as string;
   const totalKm = (resolvedSearchParams.totalKm || "0") as string;
   const price = (resolvedSearchParams.price || "0") as string;
@@ -65,6 +66,7 @@ export default async function Page(props: BookingPageProps): Promise<JSX.Element
         endLocation={endLocation}
         date={date}
         carType={carType}
+        rideType={rideType}
         totalKm={totalKm}
         price={price}
         inclusions={inclusions}

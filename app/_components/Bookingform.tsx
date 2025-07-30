@@ -1,7 +1,6 @@
-// components/BookingFormClient.tsx
-"use client"; // This directive marks it as a Client Component
+"use client";
 
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Script from "next/script";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -49,6 +48,7 @@ interface BookingFormClientProps {
   endLocation: string;
   date: string | null;
   carType: string;
+  rideType: string | null;
   totalKm: string;
   price: string;
   inclusions: string[];
@@ -67,35 +67,59 @@ export function BookingFormClient({
   totalKm,
   price,
   inclusions,
+  rideType,
   exclusions,
   termscondition,
   rawTime,
   formattedDate,
   formattedTime,
 }: BookingFormClientProps) {
-  // Form state
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [pickupAddress, setPickupAddress] = useState("");
   const [dropAddress, setDropAddress] = useState("");
+  const formFields = [
+    { id: "name", label: "Name", type: "text", value: name, onChange: setName, required: true },
+    { id: "email", label: "Email", type: "email", value: email, onChange: setEmail, required: true },
+    { id: "phone", label: "Phone", type: "tel", value: phone, onChange: setPhone, required: true },
+    { id: "pickupAddress", label: "Pickup Address", type: "text", value: pickupAddress, onChange: setPickupAddress, required: true },
+    { id: "dropAddress", label: "Drop Address", type: "text", value: dropAddress, onChange: setDropAddress, required: false }, // Drop address is not always required
+  ];
 
-  // New state for payment option selection
+
   const [paymentOption, setPaymentOption] = useState<"full" | "partial">(
     "full"
-  ); // 'full' or 'partial'
+  );
 
   const fullPrice = parseFloat(price);
-  const partialPrice = fullPrice * 0.3; // 30% of the total price
 
-  // Create Razorpay order - This should ideally be an API call
-  // For a Server Component, you'd trigger a Server Action or API Route here.
-  // We're keeping it within the Client Component for direct Razorpay integration.
+  const { partialPercentage, partialAmount } = useMemo(() => {
+    let percentage = 0;
+    if (rideType === "Round Trip") {
+      percentage = 0.3;
+    } else if (rideType === "Local") {
+      percentage = 0.2;
+    }
+    return {
+      partialPercentage: percentage * 100,
+      partialAmount: fullPrice * percentage,
+    };
+  }, [rideType, fullPrice]);
+
+  useEffect(() => {
+    // If rideType changes to "One Way" or any type where partial isn't allowed,
+    // force paymentOption to "full".
+    if (rideType === "One Way" && paymentOption === "partial") {
+      setPaymentOption("full");
+    }
+  }, [rideType, paymentOption]);
+
   const createOrder = async (amount: number) => {
     const res = await fetch("/api/order", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount: amount * 100 }), // Amount in paisa
+      body: JSON.stringify({ amount: amount * 100 }),
     });
     const data = await res.json();
     if (!res.ok) {
@@ -104,15 +128,15 @@ export function BookingFormClient({
     return data.orderId;
   };
 
-  // Handle payment
   const handlePayment = async () => {
-    // Basic form validation
     if (!name || !email || !phone || !pickupAddress) {
       toast.error("Please fill in all required contact and pickup details.");
       return;
     }
 
-    const amountToPay = paymentOption === "full" ? fullPrice : partialPrice;
+    // Determine the amount to pay based on the selected option or forced full for One Way
+    const amountToPay = rideType === "One Way" ? fullPrice : (paymentOption === "full" ? fullPrice : partialAmount);
+
 
     try {
       const orderId = await createOrder(amountToPay);
@@ -125,7 +149,7 @@ export function BookingFormClient({
 
       const options: RazorpayOptions = {
         key: razorpayKey,
-        amount: amountToPay * 100, // Amount in paisa
+        amount: amountToPay * 100,
         currency: "INR",
         name: "Car Booking",
         description: "Trip Payment",
@@ -134,10 +158,11 @@ export function BookingFormClient({
           let bookingStatus = "";
           let paymentStatus = "";
 
-          if (paymentOption === "full") {
+          // Payment status logic for backend
+          if (rideType === "One Way" || paymentOption === "full") {
             bookingStatus = "Confirmed";
             paymentStatus = "Paid Full";
-          } else {
+          } else { // Partial payment logic for Round Trip or Local
             bookingStatus = "Advance Paid";
             paymentStatus = "Partial Paid";
           }
@@ -161,15 +186,17 @@ export function BookingFormClient({
                 time: rawTime,
                 carType,
                 totalKm,
-                price: fullPrice, // Always store the full price in booking
-                amountPaid: amountToPay, // Store the amount actually paid
+                price: fullPrice,
+                amountPaid: amountToPay,
                 inclusions,
                 exclusions,
                 termscondition,
-                type: "One Way",
-                paymentOption: paymentOption, // 'full' or 'partial'
-                bookingStatus: bookingStatus, // 'Confirmed' or 'Advance Paid'
-                paymentStatus: paymentStatus, // 'Paid Full' or 'Partial Paid'
+                type: rideType,
+                // Ensure paymentOption correctly reflects the actual choice for backend
+                // For One Way, it's always 'full', even if the button wasn't shown.
+                paymentOption: rideType === "One Way" ? "full" : paymentOption,
+                bookingStatus: bookingStatus,
+                paymentStatus: paymentStatus,
               },
             }),
           });
@@ -177,9 +204,8 @@ export function BookingFormClient({
           const result = await res.json();
           if (result.isOk) {
             toast.success(`Booking ${bookingStatus} ✅`);
-            // Optionally redirect or show success message
           } else {
-            toast.error(result.message || "Payment failed ❌"); // Changed to toast.error here
+            toast.error(result.message || "Payment failed ❌");
           }
         },
         prefill: { name, email, contact: phone },
@@ -188,8 +214,7 @@ export function BookingFormClient({
 
       const razorpay = new window.Razorpay(options);
       razorpay.open();
-    } catch (error) { // Changed 'error: any' to 'error' (type unknown by default in modern TS)
-      // Type guard to safely access error properties
+    } catch (error) {
       if (error instanceof Error) {
         toast.error(`Payment initiation failed: ${error.message}`);
       } else {
@@ -200,13 +225,10 @@ export function BookingFormClient({
 
   return (
     <>
-      {/* Razorpay script is typically loaded once, often in _app.tsx or layout.tsx
-          but for simplicity, keeping it here. It's safe in a Client Component. */}
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
 
       <div className="w-full sm:min-h-[89.75vh] flex items-center justify-center p-4">
         <div className="max-w-7xl w-full flex flex-col md:flex-row gap-6">
-          {/* Left Form */}
           <Card className="md:w-[58%] w-full shadow-lg bg-white">
             <CardHeader>
               <h2 className="text-2xl font-bold text-center">
@@ -215,77 +237,51 @@ export function BookingFormClient({
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div>
-                  <Label htmlFor="name">Name</Label>
-                  <Input
-                    id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    type="email"
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="phone">Phone</Label>
-                  <Input
-                    id="phone"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    type="tel"
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="pickupAddress">Pickup Address</Label>
-                  <Input
-                    id="pickupAddress"
-                    value={pickupAddress}
-                    onChange={(e) => setPickupAddress(e.target.value)}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="dropAddress">Drop Address</Label>
-                  <Input
-                    id="dropAddress"
-                    value={dropAddress}
-                    onChange={(e) => setDropAddress(e.target.value)}
-                  />
-                </div>
-
-                {/* Payment Options */}
-                <div className="pt-4">
-                  <h3 className="text-lg font-semibold mb-2">
-                    Select Payment Option
-                  </h3>
-                  <div className="flex gap-4">
-                    <Button
-                      variant={paymentOption === "full" ? "default" : "outline"}
-                      onClick={() => setPaymentOption("full")}
-                      className="flex-1"
-                    >
-                      Pay Full (₹{Math.floor(fullPrice)})
-                    </Button>
-                    <Button
-                      variant={
-                        paymentOption === "partial" ? "default" : "outline"
-                      }
-                      onClick={() => setPaymentOption("partial")}
-                      className="flex-1"
-                    >
-                      Pay 30% Now (₹{Math.floor(partialPrice)})
-                    </Button>
+               {formFields.map((field) => (
+                  <div key={field.id}>
+                    <Label className="mb-1" htmlFor={field.id}>{field.label}</Label>
+                    <Input
+                      id={field.id}
+                      value={field.value}
+                      onChange={(e) => field.onChange(e.target.value)}
+                      type={field.type}
+                      required={field.required}
+                    />
                   </div>
-                </div>
+                ))}
+
+                {/* Conditional Payment Options Section */}
+                {rideType !== "One Way" ? ( // Only show payment options for Round Trip or Local
+                  <div className="pt-4">
+                    <h3 className="text-lg font-semibold mb-2">
+                      Select Payment Option
+                    </h3>
+                    <div className="flex gap-4 md:flex-row flex-col">
+                      <Button
+                        variant={paymentOption === "full" ? "default" : "outline"}
+                        onClick={() => setPaymentOption("full")}
+                        className="flex-1"
+                      >
+                        Pay Full (₹{Math.floor(fullPrice)})
+                      </Button>
+                      {partialPercentage > 0 && ( // Still only show partial if percentage > 0
+                        <Button
+                          variant={
+                            paymentOption === "partial" ? "default" : "outline"
+                          }
+                          onClick={() => setPaymentOption("partial")}
+                          className="flex-1"
+                        >
+                          Pay {Math.floor(partialPercentage)}% Now (₹
+                          {Math.floor(partialAmount)})
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  // For "One Way", display a message that full payment is required
+                  <></>
+                )}
 
                 <Button onClick={handlePayment} className="w-full mt-6">
                   PROCEED TO PAY
@@ -294,7 +290,7 @@ export function BookingFormClient({
             </CardContent>
           </Card>
 
-          {/* Right Booking Summary (can remain in client component for simplicity, or be a separate static server component) */}
+          {/* Right Booking Summary */}
           <div className="flex flex-col gap-4 w-full md:w-[39%]">
             <Card className="shadow-lg bg-white p-4 md:p-6">
               <CardHeader>
@@ -303,6 +299,9 @@ export function BookingFormClient({
                 </h2>
               </CardHeader>
               <CardContent className="space-y-2 text-sm md:text-base">
+                <p>
+                  <strong>Ride Type:</strong> {rideType}
+                </p>
                 <p>
                   <strong>Itinerary:</strong> {startLocation}{" "}
                   {endLocation === "Not%20Available" ? (
@@ -324,12 +323,7 @@ export function BookingFormClient({
                 <p>
                   <strong>Total Fare:</strong> ₹ {Math.floor(fullPrice)}
                 </p>
-                {paymentOption === "partial" && (
-                  <p className="text-blue-600 font-semibold">
-                    <strong>Amount to Pay Now:</strong> ₹
-                    {Math.floor(partialPrice)}
-                  </p>
-                )}
+                
               </CardContent>
             </Card>
 

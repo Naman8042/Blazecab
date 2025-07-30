@@ -72,6 +72,7 @@ const CarCategoryCard = ({
                 carType: name,
                 totalKm: distance?.toFixed(2) || "0",
                 price: price.toString(),
+                rideType:initialValues.rideType,
                 inclusions: JSON.stringify(inclusions),
                 exclusions: JSON.stringify(exclusions),
                 termscondition: JSON.stringify(termscondition),
