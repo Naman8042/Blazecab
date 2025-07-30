@@ -7,14 +7,20 @@ import { JSX } from "react";
 import { Suspense } from "react";
 import Loading from "../carride/loading"; // Adjust path if loading.tsx is elsewhere
 
+// Define the props for your Server Component.
+// CRITICAL FIX: The 'searchParams' property itself is expected to be a Promise.
+interface BookingPageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
 // Your page component, accepting 'props' with the specified searchParams type
-export default async function Page(props: { searchParams: { [key: string]: string | string[] | undefined } }): Promise<JSX.Element> {
-  // Await searchParams to resolve the Next.js dynamic API warning.
-  // This ensures all search parameter values are ready before use.
+export default async function Page(props: BookingPageProps): Promise<JSX.Element> {
+  // Await searchParams to resolve the Promise.
+  // This is now explicitly typed as a Promise, matching the error's expectation.
   const resolvedSearchParams = await props.searchParams;
 
   // Extract and parse search parameters from the resolved object.
-  // CRITICAL FIX: Add 'as string' to cast the value, ensuring it's treated as a single string.
+  // Add 'as string' to cast the value, ensuring it's treated as a single string.
   // The '|| ""' provides a default empty string if the param is undefined.
   const startLocation = (resolvedSearchParams.startLocation || "") as string;
   const endLocation = (resolvedSearchParams.endLocation || "") as string;
@@ -25,7 +31,6 @@ export default async function Page(props: { searchParams: { [key: string]: strin
   const price = (resolvedSearchParams.price || "0") as string;
 
   // Safely parse JSON strings for arrays, providing default empty arrays.
-  // No change needed here as JSON.parse expects string.
   const inclusions: string[] = JSON.parse(
     (resolvedSearchParams.inclusions || "[]") as string
   );
