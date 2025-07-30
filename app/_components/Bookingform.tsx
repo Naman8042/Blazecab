@@ -304,10 +304,10 @@ export function BookingFormClient({
                 </p>
                 <p>
                   <strong>Itinerary:</strong> {startLocation}{" "}
-                  {endLocation === "Not%20Available" ? (
+                  {endLocation === "Not Available" ? (
                     <></>
                   ) : (
-                    <>→ {decodeURIComponent(endLocation)}</>
+                    <>→ endLocation</>
                   )}
                 </p>
                 <p>
