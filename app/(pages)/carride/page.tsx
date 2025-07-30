@@ -1,51 +1,51 @@
 import { Suspense } from "react";
 import { JSX } from "react";
 import Editcar from "@/app/_components/Editcar";
-import Loading from "../loading";
+import Loading from "./loading";
 import CarList from "@/app/_components/Carlist";
 
-function restoreISODate(dateStr: string) {
+function restoreISODate(dateStr: string | null) { // dateStr can be null now
   if (!dateStr) return null;
   // Replace the dashes in the time portion (HH-mm-ss) with colons (HH:mm:ss)
   return dateStr.replace(/T(\d{2})-(\d{2})-(\d{2})/, "T$1:$2:$3");
 }
 
-type Params = Promise<{ slug: string }>;
+// Updated props type to include searchParams
+export default async function Page(props: { searchParams: { [key: string]: string | string[] | undefined } }): Promise<JSX.Element> {
+  const { searchParams } = await props;
 
-export default async function Page(props: { params: Params }): Promise<JSX.Element> {
-  const { slug } = await props.params;
-  
-  const [
-    rideTypeRaw = "",
-    pickupLocation = "",
-    dropoffLocation = "",
-    pickupDate = "",
-    pickupTime = "",
-    dropoffDate = ""
-  ] = slug;
+  // Accessing query parameters directly
+  const rideTypeRaw = searchParams.rideType as string || "";
+  const pickupLocation = searchParams.pickupLocation as string || "";
+  const dropoffLocation = searchParams.dropoffLocation as string || "";
+  const pickupDate = searchParams.pickupDate as string || "";
+  const pickupTime = searchParams.pickupTime as string || ""; // This will be a string representing milliseconds
+  const dropoffDate = searchParams.dropoffDate as string || "";
 
   const rideType = rideTypeRaw.replace(/-/g, " ");
-  
+
   // Date parsing
   const restoredPickupDate = restoreISODate(pickupDate);
   const pickupDateUpdated = restoredPickupDate ? new Date(restoredPickupDate) : undefined;
-  
+
   const restoreddropOffDate = restoreISODate(dropoffDate);
   const dropOffDateUpdated = restoreddropOffDate ? new Date(restoreddropOffDate) : undefined;
-  
-  const rawTime = new Date(Number(pickupTime));
-  console.log(rawTime)
+
+  // Ensure pickupTime is a valid number before converting to Date
+  const rawTime = pickupTime ? new Date(Number(pickupTime)) : undefined;
+  console.log("Parsed rawTime:", rawTime); // Log to check if parsing is correct
 
   const initialValues = {
     pickupLocation,
     dropoffLocation,
     pickupDateUpdated,
-    pickupTime: rawTime, 
+    pickupTime: rawTime, // rawTime is already a Date object or undefined
     dropOffDateUpdated,
     rideType,
   };
-  
-  console.log(initialValues)
+
+  console.log("Initial Values:", initialValues); // Log to verify all values
+
   const formattedDate = initialValues.pickupDateUpdated?.toLocaleDateString() || null;
 
   return (

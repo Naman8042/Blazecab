@@ -1,6 +1,7 @@
 "use client";
 import { useState, FormEvent, Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
+import {toast} from 'react-hot-toast'
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -79,40 +80,78 @@ export const CarRentalSearch = ({
 
   const router = useRouter();
 
-  const onNavigateHandler = (e: FormEvent) => {
+ const onNavigateHandler = (e: FormEvent) => {
     e.preventDefault();
+
+    // --- Validation Logic ---
+    let isValid = true;
+    let errorMessage = "";
+
+    if (!rideType) {
+      errorMessage = "Please select a ride type.";
+      isValid = false;
+    } else if (!formData.pickupLocation.trim()) {
+      errorMessage = "Pickup location cannot be empty.";
+      isValid = false;
+    } else if (rideType !== "Local" && !formData.dropoffLocation.trim()) {
+      // dropoffLocation is required if not "Local"
+      errorMessage = "Dropoff location cannot be empty for this ride type.";
+      isValid = false;
+    } else if (!formData.pickupDate) {
+      errorMessage = "Please select a pickup date.";
+      isValid = false;
+    } else if (!formData.pickupTime) {
+      errorMessage = "Please select a pickup time.";
+      isValid = false;
+    } else if (rideType === "Round Trip" && !formData.dropoffDate) {
+      // dropoffDate is required for "Round Trip"
+      errorMessage = "Please select a dropoff date for round trip.";
+      isValid = false;
+    }
+
+    if (!isValid) {
+      toast.error(errorMessage);
+      return; // Stop the function execution if validation fails
+    }
+    // --- End Validation Logic ---
+
 
     if (showForm && typeof setShowForm === "function") {
       setShowForm(!showForm);
     }
 
-    const safeRideType = (rideType || "").replace(/\s+/g, "-");
-    const safePickupLocation = formData.pickupLocation || "";
-    const safeDropoffLocation = formData.dropoffLocation || "";
+    const queryParams = new URLSearchParams();
 
-    const pathSegments = [safeRideType, safePickupLocation];
+    // Add rideType (already validated)
+    queryParams.append("rideType", rideType.replace(/\s+/g, "-"));
 
-    if (rideType !== "Local" && safeDropoffLocation) {
-      pathSegments.push(safeDropoffLocation);
-    } else {
-      pathSegments.push("Not Available");
+    // Add pickupLocation (already validated)
+    queryParams.append("pickupLocation", formData.pickupLocation);
+
+    // Add dropoffLocation (conditional based on rideType, already validated)
+    if (rideType !== "Local" && formData.dropoffLocation) {
+      queryParams.append("dropoffLocation", formData.dropoffLocation);
+    } else if (rideType === "Local") {
+      queryParams.append("dropoffLocation", "Not Available");
     }
 
-    if (formData.pickupDate) {
-      pathSegments.push(formData.pickupDate.toISOString().replace(/:/g, "-"));
-    }
 
-    if (formData.pickupTime) {
-      pathSegments.push(formData.pickupTime.getTime().toString());
-    }
+    // Add pickupDate (already validated)
+    queryParams.append("pickupDate", formData.pickupDate.toISOString().replace(/:/g, "-"));
+
+    // Add pickupTime (already validated)
+    queryParams.append("pickupTime", formData.pickupTime.getTime().toString());
+
+    // Add dropoffDate (only for "Round Trip", already validated)
     if (rideType === "Round Trip" && formData.dropoffDate) {
-      pathSegments.push(formData.dropoffDate.toISOString().replace(/:/g, "-"));
+      queryParams.append("dropoffDate", formData.dropoffDate.toISOString().replace(/:/g, "-"));
     }
-    console.log(pathSegments);
-    const url = "/carride/" + pathSegments.map(encodeURIComponent).join("/");
 
+    const url = `/carride?${queryParams.toString()}`;
+    console.log("Navigating to URL:", url);
     router.push(url);
   };
+
 
   const handleDateChange = (date: Date | null, field: keyof FormData) => {
     if (date) {

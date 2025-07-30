@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
       ...booking,
       paymentId: razorpayPaymentId,
       amountPaid: parseFloat(booking.amount),
-      status:"Booked"
+      status:booking.paymentStatus
     });
 
     return NextResponse.json({ isOk: true, booking: saved }); // ✅ fix missing return
