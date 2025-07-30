@@ -179,7 +179,7 @@ export function BookingFormClient({
             toast.success(`Booking ${bookingStatus} ✅`);
             // Optionally redirect or show success message
           } else {
-            toast.success(result.message || "Payment failed ❌");
+            toast.error(result.message || "Payment failed ❌"); // Changed to toast.error here
           }
         },
         prefill: { name, email, contact: phone },
@@ -188,8 +188,13 @@ export function BookingFormClient({
 
       const razorpay = new window.Razorpay(options);
       razorpay.open();
-    } catch (error: any) {
-      toast.error(`Payment initiation failed: ${error.message}`);
+    } catch (error) { // Changed 'error: any' to 'error' (type unknown by default in modern TS)
+      // Type guard to safely access error properties
+      if (error instanceof Error) {
+        toast.error(`Payment initiation failed: ${error.message}`);
+      } else {
+        toast.error("An unknown error occurred during payment initiation.");
+      }
     }
   };
 
