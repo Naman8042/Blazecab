@@ -401,7 +401,7 @@ const BookingsView = () => {
                         </p>
                         <p>
                           <strong>Destination:</strong>{" "}
-                          {booking.destinationCity}
+                          {booking.destination}
                         </p>
                         <p>
                           <strong>Created At:</strong>{" "}
@@ -415,7 +415,7 @@ const BookingsView = () => {
                           <strong>Customer Name:</strong> {booking.customerName}
                         </p>
                         <p>
-                          <strong>Phone:</strong> {booking.customerPhone}
+                          <strong>Phone:</strong> {booking.phone}
                         </p>
                         <p>
                           <strong>Status:</strong> {booking.status}
