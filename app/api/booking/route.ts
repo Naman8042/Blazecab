@@ -12,6 +12,7 @@ interface BookingDocument {
   customerName: string;
   phone: string;
   status: string;
+  email:string;
   bookingId:string
 }
 
@@ -35,6 +36,7 @@ export async function GET() {
       createdAt: b.createdAt,
       pickupDate: b.pickupDate,
       customerName: b.customerName,
+      email:b.email,
       phone: b.phone,
       status: b.status,
       bookingId:b.bookingId

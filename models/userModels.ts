@@ -6,17 +6,17 @@ const userSchema = new mongoose.Schema({
     unique: true,
     required: [true, "Please provide an email"],
   },
-  phone:{
+  userName:{
     type:String
   },
-  // password: {
-  //   type: String,
-  //   // required: [true, "Please provide a password"],
-  // },
-  isAdmin: {
-    type: Boolean,
-    default: false,
+  password: {
+    type: String,
+    // required: [true, "Please provide a password"],
   },
+  // isAdmin: {
+  //   type: Boolean,
+  //   default: false,
+  // },
 });
 
 // Use capitalized model name "User" for clarity and convention

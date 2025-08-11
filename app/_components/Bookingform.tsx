@@ -45,7 +45,7 @@ declare global {
 
 interface BookingFormClientProps {
   startLocation: string;
-  endLocation: string;
+  endLocation: string; // This will still be URL-encoded like "Not%20Available"
   date: string | null;
   carType: string;
   rideType: string | null;
@@ -74,19 +74,56 @@ export function BookingFormClient({
   formattedDate,
   formattedTime,
 }: BookingFormClientProps) {
+  // Decode endLocation once at the top of the component for consistent display logic
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [pickupAddress, setPickupAddress] = useState("");
   const [dropAddress, setDropAddress] = useState("");
-  const formFields = [
-    { id: "name", label: "Name", type: "text", value: name, onChange: setName, required: true },
-    { id: "email", label: "Email", type: "email", value: email, onChange: setEmail, required: true },
-    { id: "phone", label: "Phone", type: "tel", value: phone, onChange: setPhone, required: true },
-    { id: "pickupAddress", label: "Pickup Address", type: "text", value: pickupAddress, onChange: setPickupAddress, required: true },
-    { id: "dropAddress", label: "Drop Address", type: "text", value: dropAddress, onChange: setDropAddress, required: false }, // Drop address is not always required
-  ];
 
+  const formFields = [
+    {
+      id: "name",
+      label: "Name",
+      type: "text",
+      value: name,
+      onChange: setName,
+      required: true,
+    },
+    {
+      id: "email",
+      label: "Email",
+      type: "email",
+      value: email,
+      onChange: setEmail,
+      required: true,
+    },
+    {
+      id: "phone",
+      label: "Phone",
+      type: "tel",
+      value: phone,
+      onChange: setPhone,
+      required: true,
+    },
+    {
+      id: "pickupAddress",
+      label: "Pickup Address",
+      type: "text",
+      value: pickupAddress,
+      onChange: setPickupAddress,
+      required: true,
+    },
+    {
+      id: "dropAddress",
+      label: "Drop Address",
+      type: "text",
+      value: dropAddress,
+      onChange: setDropAddress,
+      required: false,
+    },
+  ];
 
   const [paymentOption, setPaymentOption] = useState<"full" | "partial">(
     "full"
@@ -96,10 +133,11 @@ export function BookingFormClient({
 
   const { partialPercentage, partialAmount } = useMemo(() => {
     let percentage = 0;
-    if (rideType === "Round Trip") {
-      percentage = 0.3;
+    // Updated logic: One Way and Round Trip are 30%
+    if (rideType === "Round Trip" || rideType === "One Way") {
+      percentage = 0.3; // 30%
     } else if (rideType === "Local") {
-      percentage = 0.2;
+      percentage = 0.2; // 20%
     }
     return {
       partialPercentage: percentage * 100,
@@ -107,13 +145,13 @@ export function BookingFormClient({
     };
   }, [rideType, fullPrice]);
 
+  // Keep this useEffect. It ensures if a rideType change makes partial payment 0% (e.g., if you later add a type that doesn't allow it),
+  // the paymentOption automatically reverts to 'full'.
   useEffect(() => {
-    // If rideType changes to "One Way" or any type where partial isn't allowed,
-    // force paymentOption to "full".
-    if (rideType === "One Way" && paymentOption === "partial") {
+    if (partialPercentage === 0 && paymentOption === "partial") {
       setPaymentOption("full");
     }
-  }, [rideType, paymentOption]);
+  }, [partialPercentage, paymentOption]);
 
   const createOrder = async (amount: number) => {
     const res = await fetch("/api/order", {
@@ -134,9 +172,9 @@ export function BookingFormClient({
       return;
     }
 
-    // Determine the amount to pay based on the selected option or forced full for One Way
-    const amountToPay = rideType === "One Way" ? fullPrice : (paymentOption === "full" ? fullPrice : partialAmount);
-
+    // Determine the amount to pay based on the selected option (full or partial)
+    // partialAmount will be 0 if partialPercentage is 0, so this logic is robust.
+    const amountToPay = paymentOption === "full" ? fullPrice : partialAmount;
 
     try {
       const orderId = await createOrder(amountToPay);
@@ -159,10 +197,11 @@ export function BookingFormClient({
           let paymentStatus = "";
 
           // Payment status logic for backend
-          if (rideType === "One Way" || paymentOption === "full") {
+          if (paymentOption === "full") {
             bookingStatus = "Confirmed";
             paymentStatus = "Paid Full";
-          } else { // Partial payment logic for Round Trip or Local
+          } else {
+            // This now covers partial payments for One Way, Round Trip, or Local
             bookingStatus = "Advance Paid";
             paymentStatus = "Partial Paid";
           }
@@ -181,7 +220,7 @@ export function BookingFormClient({
                 pickupAddress,
                 dropAddress,
                 pickupCity: startLocation,
-                destination: endLocation,
+                destination: endLocation, // Pass the original encoded value to backend
                 pickupDate: date,
                 time: rawTime,
                 carType,
@@ -192,9 +231,7 @@ export function BookingFormClient({
                 exclusions,
                 termscondition,
                 type: rideType,
-                // Ensure paymentOption correctly reflects the actual choice for backend
-                // For One Way, it's always 'full', even if the button wasn't shown.
-                paymentOption: rideType === "One Way" ? "full" : paymentOption,
+                paymentOption: paymentOption, // This state directly reflects the user's choice (full or partial)
                 bookingStatus: bookingStatus,
                 paymentStatus: paymentStatus,
               },
@@ -225,7 +262,10 @@ export function BookingFormClient({
 
   return (
     <>
-      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
+      <Script
+        src="https://checkout.razorpay.com/v1/checkout.js"
+        strategy="lazyOnload"
+      />
 
       <div className="w-full sm:min-h-[89.75vh] flex items-center justify-center p-4">
         <div className="max-w-7xl w-full flex flex-col md:flex-row gap-6">
@@ -237,9 +277,11 @@ export function BookingFormClient({
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-               {formFields.map((field) => (
+                {formFields.map((field) => (
                   <div key={field.id}>
-                    <Label className="mb-1" htmlFor={field.id}>{field.label}</Label>
+                    <Label className="mb-1" htmlFor={field.id}>
+                      {field.label}
+                    </Label>
                     <Input
                       id={field.id}
                       value={field.value}
@@ -250,41 +292,46 @@ export function BookingFormClient({
                   </div>
                 ))}
 
-                {/* Conditional Payment Options Section */}
-                {rideType !== "One Way" ? ( // Only show payment options for Round Trip or Local
+                {/* Always show payment option buttons if partial percentage is applicable */}
+                {partialPercentage > 0 && (
                   <div className="pt-4">
                     <h3 className="text-lg font-semibold mb-2">
                       Select Payment Option
                     </h3>
                     <div className="flex gap-4 md:flex-row flex-col">
                       <Button
-                        variant={paymentOption === "full" ? "default" : "outline"}
+                        variant={
+                          paymentOption === "full" ? "default" : "outline"
+                        }
                         onClick={() => setPaymentOption("full")}
                         className="flex-1"
                       >
                         Pay Full (₹{Math.floor(fullPrice)})
                       </Button>
-                      {partialPercentage > 0 && ( // Still only show partial if percentage > 0
-                        <Button
-                          variant={
-                            paymentOption === "partial" ? "default" : "outline"
-                          }
-                          onClick={() => setPaymentOption("partial")}
-                          className="flex-1"
-                        >
-                          Pay {Math.floor(partialPercentage)}% Now (₹
-                          {Math.floor(partialAmount)})
-                        </Button>
-                      )}
+                      <Button
+                        variant={
+                          paymentOption === "partial" ? "default" : "outline"
+                        }
+                        onClick={() => setPaymentOption("partial")}
+                        className="flex-1"
+                      >
+                        Pay {Math.floor(partialPercentage)}% Now (₹
+                        {Math.floor(partialAmount)})
+                      </Button>
                     </div>
                   </div>
-                ) : (
-                  // For "One Way", display a message that full payment is required
-                  <></>
+                )}
+                {/* If partial percentage is 0 (meaning full payment is implicitly required or no partial option exists) */}
+                {partialPercentage === 0 && (
+                  <div className="pt-4 text-center text-sm text-gray-600">
+                    <p className="font-semibold">
+                      Full payment required for this trip type.
+                    </p>
+                  </div>
                 )}
 
                 <Button onClick={handlePayment} className="w-full mt-6">
-                  PROCEED TO PAY
+                  PROCEED TO BOOK
                 </Button>
               </div>
             </CardContent>
@@ -304,11 +351,7 @@ export function BookingFormClient({
                 </p>
                 <p>
                   <strong>Itinerary:</strong> {startLocation}{" "}
-                  {endLocation === "Not Available" ? (
-                    <></>
-                  ) : (
-                    <>→ endLocation</>
-                  )}
+                  {endLocation === "Not Available" ? <></> : <>→ {endLocation}</>}
                 </p>
                 <p>
                   <strong>Pickup:</strong> {formattedDate} at {formattedTime}

@@ -18,6 +18,7 @@ export const option: NextAuthOptions = {
         }
 
         const { email, password } = credentials as { email: string; password: string };
+        console.log(email,password)
 
         const user = await User.findOne({ email });
 
@@ -33,7 +34,6 @@ export const option: NextAuthOptions = {
 
         return {
           id: user._id.toString(),
-          name: user.userName,
           email: user.email,
         };
       },
@@ -46,7 +46,8 @@ export const option: NextAuthOptions = {
   callbacks: {
     session: ({ session, token }: { session: Session; token: JWT }) => {
       if (session?.user) {
-        session.user.id = token.sub; // Add the user ID to the session
+         session.user.id = token.id as string;
+         session.user.email = token.email as string;
       }
       return session;
     },

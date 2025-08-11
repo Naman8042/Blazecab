@@ -49,7 +49,7 @@ const testimonials = [
 
 const TestimonialSection = () => {
   return (
-    <section className="py-10">
+    <section className="">
       <div className="max-w-6xl mx-auto px-6">
         {/* Header Section */}
         <motion.div

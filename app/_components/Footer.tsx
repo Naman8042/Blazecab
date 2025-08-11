@@ -14,7 +14,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 items-start">
           {/* Brand Info */}
           <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-5">
-            <h3 className="text-3xl font-bold tracking-wide">🚀 BlazeCab</h3>
+            <h3 className="text-3xl font-bold tracking-wide"> BlazeCab</h3>
             <p className="text-blue-100 text-base max-w-md leading-relaxed">
               Our goal is to demystify the process, address your concerns, and empower you.
             </p>

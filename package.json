@@ -21,6 +21,8 @@
     "icons": "^1.0.0",
     "lucide-react": "^0.487.0",
     "mongoose": "^8.13.2",
+    "mongoose-plugin-autoinc": "^1.1.9",
+    "mongoose-sequence": "^6.0.1",
     "next": "15.2.4",
     "next-auth": "^4.24.11",
     "razorpay": "^2.9.6",
@@ -37,6 +39,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/mongoose-sequence": "^3.0.11",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
