@@ -9,24 +9,29 @@ export default function Page() {
   
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  
-  const loginHandler = async (e: React.FormEvent) => {
-      e.preventDefault(); // Prevent form default submission behavior
-      try {
-        toast.success("Logged In Sucessfully")
-        await signIn("credentials", {
-          redirect: true,
-          email,
-          password,
-          callbackUrl: "/", 
-        });
-  
-      } catch (err) {
-        console.log(err);
-      }
-    };
+
+
+const loginHandler = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  const res = await signIn("credentials", {
+    redirect: false, // so we can check the response
+    email,
+    password,
+    callbackUrl: "/", 
+  });
+
+  if (res?.error) {
+    toast.error("Login failed");
+  } else {
+    toast.success("Logged in successfully");
+    // You can redirect manually if needed
+    window.location.href = "/";
+  }
+};
+
   return (
-    <div className="flex h-[84vh]  sm:h-[90vh] w-full items-center justify-center p-6 md:p-10">
+    <div className="flex h-dvh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
         <LoginForm
         setEmail={setEmail}

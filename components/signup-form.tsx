@@ -30,7 +30,7 @@ export function SigninForm({
     <div className={cn("flex flex-col gap-6")}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Signin</CardTitle>
+          <CardTitle className="text-2xl">Sign Up</CardTitle>
           <CardDescription>Enter your email below to sign in</CardDescription>
         </CardHeader>
         <CardContent>
@@ -68,8 +68,8 @@ export function SigninForm({
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <a href="/login" className=" underline-offset-4">
+              Already have an account?{" "}
+              <a href="/login" className="text-[#6aa4e0] font-semibold">
                 Login
               </a>
             </div>

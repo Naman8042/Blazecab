@@ -54,7 +54,7 @@ export function LoginForm({ setEmail, setPassword, loginHandler }: LoginProps) {
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account? <a href="/signup" className=" underline-offset-4">Sign up</a>
+              Don&apos;t have an account? <a href="/signup" className="text-[#6aa4e0] font-semibold">Signup</a>
             </div>
           </form>
         </CardContent>

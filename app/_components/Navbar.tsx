@@ -60,7 +60,7 @@ const Navbar = () => {
                   <Link href="/login">Login</Link>
                 </Button>
                 <Button className="bg-[#FFB300] text-white hover:bg-[#FFA000] hidden sm:block">
-                  <Link href="/signin">Signup</Link>
+                  <Link href="/signup">Signup</Link>
                 </Button>
               </>
             )}
