@@ -25,8 +25,7 @@ export async function GET() {
 
     // Get bookings with pickupDate today or in the future
     const bookings = await Booking.find({
-      pickupDate: { $gte: now }
-    }).sort({ pickupDate: 1 });
+    }).sort({ bookingId: -1 });
 
     const formatted = bookings.map((b: BookingDocument) => ({
       id: b._id.toString(),
