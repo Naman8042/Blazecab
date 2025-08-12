@@ -36,7 +36,7 @@ const Dashboard = async () => {
   const bookings = await getBookings(userEmail);
 
   return (
-    <div className="px-4 sm:px-8 py-10 max-w-5xl mx-auto h-[83vh] sm:h-[91vh]">
+    <div className="px-4 sm:px-8 py-10 max-w-5xl mx-auto h-[calc(100vh-3.5rem)] ">
       <div className="container mx-auto">
         <BookingsList bookings={bookings} />
       </div>
@@ -47,7 +47,7 @@ const Dashboard = async () => {
 // Component to display the list of bookings
 const BookingsList = ({ bookings }: { bookings: Booking[] }) => {
   return (
-    <div className="bg-white shadow-xl rounded-xl p-4 sm:p-6">
+    <div className="bg-white shadow-xl rounded-xl p-4 sm:p-6 ">
       <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">
         All Bookings
       </h2>

@@ -6,14 +6,14 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { FaPhoneAlt, FaUserCircle } from "react-icons/fa"; // Import FaUserCircle
 import { useSession } from "next-auth/react";
-import { Skeleton } from "@/components/ui/skeleton"; // Assuming you have a skeleton component for loading state
+// import { Skeleton } from "@/components/ui/skeleton"; // Assuming you have a skeleton component for loading state
 
 const Navbar = () => {
   // Use the useSession hook to get the user's session data and status
   const { data: session, status } = useSession();
 
   return (
-    <div className="shadow-md mb-0.5 w-full z-50 bg-white">
+    <div className="shadow-md  w-full z-50 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-6 py-1 sm:py-2">
         <div className="flex justify-between items-center h-14 gap-2 sm:gap-4">
           {/* Logo */}
@@ -47,7 +47,7 @@ const Navbar = () => {
           <div className="flex items-center space-x-2 sm:min-w-28">
             {status === "loading" ? (
               // Show a skeleton loader while authentication status is being checked
-              <Skeleton className="w-16 h-8 rounded-md" />
+              <></>
             ) : session ? (
               // Show user icon if the user is logged in
               <Link href="/dashboard" className="flex items-center justify-end w-full">

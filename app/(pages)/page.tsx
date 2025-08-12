@@ -5,7 +5,7 @@ import Howitworks from '@/app/_components/Howitworks'
 
 export default function Home() {
   return (
-    <div className='flex flex-col gap-14 sm:gap-24'>
+    <div className='flex flex-col gap-14 sm:space-y-24 mb-24'>
        <CarRentalSearch/>
        <FeatureSection/>
        <Howitworks/>

@@ -236,7 +236,7 @@ export const CarRentalSearch = ({
           source === "home" ? "shadow-2xl" : "border-2"
         } border w-full backdrop-blur-sm`}
       >
-        <div className="flex flex-wrap justify-between sm:justify-center gap-2 mb-6  px-3 sm:px-6">
+        <div className="flex flex-wrap justify-between sm:justify-center gap-2 mb-6  px-5 sm:px-6">
           {["One Way", "Round Trip", "Local"].map((type) => (
             <button
               key={type}
@@ -415,7 +415,7 @@ export const CarRentalSearch = ({
 
 function CarSearch() {
   return (
-    <section className="relative w-full bg-gray-100 h-[83vh] sm:h-[91vh] flex items-center py-6 md:py-12 lg:py-24 overflow-hidden">
+    <section className="relative w-full bg-gray-100 min-h-[calc(100vh-3.5rem)] flex items-center py-6 md:py-12 lg:py-24 overflow-hidden">
       <div className="absolute inset-0 bg-opacity-50 -z-10"></div>
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
