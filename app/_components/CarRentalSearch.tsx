@@ -280,7 +280,7 @@ export const CarRentalSearch = ({
               className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 placeholder-gray-500 border-2"
             />
             {activeField === "pickup" && pickupSuggestions.length > 0 && (
-              <ul className="absolute top-full text-black left-0 w-full bg-white rounded-lg shadow-lg z-50">
+              <ul className="absolute top-full text-black left-0 w-full bg-white rounded-lg shadow-lg z-50 h-40 overflow-y-auto">
                 {pickupSuggestions.map((suggestion) => (
                   <li
                     key={suggestion.properties.osm_id}
@@ -329,7 +329,7 @@ export const CarRentalSearch = ({
                 className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 placeholder-gray-500 border-2"
               />
               {activeField === "dropoff" && dropoffSuggestions.length > 0 && (
-                <ul className="absolute top-full text-black left-0 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-50">
+                <ul className="absolute top-full text-black left-0 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-50 h-40 overflow-y-auto">
                   {dropoffSuggestions.map((suggestion) => (
                     <li
                       key={suggestion.properties.osm_id}
