@@ -13,7 +13,7 @@ const Navbar = () => {
   const { data: session, status } = useSession();
 
   return (
-    <div className="shadow-md  w-full z-50 bg-white">
+    <div className="absolute top-0 sm:relative shadow-md  w-full z-50 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-6 py-1 sm:py-2">
         <div className="flex justify-between items-center h-14 gap-2 sm:gap-4">
           {/* Logo */}
@@ -44,10 +44,10 @@ const Navbar = () => {
           </div>
 
           {/* Conditional Rendering based on Authentication Status */}
-          <div className="flex items-center space-x-2 sm:min-w-28">
+          <div className="flex items-center space-x-2 min-w-7 sm:min-w-28">
             {status === "loading" ? (
               // Show a skeleton loader while authentication status is being checked
-              <></>
+              <div className=""></div>
             ) : session ? (
               // Show user icon if the user is logged in
               <Link href="/dashboard" className="flex items-center justify-end w-full">

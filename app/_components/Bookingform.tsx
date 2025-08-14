@@ -267,11 +267,11 @@ export function BookingFormClient({
         strategy="lazyOnload"
       />
 
-      <div className="w-full sm:min-h-[89.75vh] flex items-center justify-center p-4">
+      <div className="w-full min-h-dvh pt-[20%] sm:pt-0 flex items-center justify-center p-4">
         <div className="max-w-7xl w-full flex flex-col md:flex-row gap-6">
           <Card className="md:w-[58%] w-full shadow-lg bg-white">
             <CardHeader>
-              <h2 className="text-2xl font-bold text-center">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-center">
                 Contact & Pickup Details
               </h2>
             </CardHeader>
@@ -295,7 +295,7 @@ export function BookingFormClient({
                 {/* Always show payment option buttons if partial percentage is applicable */}
                 {partialPercentage > 0 && (
                   <div className="pt-4">
-                    <h3 className="text-lg font-semibold mb-2">
+                    <h3 className="text-lg font-semibold mb-2 text-center sm:text-start">
                       Select Payment Option
                     </h3>
                     <div className="flex gap-4 md:flex-row flex-col">

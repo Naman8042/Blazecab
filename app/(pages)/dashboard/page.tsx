@@ -2,6 +2,7 @@
 import { getServerSession } from "next-auth";
 import { option } from "@/app/api/auth/[...nextauth]/option";
 import axios from "axios";
+import Logoutbutton from '@/app/_components/Logoutbutton'
 
 
 interface Booking {
@@ -36,8 +37,11 @@ const Dashboard = async () => {
   const bookings = await getBookings(userEmail);
 
   return (
-    <div className="px-4 sm:px-8 py-10 max-w-5xl mx-auto h-[calc(100vh-3.5rem)] ">
+    <div className="px-4 sm:px-8 py-10 max-w-5xl mx-auto min-h-dvh pt-[20%] sm:pt-0">
       <div className="container mx-auto">
+        <div className="flex justify-end mt-2">
+          <Logoutbutton/>
+        </div>
         <BookingsList bookings={bookings} />
       </div>
     </div>
