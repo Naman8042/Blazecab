@@ -56,7 +56,7 @@ const Navbar = () => {
             ) : (
               // Show login/signup buttons if not logged in
               <>
-                <Button className="">
+                <Button className="text-[10px] sm:text-xs md:text-sm ">
                   <Link href="/login">Login</Link>
                 </Button>
                 <Button className="bg-[#FFB300] text-white hover:bg-[#FFA000] hidden sm:block">
