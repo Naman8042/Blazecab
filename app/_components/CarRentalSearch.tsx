@@ -415,7 +415,7 @@ export const CarRentalSearch = ({
 
 function CarSearch() {
   return (
-    <section className="relative w-full bg-gray-100 min-h-dvh sm:min-h-[calc(100vh-3.5rem)] flex items-center overflow-hidden pt-[15%] sm:pt-0">
+    <section className="relative w-full bg-gray-100 min-h-svh sm:min-h-[calc(100vh-3.5rem)] flex items-center overflow-hidden pt-[20%] sm:pt-0">
       <div className="absolute inset-0 bg-opacity-50 -z-10"></div>
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
