@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { connect } from "@/dbConfig/dbConfig";
 import Booking from "@/models/Booking";
+import { sendEmail } from "@/helper/mailer";
 
 export async function POST(req: NextRequest) {
   try {
@@ -33,6 +34,8 @@ export async function POST(req: NextRequest) {
       amountPaid: parseFloat(booking.amount),
       status:booking.paymentStatus
     });
+
+    sendEmail({email:booking.email,emailType:"Book"})
 
     return NextResponse.json({ isOk: true, booking: saved }); // ✅ fix missing return
   } catch (err) {

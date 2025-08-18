@@ -6,6 +6,10 @@ import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Button } from "@/components/ui/button";
+import { useRideTypeStore } from "../Providers";
+import { RideType } from "@/state/counter-store";
+
+const rideTypes: RideType[] = ["One Way", "Round Trip", "Local"];
 
 type PhotonFeature = {
   properties: {
@@ -21,6 +25,7 @@ type PhotonFeature = {
     coordinates: [number, number];
   };
 };
+
 
 type FormData = {
   pickupLocation: string;
@@ -43,12 +48,10 @@ export const CarRentalSearch = ({
   showForm,
   source,
 }: CarRentalSearchProps) => {
-  const [rideType, setRideType] = useState<string>(
-    initialValues?.rideType || "One Way"
-  );
+  const rideType = useRideTypeStore((state) => state.rideType);
+  const setRideType = useRideTypeStore((state) => state.setRideType);
   
   
-
   const [formData, setFormData] = useState<FormData>({
     pickupLocation: initialValues?.pickupLocation || "",
     dropoffLocation: initialValues?.dropoffLocation === "Not%20Available"
@@ -237,7 +240,7 @@ export const CarRentalSearch = ({
         } border w-full backdrop-blur-sm`}
       >
         <div className="flex flex-wrap justify-between sm:justify-center gap-2 mb-6  px-5 sm:px-6">
-          {["One Way", "Round Trip", "Local"].map((type) => (
+          {rideTypes.map((type) => (
             <button
               key={type}
               type="button"
