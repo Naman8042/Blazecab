@@ -3,6 +3,7 @@ import CarRentalSearch from '@/app/_components/CarRentalSearch';
 import FeatureSection from '@/app/_components/Featuresection'
 // import Howitworks from '@/app/_components/Howitworks'
 import Service from '../_components/Service'
+import FAQ from '@/app/_components/FAQ'
 
 export default function Home() {
   return (
@@ -11,6 +12,7 @@ export default function Home() {
        <FeatureSection/>
        {/* <Howitworks/> */}
        <Service/>
+       <FAQ/>
       <Testimonials/>
     </div>
   );

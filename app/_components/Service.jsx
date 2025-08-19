@@ -7,7 +7,7 @@ import Local from "@/assets/train.png";
 
 const Service = () => {
   return (
-    <section className="w-full overflow-hidden">
+    <section className=" overflow-hidden mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div className="container">
         <div className=" flex flex-wrap">
           <div className="w-full px-4">
@@ -26,7 +26,7 @@ const Service = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:max-w-7xl sm:grid-cols-4 mx-auto  py-2">
+        <div className="flex flex-wrap justify-center gap-y-8 gap-x-4 md:gap-x-8 lg:flex-nowrap lg:gap-x-8 py-2">
           <ServiceCard
             title="One Way"
             details="We dejoy working with discerning clients, people for whom qualuty, service, integrity & aesthetics."
@@ -66,7 +66,7 @@ const ServiceCard = ({ icon, title, details }) => {
   return (
     <>
       <div
-        className="w-full sm:px-4  cursor-pointer"
+        className="w-full text-center max-w-[45%] group sm:w-[45%] md:w-1/2 lg:w-1/4 cursor-pointer"
         onClick={onCLickHandler}
       >
         <div className="rounded-[20px] bg-white p-3 sm:p-8 lg:p-10 shadow-md hover:shadow-xl dark:bg-dark-2 flex flex-col justify-center items-center transition-all duration-300">
