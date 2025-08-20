@@ -76,7 +76,7 @@ export default function Example() {
     return () => clearInterval(interval);
   }, [itemsPerSlide, testimonials.length]);
 
-  const goToSlide = (index) => {
+  const goToSlide = (index:number) => {
     setCurrentIndex(index);
   };
 
