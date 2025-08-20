@@ -86,9 +86,11 @@
 //   );
 // };
 
+"use client"
 import Image from "next/image";
 import Oneway from "@/assets/one-way-trip.jpg";
 import Roundtrip from "@/assets/round.png";
+import { useRideTypeStore } from "../Providers";
 import Local from "@/assets/train.png";
 import Airport from '@/assets/airport.png'
 
@@ -96,7 +98,7 @@ const Service = () => {
   const cards = [
     {
       imageSrc: Oneway,
-      title: 'One Way Trip',
+      title: 'One Way',
       description: 'We Provide Various Methods For You To Carry Out All Transactions Related To Your Finances'
     },
     {
@@ -106,7 +108,7 @@ const Service = () => {
     },
     {
       imageSrc: Local,
-      title: 'Local Trip',
+      title: 'Local ',
       description: 'Provide Customer Service For Those Of You Who Have Problems 24 Hours A Week'
     },
     {
@@ -154,15 +156,21 @@ const Service = () => {
 };
 
 const Card = ({ imageSrc, title, description }) => {
+   const setRideType = useRideTypeStore((state) => state.setRideType);
+
+  function onCLickHandler() {
+    setRideType(title);
+    document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
+  }
   return (
-    <div className="group relative w-full bg-gray-50 cursor-pointer rounded-2xl p-6 transition-all duration-500 hover:bg-[#6aa4e0] min-h-[200px] sm:min-h-[220px]">
-      <div className="bg-white rounded-full flex justify-center mx-auto items-center mb-4 w-12 h-12 sm:w-14 sm:h-14">
-        <Image src={imageSrc} alt={title} className="w-6 h-6 sm:w-8 sm:h-8" width={100} height={100}/>
+    <div onClick={onCLickHandler} className="group relative w-full bg-gray-50 cursor-pointer rounded-2xl p-2 sm:p-6 transition-all duration-500 hover:bg-[#6aa4e0] min-h-[200px] sm:min-h-[220px]">
+      <div className="bg-white rounded-full flex justify-center mx-auto items-center mb-4 w-12 h-12 sm:w-14 sm:h-14 p-1 sm:p-0">
+        <Image src={imageSrc} alt={title} className="w-10 h-10 rounded-" width={100} height={100}/>
       </div>
-      <h4 className="text-lg sm:text-xl text-center font-semibold text-[#6aa4e0] mb-2 sm:mb-3 capitalize transition-all duration-500 group-hover:text-white leading-tight">
+      <h4 className="text-lg  sm:text-xl text-center font-semibold text-[#6aa4e0] mb-2 sm:mb-3 capitalize transition-all duration-500 group-hover:text-white leading-tight">
         {title}
       </h4>
-      <p className="text-xs sm:text-sm text-center font-normal text-gray-500 transition-all duration-500 leading-relaxed group-hover:text-white">
+      <p className="text-xs sm:text-sm  text-center font-normal text-gray-500 transition-all duration-500 leading-relaxed group-hover:text-white">
         {description}
       </p>
     </div>
