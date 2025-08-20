@@ -1,6 +1,6 @@
 import Rupee from "@/assets/rupee.png";
 import Affordable from "@/assets/save.png";
-import Support from "@/assets/support.png";
+import Driver from '@/assets/taxi-driver.png'
 import twentyforseven from "@/assets/24-7.png";
 import Image from "next/image";
 
@@ -51,7 +51,7 @@ const Featuresection = () => {
           {/* Feature 3: Professional Drivers */}
           <div className="relative w-full text-center max-w-[45%] group sm:w-[45%] md:w-1/2 lg:w-1/4">
             <div className=" rounded-lg flex justify-center items-center mb-4 w-16 h-16 mx-auto transition-all duration-500 ">
-              <Image src={Support} alt="" />
+              <Image src={Driver} alt="" />
             </div>
             <h4 className="text-lg font-medium text-[#6aa4e0] mb-2">
               Verified Drivers

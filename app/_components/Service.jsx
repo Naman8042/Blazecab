@@ -1,9 +1,10 @@
 "use client";
 import { useRideTypeStore } from "../Providers";
 import Image from "next/image";
-import Oneway from "@/assets/one-way-trip.png";
+import Oneway from "@/assets/one-way-trip.jpg";
 import Roundtrip from "@/assets/round.png";
 import Local from "@/assets/train.png";
+import Airport from '@/assets/airport.png'
 
 const Service = () => {
   return (
@@ -43,9 +44,9 @@ const Service = () => {
             icon={Local}
           />
           <ServiceCard
-            title="Local"
+            title="Airport"
             details="We dejoy working with discerning clients, people for whom qualuty, service, integrity & aesthetics."
-            icon={Local}
+            icon={Airport}
           />
         </div>
       </div>

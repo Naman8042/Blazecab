@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import { FaAngleDown } from "react-icons/fa";
 
@@ -24,92 +24,133 @@ const Accordion = () => {
         </div>
 
         <div className="-mx-4 flex flex-wrap bg-white">
-          <div className="w-full px-4 lg:w-1/2">
+          <div className="w-full px-4 lg:w-full">
             <AccordionItem
-              header="How long we deliver your first blog post?"
-              text="It takes 2-3 weeks to get your first blog post ready. That includes the in-depth research & creation of your monthly content marketing strategy that we do before writing your first blog post, Ipsum available ."
+              header="In which cities are Blazecab services available?"
+              text="Blazecab operates pan-India, including Delhi, Gurugram, Noida, Mumbai, Bengaluru, and Chennai. We provide both local and outstation rides."
             />
             <AccordionItem
-              header="How long we deliver your first blog post?"
-              text="It takes 2-3 weeks to get your first blog post ready. That includes the in-depth research & creation of your monthly content marketing strategy that we do before writing your first blog post, Ipsum available ."
+              header="What types of services does Blazecab offer?"
+              text={`Blazecab provides:
+
+Airport transfers – pick-up and drop services.
+
+One-way trips – point-to-point rides.
+
+Round trips – hire a cab for a return journey.
+
+Local city cabs – convenient rides within the city.
+
+All-inclusive packages – including driver allowance, tolls, parking, and fuel for hassle-free travel.`}
             />
             <AccordionItem
-              header="How long we deliver your first blog post?"
-              text="It takes 2-3 weeks to get your first blog post ready. That includes the in-depth research & creation of your monthly content marketing strategy that we do before writing your first blog post, Ipsum available ."
-            />
-          </div>
-          <div className="w-full px-4 lg:w-1/2">
-            <AccordionItem
-              header="How long we deliver your first blog post?"
-              text="It takes 2-3 weeks to get your first blog post ready. That includes the in-depth research & creation of your monthly content marketing strategy that we do before writing your first blog post, Ipsum available ."
+              header="Can I book a cab for a full day?"
+              text="Yes, you can! Blazecab offers daily rentals where you can hire a cab and driver for the whole day according to your schedule."
             />
             <AccordionItem
-              header="How long we deliver your first blog post?"
-              text="It takes 2-3 weeks to get your first blog post ready. That includes the in-depth research & creation of your monthly content marketing strategy that we do before writing your first blog post, Ipsum available ."
+              header="What are the cancellation and refund policies?"
+              text={
+                "Blazecab offers flexible cancellation options:\n\n" +
+                "Full refund if cancelled before 4 hours of the ride. Only minimal getaway charges (if any) will apply.\n\n" +
+                "No refund if cancelled within 4 hours of the ride.\n" +
+                "Refunds are processed to the original payment method within 3–5 business days."
+              }
             />
             <AccordionItem
-              header="How long we deliver your first blog post?"
-              text="It takes 2-3 weeks to get your first blog post ready. That includes the in-depth research & creation of your monthly content marketing strategy that we do before writing your first blog post, Ipsum available ."
+              header="What payment options are available?
+"
+              text="Blazecab accepts cash, UPI (Google Pay, PhonePe, Paytm), and debit/credit cards. Choose whichever is convenient for you.
+"
+            />
+            <AccordionItem
+              header="What should I do if there’s an issue during the ride?"
+              text="You can contact our 24x7 customer support at +91-7703821374. Any issue during the ride will be addressed immediately by our support team.
+"
+            />
+            <AccordionItem
+              header="Are the rides chauffeur-driven?"
+              text="Absolutely. All Blazecab rides are chauffeur-driven. Our drivers are professional, well-trained, and ensure a safe and comfortable journey."
+            />
+            <AccordionItem
+              header="Does Blazecab offer weekend trips?"
+              text="Yes! We provide cabs for weekend getaways like Shimla, Agra, Jaipur, and Haridwar. Simply select your destination and dates while booking."
+            />
+            <AccordionItem
+              header="Can I make a last-minute booking?"
+              text="If a vehicle and driver are available, last-minute bookings are possible. We recommend contacting us quickly to confirm availability."
+            />
+            <AccordionItem
+              header="Are the drivers experienced and are the vehicles clean?"
+              text="Yes! All Blazecab drivers are expert and trained, ensuring a safe and smooth ride. Our vehicles are neat, clean, and regularly sanitized for a comfortable travel experience."
+            />
+            <AccordionItem
+              header="How do I book a ride on the Blazecab website?"
+              text="Visit www.blazecab.com and fill in your ride details. Our website has a simple and user-friendly interface to make booking hassle-free."
+            />
+            <AccordionItem
+              header=" How do I book an outstation trip in advance?"
+              text="You can book online via our website or call our customer care at +91-7703821374. Advance bookings ensure availability of your preferred vehicle and driver."
             />
           </div>
         </div>
       </div>
-
-      
     </section>
   );
 };
 
 export default Accordion;
 
-interface AccordionItemInterface{
-  header:string,
-  text:string
+interface AccordionItemInterface {
+  header: string;
+  text: string;
 }
 
-const AccordionItem = ({ header, text }:AccordionItemInterface) => {
+const AccordionItem = ({ header, text }: AccordionItemInterface) => {
   const [active, setActive] = useState(false);
 
   const handleToggle = (event: React.SyntheticEvent) => {
-  event.preventDefault();
-  setActive(!active);
-};
-
+    event.preventDefault();
+    setActive(!active);
+  };
 
   return (
-    <div className="mb-8 w-full rounded-lg bg-white p-4 sm:p-8 lg:px-6 xl:px-8 shadow-md border">
-      {/* Header Row */}
+    <div className="mb-1 w-full border-b">
+      {/* Header */}
       <div
-        className="faq-btn flex items-center justify-center text-left  w-full cursor-pointer"
+        className="flex items-center w-full cursor-pointer px-5 py-2"
         onClick={handleToggle}
       >
         {/* Icon */}
-        <div className="mr-5 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/5 text-primary dark:bg-white/5">
-          <FaAngleDown
-            size={20}
-            className={` text-gray-500  duration-200 ease-in-out  ${
-              active ? "rotate-180" : ""
-            }`}
-            />
-        </div>
 
-        {/* Text */}
-        <div className="flex-1 ">
-          <h4 className="mt-1 text-lg font-semibold text-dark text-gray-500 dark:text-white">
-            {header}
-          </h4>
+        {/* Question */}
+        <h4 className="flex-1 text-base sm:text-lg font-medium text-gray-800 dark:text-gray-200">
+          {header}
+        </h4>
+
+        <div
+          className="flex h-9 w-9 items-center justify-center rounded-lg 
+                   "
+        >
+          <FaAngleDown
+            size={18}
+            className={`transform duration-300 ease-in-out ${
+              active ? "rotate-180 text-primary" : "text-gray-500"
+            }`}
+          />
         </div>
       </div>
 
       {/* Expandable Content */}
       <div
-        className={`overflow-hidden transition-all duration-300 ease-in-out ${
-          active ? "max-h-40 opacity-100 " : "max-h-0 opacity-0"
+        className={`overflow-hidden pt-2 transition-all duration-500 ease-in-out ${
+          active ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        <p className="py-3 px-2 text-base leading-relaxed text-body-color text-gray-500">
-          {text}
-        </p>
+        <div className="px-6 pb-4">
+          <p className="whitespace-pre-line text-gray-600 dark:text-gray-400 leading-relaxed">
+            {text}
+          </p>
+        </div>
       </div>
     </div>
   );
