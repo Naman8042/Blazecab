@@ -3,12 +3,12 @@ import { Button } from "@/components/ui/button";
 
 const About1 = () => {
   return (
-    <section className="max-w-7xl mx-auto overflow-hidden min-h-svh sm:h-[calc(100vh-4.25rem)] bg-white dark:bg-dark">
+    <section className="max-w-7xl mx-auto overflow-hidden px-4 mb-4  pt-10 md:pt-0 sm:h-[calc(100vh-4.25rem)] bg-white dark:bg-dark">
       <div className="container mx-auto">
         <div className="flex flex-wrap items-center justify-between -mx-4">
           
           {/* Images Column */}
-          <div className="w-full px-4 lg:w-6/12">
+          <div className="w-full px-4 lg:w-6/12 hidden md:block">
             <div className="flex items-center -mx-3 sm:-mx-4">
               
               {/* Left side (two stacked images) */}
