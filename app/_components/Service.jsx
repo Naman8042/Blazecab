@@ -89,34 +89,39 @@
 "use client"
 import Image from "next/image";
 import Oneway from "@/assets/one-way-trip.jpg";
-import Roundtrip from "@/assets/round.png";
+import Roundtrip from "@/assets/round.jpg";
 import { useRideTypeStore } from "../Providers";
 import Local from "@/assets/train.png";
 import Airport from '@/assets/airport.png'
 
 const Service = () => {
-  const cards = [
-    {
-      imageSrc: Oneway,
-      title: 'One Way',
-      description: 'We Provide Various Methods For You To Carry Out All Transactions Related To Your Finances'
-    },
-    {
-      imageSrc: Roundtrip,
-      title: 'Round Trip',
-      description: 'We have the most up-to-date security to support the security of all our '
-    },
-    {
-      imageSrc: Local,
-      title: 'Local ',
-      description: 'Provide Customer Service For Those Of You Who Have Problems 24 Hours A Week'
-    },
-    {
-      imageSrc: Airport,
-      title: 'Airport',
-      description: 'We provide faster transaction speeds than competitors, so money arrives and is received faster.'
-    }
-  ];
+  const cards = [ 
+  {
+    imageSrc: Oneway,
+    title: 'One Way Cab Service',
+    value: 'One Way',
+    description: 'Travel one way across India with ease. No return fare, just pay for your ride.'
+  },
+  {
+    imageSrc: Roundtrip,
+    title: 'Round Trip Cab Service',
+    value: 'Round Trip',
+    description: 'Plan a round trip anywhere in India. Clean cars, expert drivers & punctual service.'
+  },
+  {
+    imageSrc: Local,
+    title: 'Local Taxi Service',
+    value: 'Local',
+    description: 'Your trusted local taxi, available 24x7. Perfect for shopping, city rides & sightseeing.'
+  },
+  {
+    imageSrc: Airport,
+    title: 'Airport Taxi Service',
+    value: 'Local',
+    description: '24x7 airport cabs – day or night. Guaranteed pickup, fixed price & on-time drop.'
+  }
+];
+
 
 
   return (
@@ -155,11 +160,11 @@ const Service = () => {
   );
 };
 
-const Card = ({ imageSrc, title, description }) => {
+const Card = ({ imageSrc, title, description, value }) => {
    const setRideType = useRideTypeStore((state) => state.setRideType);
 
   function onCLickHandler() {
-    setRideType(title);
+    setRideType(value);
     document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
   }
   return (

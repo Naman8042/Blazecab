@@ -143,7 +143,7 @@ const AccordionItem = ({ header, text }: AccordionItemInterface) => {
       {/* Expandable Content */}
       <div
         className={`overflow-hidden pt-2 transition-all duration-500 ease-in-out ${
-          active ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+          active ? "sm:max-h-96 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <div className="px-6 pb-4">
