@@ -3,8 +3,10 @@ import { JSX } from "react";
 import Editcar from "@/app/_components/Editcar";
 import Loading from "./loading";
 import CarList from "@/app/_components/Carlist";
+import { Metadata } from "next";
 
-export async function generateMetadata({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
+export async function generateMetadata(props: CarListPageProps): Promise<Metadata> {
+  const searchParams = await props.searchParams;
   const pickupLocation = (searchParams.pickupLocation || "") as string;
   const dropoffLocation = (searchParams.dropoffLocation || "") as string;
 
