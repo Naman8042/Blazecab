@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Aboutus1 from "@/assets/businesswoman-travelling-by-car-backseat-reading-text-message-smartphone-while-driving-meeting.jpg";
 import Aboutus2 from "@/assets/close-up-man-car-with-map-mobile.jpg";

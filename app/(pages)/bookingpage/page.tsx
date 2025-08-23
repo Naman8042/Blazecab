@@ -17,14 +17,12 @@ interface BookingPageProps {
 }
 
 
-export async function generateMetadata({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
-  
+export const metadata = {
+  title: "Booking Page | BlazeCab",
+  description:
+    "Read BlazeCab's terms and conditions for cab rentals: booking, pricing, cancellations, refunds, liabilities, and user responsibilities.",
+};
 
-  const title = "Cab Rental Booking";
-  return {
-    title,
-  };
-}
 
 // Your page component, accepting 'props' with the specified searchParams type
 export default async function Page(props: BookingPageProps): Promise<JSX.Element> {
