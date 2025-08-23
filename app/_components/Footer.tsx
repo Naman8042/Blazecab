@@ -165,7 +165,7 @@ const Footer = () => {
                 </span>
               </li>
               <li className="flex gap-1 items-center">
-                <MdEmail className="text-white" size={17} /> info@blazeCab.com
+                <MdEmail className="text-white" size={17} /> info@blazecab.com
               </li>
               <li className="flex gap-1 items-center">
                 <FaPhoneAlt className="text-white" size={17} />
@@ -278,7 +278,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="hover:underline">
+                <Link href="/termsandcondition" className="hover:underline">
                   Terms & Conditions
                 </Link>
               </li>

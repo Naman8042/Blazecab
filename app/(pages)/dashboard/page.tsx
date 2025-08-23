@@ -13,6 +13,8 @@ interface Booking {
   status: string;
   destination?: string;
 }
+
+
 async function getBookings(userEmail: string): Promise<Booking[]> {
 
   const {data} = await axios.get(`${process.env.NEXTAUTH_URL}/api/user?email=${userEmail}`);

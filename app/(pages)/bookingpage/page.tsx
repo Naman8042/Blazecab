@@ -5,6 +5,9 @@
 import { BookingFormClient } from "@/app/_components/Bookingform"; // Import your client component
 import { JSX } from "react";
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+import {option} from '@/app/api/auth/[...nextauth]/option'
 import Loading from "../carride/loading"; // Adjust path if loading.tsx is elsewhere
 
 // Define the props for your Server Component.
@@ -13,8 +16,24 @@ interface BookingPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
+
+export async function generateMetadata({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
+  
+
+  const title = "Cab Rental Booking";
+  return {
+    title,
+  };
+}
+
 // Your page component, accepting 'props' with the specified searchParams type
 export default async function Page(props: BookingPageProps): Promise<JSX.Element> {
+  const session = await getServerSession(option);
+
+ if (!session) {
+    redirect("/api/auth/signin");
+  }
+
   // Await searchParams to resolve the Promise.
   // This is now explicitly typed as a Promise, matching the error's expectation.
   const resolvedSearchParams = await props.searchParams;

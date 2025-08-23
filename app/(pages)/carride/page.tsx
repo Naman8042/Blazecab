@@ -4,6 +4,26 @@ import Editcar from "@/app/_components/Editcar";
 import Loading from "./loading";
 import CarList from "@/app/_components/Carlist";
 
+export async function generateMetadata({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
+  const pickupLocation = (searchParams.pickupLocation || "") as string;
+  const dropoffLocation = (searchParams.dropoffLocation || "") as string;
+
+  const fromCity = pickupLocation || "Your City";
+  let toCity = dropoffLocation || "Destination";
+
+  if(toCity == "Not Available"){
+    toCity = "";
+  }
+
+  const title = fromCity && toCity
+    ? `${fromCity} to ${toCity} Cab Rentals | BlazeCab`
+    : `Cab Rentals | BlazeCab`;
+  return {
+    title,description: `Book affordable and reliable cabs from ${fromCity} to ${toCity} with BlazeCab. Enjoy safe rides, on-time service, and transparent pricing.`,
+  };
+}
+
+
 function restoreISODate(dateStr: string | null) {
   if (!dateStr) return null;
   // Replace the dashes in the time portion (HH-mm-ss) with colons (HH:mm:ss)

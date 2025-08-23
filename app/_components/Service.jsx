@@ -169,8 +169,8 @@ const Card = ({ imageSrc, title, description, value }) => {
   }
   return (
     <div onClick={onCLickHandler} className="group relative w-full bg-gray-50 cursor-pointer rounded-2xl p-2 sm:p-6 transition-all duration-500 hover:bg-[#6aa4e0] min-h-[200px] sm:min-h-[220px]">
-      <div className="bg-white rounded-full flex justify-center mx-auto items-center mb-4 w-12 h-12 sm:w-14 sm:h-14 p-1 sm:p-0">
-        <Image src={imageSrc} alt={title} className="w-10 h-10 rounded-" width={100} height={100}/>
+      <div className="bg-white rounded-full flex justify-center mx-auto items-center mb-4 w-13 h-13 sm:w-14 sm:h-14 p-1 sm:p-0">
+        <Image src={imageSrc} alt={title} className="w-9 h-9 " width={100} height={100}/>
       </div>
       <h4 className="text-lg  sm:text-xl text-center font-semibold text-[#6aa4e0] mb-2 sm:mb-3 capitalize transition-all duration-500 group-hover:text-white leading-tight">
         {title}
