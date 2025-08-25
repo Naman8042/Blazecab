@@ -44,7 +44,7 @@ const Navbar = () => {
           </div>
 
           {/* Conditional Rendering based on Authentication Status */}
-          <div className="flex items-center space-x-2 min-w-16 sm:min-w-28">
+          <div className="flex items-center space-x-2 min-w-16 sm:min-w-40  justify-end">
             {status === "loading" ? (
               // Show a skeleton loader while authentication status is being checked
               <div className=""></div>
