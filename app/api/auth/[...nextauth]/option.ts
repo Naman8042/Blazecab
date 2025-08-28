@@ -18,7 +18,6 @@ export const option: NextAuthOptions = {
         }
 
         const { email, password } = credentials as { email: string; password: string };
-        console.log(email,password)
 
         const user = await User.findOne({ email });
 
@@ -27,7 +26,6 @@ export const option: NextAuthOptions = {
         }
 
         const validPassword = await bcrypt.compare(password, user.password);
-
         if (!validPassword) {
           return null;
         }
@@ -35,6 +33,7 @@ export const option: NextAuthOptions = {
         return {
           id: user._id.toString(),
           email: user.email,
+          isAdmin: user.isAdmin,
         };
       },
     }),
@@ -44,10 +43,19 @@ export const option: NextAuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    session: ({ session, token }: { session: Session; token: JWT }) => {
+    async jwt({ token, user }: { token: JWT; user?: any }) {
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+        token.isAdmin = user.isAdmin; // ✅ store isAdmin in JWT
+      }
+      return token;
+    },
+    async session({ session, token }: { session: Session; token: JWT }) {
       if (session?.user) {
-         session.user.id = token.id as string;
-         session.user.email = token.email as string;
+        session.user.id = token.id as string;
+        session.user.email = token.email as string;
+        session.user.isAdmin = token.isAdmin as boolean; // ✅ expose to session
       }
       return session;
     },

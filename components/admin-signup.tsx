@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 interface LoginProps {
   setEmail: Dispatch<SetStateAction<string>>;
   setPassword: Dispatch<SetStateAction<string>>;
+  setAdminSecret:Dispatch<SetStateAction<string>>;
   signinHandler: (e: React.FormEvent) => Promise<void>;
 }
 
@@ -23,6 +24,7 @@ export function SigninForm({
   setEmail,
   setPassword,
   signinHandler,
+  setAdminSecret
 }: LoginProps) {
   return (
     <div className={cn("flex flex-col gap-6")}>
@@ -35,8 +37,14 @@ export function SigninForm({
           <form onSubmit={signinHandler}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
-              
-                
+              <Label htmlFor="username">Admin Secret</Label>
+                <Input
+                  id="adminsecret"
+                  type="password"
+                  placeholder="Admin Secret"
+                  required
+                  onChange={(e) => setAdminSecret(e.target.value)}
+                />
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"

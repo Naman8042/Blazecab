@@ -7,8 +7,10 @@ import Loading from "../../loading";
 import OnewayRoute from "@/app/_components/OnewayRoute";
 import RoundtripRoute from "@/app/_components/TwowayRoute";
 import LocalRoute from "@/app/_components/LocalRoute";
+import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useRouter } from "next/navigation";
 
 const Sidebar = ({ setActive }: { setActive: (val: string) => void }) => {
   return (
@@ -443,6 +445,14 @@ const BookingsView = () => {
 
 export default function Dashboard() {
   const [active, setActive] = useState("bookings");
+  const { data: session } = useSession();
+  const router  = useRouter()
+
+  if (!session) return;
+
+  if(!session.user.isAdmin){
+    router.push("/login")
+  }
 
   return (
     <div className="flex flex-col sm:flex-row h-[89.75vh]">

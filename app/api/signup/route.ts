@@ -16,7 +16,7 @@ export async function POST(request:NextRequest) {
                 message:"req Body not found"
             })
         }
-        const {userName,email,password} = reqBody;
+        const {email,password} = reqBody;
         console.log(reqBody)
 
         const user = await User.findOne({email:email})
@@ -32,7 +32,7 @@ export async function POST(request:NextRequest) {
         const hashedPassword = await bcrypt.hash(password,salt)
 
         const newUser = new User ({
-            userName,email,password:hashedPassword
+           email,password:hashedPassword
         })
 
         const savedUser = await newUser.save()

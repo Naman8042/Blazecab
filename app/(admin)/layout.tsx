@@ -1,5 +1,5 @@
-import AdminNav from '@/app/_components/Adminnav'
-
+import AdminNav from "@/app/_components/Adminnav";
+import Session from "./Session";
 
 const layout = ({
   children,
@@ -7,11 +7,13 @@ const layout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <div>
-        <AdminNav/>
+    <Session>
+      <div>
+        <AdminNav />
         {children}
-    </div>
-  )
-}
+      </div>
+    </Session>
+  );
+};
 
-export default layout
+export default layout;
