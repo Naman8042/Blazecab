@@ -1,8 +1,13 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import User from "@/models/userModels";
 import bcrypt from "bcryptjs";
-import { NextAuthOptions, Session } from "next-auth";
-import { JWT } from "next-auth/jwt";
+import { NextAuthOptions } from "next-auth";
+
+interface AuthUser {
+  id: string;
+  email: string;
+  isAdmin: boolean;
+}
 
 export const option: NextAuthOptions = {
   providers: [
@@ -43,21 +48,22 @@ export const option: NextAuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async jwt({ token, user }: { token: JWT; user?: any }) {
-      if (user) {
-        token.id = user.id;
-        token.email = user.email;
-        token.isAdmin = user.isAdmin; // ✅ store isAdmin in JWT
-      }
-      return token;
-    },
-    async session({ session, token }: { session: Session; token: JWT }) {
-      if (session?.user) {
-        session.user.id = token.id as string;
-        session.user.email = token.email as string;
-        session.user.isAdmin = token.isAdmin as boolean; // ✅ expose to session
-      }
-      return session;
-    },
+  async jwt({ token, user }) {
+    if (user) {
+      const authUser = user as AuthUser; 
+      token.id = authUser.id;
+      token.email = authUser.email;
+      token.isAdmin = authUser.isAdmin;
+    }
+    return token;
   },
-};
+  async session({ session, token }) {
+    if (session?.user) {
+      session.user.id = token.id as string;
+      session.user.email = token.email as string;
+      session.user.isAdmin = token.isAdmin as boolean;
+    }
+    return session;
+  },
+}
+}
