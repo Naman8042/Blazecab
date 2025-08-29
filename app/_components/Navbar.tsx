@@ -26,22 +26,23 @@ const Navbar = () => {
           </Link>
 
           {/* 24x7 Support Button - Centered and Styled */}
-          <div className="flex items-center border border-[#6aa4e0] rounded-md overflow-hidden h-8 sm:h-9">
-            <div className="bg-white px-2 py-1 flex items-center gap-1 h-full md:gap-2">
-              <FaPhoneAlt className="text-[#6aa4e0]" size={12} />
-              <span className="text-black font-medium hidden md:inline">
-                24x7
-              </span>
-            </div>
-            <a
-              href="tel:7703821374"
-              className="bg-[#6aa4e0] h-full flex items-center text-white px-2 py-1 font-bold"
-            >
-              <span className="text-[10px] sm:text-xs md:text-sm">
-                7703821374
-              </span>
-            </a>
-          </div>
+          <div className="flex items-center border border-[#6aa4e0] rounded-md overflow-hidden h-8 sm:h-9 min-w-[120px] sm:min-w-[140px]">
+  {/* Icon box - auto width */}
+  <div className="bg-white px-2 flex items-center justify-center">
+    <FaPhoneAlt className="text-[#6aa4e0]" size={12} />
+  </div>
+
+  {/* Phone number box - takes remaining width */}
+  <a
+    href="tel:7703821374"
+    className="bg-[#6aa4e0] flex-1 h-full flex items-center justify-center text-white px-2 font-bold"
+  >
+    <span className="text-[10px] sm:text-xs md:text-sm">
+      7703821374
+    </span>
+  </a>
+</div>
+
 
           {/* Conditional Rendering based on Authentication Status */}
           <div className="flex items-center space-x-2 min-w-16 sm:min-w-40  justify-end">
@@ -56,7 +57,7 @@ const Navbar = () => {
             ) : (
               // Show login/signup buttons if not logged in
               <>
-                <Button className="text-[10px] sm:text-xs md:text-sm ">
+                <Button className="text-[10px] sm:text-xs md:text-sm h-8 sm:h-9">
                   <Link href="/login">Login</Link>
                 </Button>
                 <Button className="bg-[#FFB300] text-white hover:bg-[#FFA000] hidden sm:block">

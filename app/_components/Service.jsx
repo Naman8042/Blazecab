@@ -141,8 +141,7 @@ const Service = () => {
             </h2>{" "}
             <p className="text-sm font-normal text-gray-500 max-w-xl mx-auto md:text-lg">
               {" "}
-              There are many variations of passages of Lorem Ipsum available but
-              the majority have suffered alteration in some form.{" "}
+              From local rides to airport transfers, Blazecab offers trusted cab services tailored to meet all your travel needs.{" "}
             </p>{" "}
           </div>{" "}
         </div>{" "}

@@ -157,19 +157,20 @@ const Footer = () => {
             <h3 className="text-xl sm:text-4xl font-bold">Blazecab</h3>
 
             <ul className="mt-4 space-y-2 text-sm">
-              <li className="flex gap-1 items-start ">
-                <FaMapMarkerAlt className="text-white" size={17} />{" "}
-                <span className=" max-w-[260px]">
-                  A194 3rd Floor, A Block, Block F, Sudershan Park, New Delhi,
-                  Delhi, 110015, India
-                </span>
-              </li>
+             
               <li className="flex gap-1 items-center">
                 <MdEmail className="text-white" size={17} /> info@blazecab.com
               </li>
               <li className="flex gap-1 items-center">
                 <FaPhoneAlt className="text-white" size={17} />
                 7703821374
+              </li>
+               <li className="flex gap-1 items-start ">
+                <FaMapMarkerAlt className="text-white" size={17} />{" "}
+                <span className=" max-w-[260px]">
+                  A194 3rd Floor, A Block, Block F, Sudershan Park, New Delhi,
+                  Delhi, 110015, India
+                </span>
               </li>
             </ul>
 
