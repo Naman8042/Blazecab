@@ -8,13 +8,20 @@ interface emailInterface {
 export async function sendEmail({ email, emailType }: emailInterface) {
   try {
     var transporter = nodemailer.createTransport({
-      host: "sandbox.smtp.mailtrap.io",
-      port: 2525,
+      service: "gmail",
       auth: {
-        user: "d24f6f1ea70ffd",
-        pass: "411933e34d5071",
+        user: process.env.user, // your Gmail address
+        pass: process.env.pass, // your App Password (no spaces)
       },
     });
+    // var transporter = nodemailer.createTransport({
+    //   host: "gmail",
+    //   // port: 587,
+    //   auth: {
+    //     user: "namansharma8042@gmail.com",
+    //     pass: "fjrdnsnncfjfmmli",
+    //   },
+    // });
 
     // Email subject and body
     const subject =
