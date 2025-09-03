@@ -156,7 +156,7 @@ const Footer = () => {
           <div className="space-y-6">
             <h3 className="text-xl sm:text-4xl font-bold">Blazecab</h3>
 
-            <ul className="mt-4 space-y-2 text-sm">
+            <ul className="mt-4 space-y-4 text-sm">
              
               <li className="flex gap-1 items-center">
                 <MdEmail className="text-white" size={17} /> info@blazecab.com

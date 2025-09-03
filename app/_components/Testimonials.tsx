@@ -1,49 +1,60 @@
 "use client";
 import { useState, useEffect } from "react";
+import { User } from "lucide-react";
 
 export default function Example() {
   const testimonials = [
-    {
-      id: 1,
-      name: "Donald Jackman",
-      role: "SWE 1 @ Amazon",
-      image: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=100",
-      review: "I've been using imagify for nearly two years, primarily for Instagram, and it has been incredibly user-friendly, making my work much easier.",
-      rating: 5,
-    },
-    {
-      id: 2,
-      name: "Richard Nelson",
-      role: "SWE 2 @ Amazon",
-      image: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100",
-      review: "Imagify helps me save so much time with content creation. The simplicity is unmatched!",
-      rating: 5,
-    },
-    {
-      id: 3,
-      name: "James Washington",
-      role: "SWE 2 @ Google",
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=100&h=100&auto=format&fit=crop",
-      review: "As a designer, having an intuitive tool like Imagify allows me to focus on creativity instead of wasting time on repetitive tasks.",
-      rating: 5,
-    },
-    {
-      id: 4,
-      name: "Sophia Carter",
-      role: "ML Engineer @ OpenAI",
-      image: "https://images.unsplash.com/photo-1502685104226-ee32379fefbe?q=80&w=100&auto=format&fit=crop",
-      review: "I was amazed by how easily I could automate my social media workflows. Game changer for my productivity!",
-      rating: 4,
-    },
-    {
-      id: 5,
-      name: "Michael Chen",
-      role: "Frontend Dev @ Meta",
-      image: "https://images.unsplash.com/photo-1603415526960-f7e0328dd352?q=80&w=100&auto=format&fit=crop",
-      review: "The performance boost I got from Imagify tools is insane. Highly recommend it for developers!",
-      rating: 5,
-    },
-  ];
+  {
+    id: 1,
+    name: "Naman Sharma",
+    role: "",
+    image:
+      "https://images.unsplash.com/photo-1544725176-7c40e5a2c9f2?q=80&w=100&auto=format&fit=crop",
+    review:
+      "Blazecab has been my go-to for daily commutes. The rides are always on time and the drivers are super professional. I’ve stopped worrying about being late for work.",
+    rating: 5,
+  },
+  {
+    id: 2,
+    name: "Prabhakar",
+    role: "",
+    image:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=100&auto=format&fit=crop",
+    review:
+      "The app is simple and reliable. I book a ride in seconds, and the pricing is very transparent. I also love how smooth the payment process is!",
+    rating: 5,
+  },
+  {
+    id: 3,
+    name: "Shaurya Sharma",
+    role: "",
+    image:
+      "https://images.unsplash.com/photo-1603415526960-f7e0328dd352?q=80&w=100&auto=format&fit=crop",
+    review:
+      "I started using Blazecab for my weekend trips and I’ve been impressed with the comfort and cleanliness. Definitely better than my previous ride apps.",
+    rating: 4,
+  },
+  {
+    id: 4,
+    name: "Samyak Jain",
+    role: "",
+    image:
+      "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=100&auto=format&fit=crop",
+    review:
+      "The best thing about Blazecab is consistency. No random cancellations, no long wait times. It just works every single time I book a ride.",
+    rating: 5,
+  },
+  {
+    id: 5,
+    name: "Vimarsh Gurka",
+    role: "",
+    image:
+      "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=100&auto=format&fit=crop",
+    review:
+      "Blazecab is a lifesaver when I’m rushing to the airport. The scheduling feature is spot on—I can pre-book and never stress about catching a flight again.",
+    rating: 5,
+  },
+];
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerSlide, setItemsPerSlide] = useState(3);
@@ -154,11 +165,7 @@ export default function Example() {
 
               {/* User Info */}
               <div className="flex items-center gap-3 mt-4">
-                {/* <img
-                  src={t.image}
-                  alt={t.name}
-                  className="w-12 h-12 rounded-full object-cover"
-                /> */}
+                <User className="w-7 h-7 text-gray-500 border-2 rounded-full" />
                 <div className="text-left">
                   <h2 className="text-lg text-gray-900 font-medium">{t.name}</h2>
                   <p className="text-sm text-gray-500">{t.role}</p>
