@@ -220,7 +220,7 @@ export function BookingFormClient({
                 pickupAddress,
                 dropAddress,
                 pickupCity: startLocation,
-                destination: endLocation, // Pass the original encoded value to backend
+                destination: endLocation,
                 pickupDate: date,
                 time: rawTime,
                 carType,
@@ -277,20 +277,27 @@ export function BookingFormClient({
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {formFields.map((field) => (
-                  <div key={field.id}>
-                    <Label className="mb-1" htmlFor={field.id}>
-                      {field.label}
-                    </Label>
-                    <Input
-                      id={field.id}
-                      value={field.value}
-                      onChange={(e) => field.onChange(e.target.value)}
-                      type={field.type}
-                      required={field.required}
-                    />
-                  </div>
-                ))}
+                {formFields.map((field) => {
+                  // Only render dropAddress when rideType is One Way
+                  if (field.id === "dropAddress" && rideType !== "One Way") {
+                    return null;
+                  }
+
+                  return (
+                    <div key={field.id}>
+                      <Label className="mb-2" htmlFor={field.id}>
+                        {field.label}
+                      </Label>
+                      <Input
+                        id={field.id}
+                        value={field.value}
+                        onChange={(e) => field.onChange(e.target.value)}
+                        type={field.type}
+                        required={field.required}
+                      />
+                    </div>
+                  );
+                })}
 
                 {/* Always show payment option buttons if partial percentage is applicable */}
                 {partialPercentage > 0 && (
@@ -339,34 +346,51 @@ export function BookingFormClient({
 
           {/* Right Booking Summary */}
           <div className="flex flex-col gap-4 w-full md:w-[39%]">
-            <Card className="shadow-lg bg-white p-4 md:p-6">
-              <CardHeader>
-                <h2 className="text-xl font-semibold text-center">
+            <Card className="shadow-md rounded-2xl border border-gray-200">
+              <CardHeader className="text-center pb-2">
+                <h2 className="text-lg font-bold text-gray-800">
                   YOUR BOOKING DETAILS
                 </h2>
               </CardHeader>
-              <CardContent className="space-y-2 text-sm md:text-base">
-                <p>
-                  <strong>Ride Type:</strong> {rideType}
-                </p>
-                <p>
-                  <strong>Itinerary:</strong> {startLocation}{" "}
-                  {endLocation === "Not Available" ? <></> : <>→ {endLocation}</>}
-                </p>
-                <p>
-                  <strong>Pickup:</strong> {formattedDate} at {formattedTime}
-                </p>
-                <p>
-                  <strong>Car Type:</strong> {carType}
-                </p>
-                <p>
-                  <strong>KMs Included:</strong> {Math.floor(Number(totalKm))}{" "}
-                  Km
-                </p>
-                <p>
-                  <strong>Total Fare:</strong> ₹ {Math.floor(fullPrice)}
-                </p>
-                
+              <CardContent className="space-y-3 text-sm md:text-base">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Ride Type</span>
+                  <span className="font-medium text-gray-800">{rideType}</span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Itinerary</span>
+                  <span className="font-medium text-gray-800">
+                    {startLocation}
+                    {endLocation !== "Not Available" && ` → ${endLocation}`}
+                  </span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Pickup</span>
+                  <span className="font-semibold text-gray-800">
+                    {formattedDate} at {formattedTime}
+                  </span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Car Type</span>
+                  <span className="font-semibold text-gray-800">{carType}</span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span className="text-gray-600">KMs Included</span>
+                  <span className="font-medium text-gray-800">
+                    {Math.floor(Number(totalKm))} Km
+                  </span>
+                </div>
+
+                <div className="flex justify-between border-t pt-3">
+                  <span className="text-gray-800 font-bold">Total Fare</span>
+                  <span className="font-extrabold text-[#6aa4e0] text-lg">
+                    ₹ {Math.floor(fullPrice)}
+                  </span>
+                </div>
               </CardContent>
             </Card>
 

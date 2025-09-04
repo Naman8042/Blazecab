@@ -16,8 +16,7 @@ const Accordion = () => {
                 Any Questions? Look Here
               </h2>
               <p className="text-sm font-normal text-gray-500 max-w-xl mx-auto md:text-lg">
-                There are many variations of passages of Lorem Ipsum available
-                but the majority have suffered alteration in some form.
+                Find quick answers to the most common questions about BlazeCab rides, pricing, and policies.
               </p>
             </div>
           </div>

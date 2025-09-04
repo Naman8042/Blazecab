@@ -77,7 +77,7 @@ export default async function Page(props: CarListPageProps): Promise<JSX.Element
   const formattedDate = initialValues.pickupDateUpdated?.toLocaleDateString() || null;
 
   return (
-    <div className="px-4 sm:px-8 py-10 max-w-5xl mx-auto pt-20 sm:pt-5">
+    <div className="px-4 sm:px-8 py-10 max-w-7xl mx-auto pt-20 sm:pt-5">
       <Editcar
         pickupLocation={pickupLocation}
         dropoffLocation={dropoffLocation}

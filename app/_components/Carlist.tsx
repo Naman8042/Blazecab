@@ -52,6 +52,8 @@ export default async function CarList({ initialValues }: PageProps) {
   const rideType = initialValues.rideType;
 
   const pickupLocation = initialValues.pickupLocation;
+  const pickupDate = initialValues.pickupDateUpdated
+  const dropOffDate = initialValues.dropOffDateUpdated
 
   const dropoffLocation = initialValues.dropoffLocation;
 
@@ -105,59 +107,72 @@ export default async function CarList({ initialValues }: PageProps) {
           .filter(Boolean) as CarCategoryCardProps[];
       }
     } else if (rideType === "Round Trip" && pickupLocation && dropoffLocation) {
-      const res = await axios.get(
-        `${baseUrl}/api/twoway?pickup=${pickupLocation}&drop=${dropoffLocation}`
-      );
-      const data = res.data;
+  const res = await axios.get(
+    `${baseUrl}/api/twoway?pickup=${pickupLocation}&drop=${dropoffLocation}`
+  );
+  const data = res.data;
 
-      if (!data.length) {
-        error = true;
-      } else {
-        cars = carData
-          .map((car: CarCategoryCardProps) => {
-            const match = data.find(
-              (r: RoundTrip) =>
-                r.cabs.toLowerCase() === car.category.toLowerCase()
-            );
+  if (!data.length) {
+    error = true;
+  } else {
+    cars = carData
+      .map((car: CarCategoryCardProps) => {
+        const match = data.find(
+          (r: RoundTrip) =>
+            r.cabs.toLowerCase() === car.category.toLowerCase()
+        );
 
-            if (!match) return null;
+        if (!match) return null;
 
-            const roundTripDistance = match.distance * 2;
-            const chargeableDistance = Math.max(
-              roundTripDistance,
-              match.minimum_per_day_km
-            );
-            const distanceCost = chargeableDistance * match.per_kms_charge;
-            const totalPrice = distanceCost + match.driver_allowance;
+        // Round trip distance (up-down)
+        const roundTripDistance = match.distance * 2;
 
-            return {
-              ...car,
-              price: totalPrice,
-              inclusions: [
-                ...car.inclusions,
-                `${chargeableDistance} kms billed (${roundTripDistance} km actual round trip)`,
-              ],
-              exclusions: [
-                "Toll",
-                "State Tax",
-                "Parking",
-                `Extra: ₹${match.per_kms_charge}/km`,
-              ],
-              termscondition: [
-                "AC Usage: Air Conditioner (AC) will be turned off in hilly areas to ensure vehicle performance and passenger safety.",
+        // Calculate total trip days
+        const diffTime = Math.abs(
+          new Date(dropOffDate!).getTime() - new Date(pickupDate!).getTime()
+        );
+        let tripDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        if (tripDays === 0) tripDays = 1;
 
-                `Minimum Kilometers per Day: A minimum billing of ${match.minimum_per_day_km} kilometers per day is applicable, even if the vehicle travels less than ${match.minimum_per_day_km} km`,
+        // ✅ Fixed minimum limit 250 km per day
+        const dailyLimit = match.limit;
+        const minDistance = tripDays * dailyLimit;
 
-                `Night Driving Charges: If the driver is required to drive between 10:00 PM and 6:00 AM, an additional ₹${match.driver_allowance} night charge must be paid directly to the driver.`,
+        // Chargeable kms
+        const chargeableDistance = Math.max(roundTripDistance, minDistance);
 
-                "One Day Means: One day means one calendar day — i.e., from 12:00 AM to 11:59 PM. If the vehicle runs beyond 11:59 PM, it will be counted as the next day and additional day charges will apply.",
-              ],
-              distance: roundTripDistance,
-            };
-          })
-          .filter(Boolean) as CarCategoryCardProps[];
-      }
-    } else if (rideType === "Local" && pickupLocation) {
+        // Total cost
+        const distanceCost = chargeableDistance * match.per_kms_charge;
+        const totalPrice =
+          distanceCost + tripDays * match.driver_allowance;
+
+        return {
+          ...car,
+          price: totalPrice,
+          inclusions: [
+            ...car.inclusions,
+            `${chargeableDistance} kms billed (${roundTripDistance} km actual round trip)`,
+          ],
+          exclusions: [
+            "Toll",
+            "State Tax",
+            "Parking",
+            `Extra: ₹${match.per_kms_charge}/km`,
+          ],
+          termscondition: [
+            `Minimum Kilometers per Day: ${dailyLimit} km per day billing rule applies.`,
+            `Driver Allowance: ₹${match.driver_allowance} per day × ${tripDays} days.`,
+            "One Day Means: One calendar day (12:00 AM to 11:59 PM).",
+            "AC Usage: AC will be turned off in hilly areas for safety.",
+          ],
+          distance: roundTripDistance,
+        };
+      })
+      .filter(Boolean) as CarCategoryCardProps[];
+  }
+}
+
+ else if (rideType === "Local" && pickupLocation) {
       const res = await axios.get(
         `${baseUrl}/api/localroute?city=${pickupLocation}`
       );
@@ -217,7 +232,7 @@ export default async function CarList({ initialValues }: PageProps) {
   }
   console.log(initialValues);
   return (
-    <div className="grid gap-6">
+    <div className="grid gap-6 max-w-7xl">
       {[...cars]
         .sort((a, b) => a.price - b.price)
         .map((car, idx) => (
