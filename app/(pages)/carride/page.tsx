@@ -74,8 +74,11 @@ export default async function Page(props: CarListPageProps): Promise<JSX.Element
 
   console.log("Initial Values:", initialValues);
 
-  const formattedDate = initialValues.pickupDate?.toLocaleDateString() || null;
-
+  const formattedDate = initialValues.pickupDate
+  ? `${String(initialValues.pickupDate.getDate()).padStart(2, "0")}/${
+      String(initialValues.pickupDate.getMonth() + 1).padStart(2, "0")
+    }/${initialValues.pickupDate.getFullYear()}`
+  : null;
   return (
     <div className="px-4 sm:px-8 py-10 max-w-7xl mx-auto pt-20 sm:pt-5">
       <Editcar

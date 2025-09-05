@@ -46,7 +46,7 @@ const Editcar = ({ formattedDate, initialValues }: Props) => {
           {/* Mobile Layout */}
           <div className="flex justify-between items-center p-4 md:hidden">
             <div>
-              <p className="text-xs text-gray-500">One Way</p>
+              <p className="text-xs text-gray-500">{initialValues.rideType}</p>
               <p className="text-sm font-bold text-gray-800">
                 {initialValues.pickupLocation}{" "}
                 {initialValues.rideType !== "Local"
@@ -54,8 +54,8 @@ const Editcar = ({ formattedDate, initialValues }: Props) => {
                   : ""}
               </p>
 
-              <p className="text-xs text-gray-600">
-                Pickup Date : {formattedDate || "N/A"} at{" "}
+              <p className="text-[10px] text-gray-600">
+                Pickup Date : {formattedDate || "N/A"} At{" "}
                 {initialValues?.pickupTime
                   ? formatTime(new Date(initialValues.pickupTime))
                   : "N/A"}
@@ -64,7 +64,7 @@ const Editcar = ({ formattedDate, initialValues }: Props) => {
             <div className="">
               <Button
                 onClick={() => setShowForm(true)}
-                className="text-sm px-3 py-1 rounded-full border border-[#6aa4e0] text-[#6aa4e0] bg-transparent hover:bg-[#6aa4e0] hover:text-white"
+                className="text-[12px] px-2 py-1 rounded-full border border-[#6aa4e0] text-[#6aa4e0] bg-transparent hover:bg-[#6aa4e0] hover:text-white"
               >
                 Modify Booking
               </Button>

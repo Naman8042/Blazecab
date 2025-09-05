@@ -418,13 +418,15 @@ const handleTimeChange = (time: Date | null) => {
               Pickup date
             </label>
             <DatePicker
-            ref={pickupTimeRef}
-              selected={formData.pickupDate}
-              dateFormat="dd-MM-yyyy"
-              onChange={(date) => handleDateChange(date, "pickupDate")}
-              className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2"
-              wrapperClassName="w-full"
-            />
+  ref={pickupTimeRef}
+  selected={formData.pickupDate}
+  onChange={(date) => handleDateChange(date, "pickupDate")}
+  dateFormat="dd-MM-yyyy"
+  className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2"
+  wrapperClassName="w-full"
+  onFocus={(e) => e.target.blur()}   // 👈 prevents keyboard from opening
+/>
+
           </div>
 
           {/* Pickup Time */}
@@ -443,6 +445,7 @@ const handleTimeChange = (time: Date | null) => {
               dateFormat="h:mm aa"
               className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2"
               wrapperClassName="w-full"
+              onFocus={(e) => e.target.blur()}
             />
           </div>
 
@@ -458,6 +461,7 @@ const handleTimeChange = (time: Date | null) => {
                 onChange={(date) => handleDateChange(date, "dropOffDate")}
                 className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2"
                 wrapperClassName="w-full"
+                onFocus={(e) => e.target.blur()}
               />
             </div>
           )}
