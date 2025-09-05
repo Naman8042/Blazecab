@@ -66,23 +66,20 @@ export default async function Page(props: CarListPageProps): Promise<JSX.Element
   const initialValues = {
     pickupLocation,
     dropoffLocation,
-    pickupDateUpdated,
+    pickupDate:pickupDateUpdated,
     pickupTime: rawTime,
-    dropOffDateUpdated,
+    dropOffDate:dropOffDateUpdated,
     rideType,
   };
 
   console.log("Initial Values:", initialValues);
 
-  const formattedDate = initialValues.pickupDateUpdated?.toLocaleDateString() || null;
+  const formattedDate = initialValues.pickupDate?.toLocaleDateString() || null;
 
   return (
     <div className="px-4 sm:px-8 py-10 max-w-7xl mx-auto pt-20 sm:pt-5">
       <Editcar
-        pickupLocation={pickupLocation}
-        dropoffLocation={dropoffLocation}
         initialValues={initialValues}
-        rideType={rideType}
         formattedDate={formattedDate}
       />
       <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-center text-gray-800 my-8">

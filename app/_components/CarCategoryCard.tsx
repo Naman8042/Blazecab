@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 interface initialValues {
   pickupLocation: string;
   dropoffLocation: string;
-  pickupDateUpdated: Date | undefined;
+  pickupDate: Date | undefined;
   pickupTime: Date | undefined;
-  dropOffDateUpdated: Date | undefined;
+  dropOffDate: Date | undefined;
   rideType: string;
 }
 
@@ -65,8 +65,8 @@ const CarCategoryCard = ({
               query: {
                 startLocation: initialValues.pickupLocation || "",
                 endLocation: initialValues.dropoffLocation || "",
-                date: initialValues.pickupDateUpdated
-                  ? initialValues.pickupDateUpdated.toISOString()
+                date: initialValues.pickupDate
+                  ? initialValues.pickupDate.toISOString()
                   : "",
                time: initialValues.pickupTime ? initialValues.pickupTime.getTime().toString() : "",
                 carType: name,

@@ -267,7 +267,7 @@ export function BookingFormClient({
         strategy="lazyOnload"
       />
 
-      <div className="w-full min-h-dvh pt-[20%] sm:pt-0 flex items-center justify-center p-4">
+      <div className="w-full pt-[20%] sm:pt-[10vh] flex items-center justify-center p-4">
         <div className="max-w-7xl w-full flex flex-col md:flex-row gap-6">
           <Card className="md:w-[58%] w-full shadow-lg bg-white">
             <CardHeader>

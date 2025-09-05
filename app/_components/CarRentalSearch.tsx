@@ -1,7 +1,8 @@
 "use client";
 import { useState, FormEvent, Dispatch, SetStateAction } from "react";
+import { useRef } from "react";
 import { useRouter } from "next/navigation";
-import {toast} from 'react-hot-toast'
+import { toast } from "react-hot-toast";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -26,17 +27,17 @@ type PhotonFeature = {
   };
 };
 
-
 type FormData = {
   pickupLocation: string;
   dropoffLocation: string;
-  pickupDate: Date;
-  pickupTime: Date; // 👈 store as Date for correct binding
-  dropoffDate: Date;
+  pickupDate: Date | undefined;
+  pickupTime: Date | undefined;
+  dropOffDate?: Date;
+  rideType?: string;
 };
 
 type CarRentalSearchProps = {
-  initialValues?: Partial<FormData> & { rideType?: string };
+  initialValues?: FormData;
   source?: "home" | "carride";
   setShowForm?: Dispatch<SetStateAction<boolean>>;
   showForm?: boolean;
@@ -48,15 +49,18 @@ export const CarRentalSearch = ({
   showForm,
   source,
 }: CarRentalSearchProps) => {
+    const pickupTimeRef = useRef<any>(null);
+const dropOffDateRef = useRef<any>(null);
   const rideType = useRideTypeStore((state) => state.rideType);
   const setRideType = useRideTypeStore((state) => state.setRideType);
-  
-  
+
+  console.log();
   const [formData, setFormData] = useState<FormData>({
     pickupLocation: initialValues?.pickupLocation || "",
-    dropoffLocation: initialValues?.dropoffLocation === "Not%20Available"
-  ? ""
-  : initialValues?.dropoffLocation ?? "",
+    dropoffLocation:
+      initialValues?.dropoffLocation === "Not%20Available"
+        ? ""
+        : initialValues?.dropoffLocation ?? "",
     pickupDate: initialValues?.pickupDate
       ? new Date(initialValues.pickupDate)
       : new Date(),
@@ -66,10 +70,11 @@ export const CarRentalSearch = ({
         : new Date(initialValues.pickupTime)
       : new Date(),
 
-    dropoffDate: initialValues?.dropoffDate
-      ? new Date(initialValues.dropoffDate)
+    dropOffDate: initialValues?.dropOffDate
+      ? new Date(initialValues.dropOffDate)
       : new Date(Date.now() + 86400000),
   });
+  console.log("formdata");
   console.log(formData);
   const [pickupSuggestions, setPickupSuggestions] = useState<PhotonFeature[]>(
     []
@@ -83,12 +88,41 @@ export const CarRentalSearch = ({
 
   const router = useRouter();
 
- const onNavigateHandler = (e: FormEvent) => {
+  const onNavigateHandler = (e: FormEvent) => {
     e.preventDefault();
 
     // --- Validation Logic ---
     let isValid = true;
     let errorMessage = "";
+
+    if (formData.pickupDate && formData.pickupTime) {
+    const now = new Date();
+    const pickupDateTime = new Date(
+      formData.pickupDate.getFullYear(),
+      formData.pickupDate.getMonth(),
+      formData.pickupDate.getDate(),
+      formData.pickupTime.getHours(),
+      formData.pickupTime.getMinutes()
+    );
+
+    const diffInMs = pickupDateTime.getTime() - now.getTime();
+    const diffInHours = diffInMs / (1000 * 60 * 60);
+
+    if (rideType === "One Way" && diffInHours < 3) {
+  isValid = false;
+  errorMessage = "One Way bookings must be at least 3 hours in advance.";
+}
+if ((rideType === "Round Trip" || rideType === "Local") && diffInHours < 2) {
+  isValid = false;
+  errorMessage = "Round Trip and Local bookings must be at least 2 hours in advance.";
+}
+
+  }
+
+  if (!isValid) {
+    toast.error(errorMessage);
+    return;
+  }
 
     if (!rideType) {
       errorMessage = "Please select a ride type.";
@@ -106,7 +140,7 @@ export const CarRentalSearch = ({
     } else if (!formData.pickupTime) {
       errorMessage = "Please select a pickup time.";
       isValid = false;
-    } else if (rideType === "Round Trip" && !formData.dropoffDate) {
+    } else if (rideType === "Round Trip" && !formData.dropOffDate) {
       // dropoffDate is required for "Round Trip"
       errorMessage = "Please select a dropoff date for round trip.";
       isValid = false;
@@ -117,7 +151,6 @@ export const CarRentalSearch = ({
       return; // Stop the function execution if validation fails
     }
     // --- End Validation Logic ---
-
 
     if (showForm && typeof setShowForm === "function") {
       setShowForm(!showForm);
@@ -138,16 +171,28 @@ export const CarRentalSearch = ({
       queryParams.append("dropoffLocation", "Not Available");
     }
 
+    if (formData.pickupDate) {
+      // Add pickupDate (already validated)
+      queryParams.append(
+        "pickupDate",
+        formData?.pickupDate.toISOString().replace(/:/g, "-")
+      );
+    }
 
-    // Add pickupDate (already validated)
-    queryParams.append("pickupDate", formData.pickupDate.toISOString().replace(/:/g, "-"));
-
-    // Add pickupTime (already validated)
-    queryParams.append("pickupTime", formData.pickupTime.getTime().toString());
+    if (formData.pickupTime) {
+      // Add pickupTime (already validated)
+      queryParams.append(
+        "pickupTime",
+        formData.pickupTime.getTime().toString()
+      );
+    }
 
     // Add dropoffDate (only for "Round Trip", already validated)
-    if (rideType === "Round Trip" && formData.dropoffDate) {
-      queryParams.append("dropoffDate", formData.dropoffDate.toISOString().replace(/:/g, "-"));
+    if (rideType === "Round Trip" && formData.dropOffDate) {
+      queryParams.append(
+        "dropoffDate",
+        formData.dropOffDate.toISOString().replace(/:/g, "-")
+      );
     }
 
     const url = `/carride?${queryParams.toString()}`;
@@ -156,17 +201,26 @@ export const CarRentalSearch = ({
   };
 
 
-  const handleDateChange = (date: Date | null, field: keyof FormData) => {
-    if (date) {
-      setFormData((prev) => ({ ...prev, [field]: date }));
-    }
-  };
 
-  const handleTimeChange = (time: Date | null) => {
-    if (time) {
-      setFormData((prev) => ({ ...prev, pickupTime: time }));
+// Date change par sidha time open ho jaye
+const handleDateChange = (date: Date | null, field: keyof FormData) => {
+  if (date) {
+    setFormData((prev) => ({ ...prev, [field]: date }));
+    if (field === "pickupDate" && pickupTimeRef.current) {
+      pickupTimeRef.current.setFocus();  // 👈 pickup time focus
     }
-  };
+  }
+};
+
+// Time select hone ke baad Return Date par jaye (agar Round Trip hai)
+const handleTimeChange = (time: Date | null) => {
+  if (time) {
+    setFormData((prev) => ({ ...prev, pickupTime: time }));
+    if (rideType === "Round Trip" && dropOffDateRef.current) {
+      dropOffDateRef.current.setFocus();  // 👈 return date focus
+    }
+  }
+};
 
   const handleAddressSearch = async (
     query: string,
@@ -212,6 +266,9 @@ export const CarRentalSearch = ({
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    if (!formData.pickupTime) {
+      return;
+    }
     const formattedData = {
       ...formData,
       pickupTime: formData.pickupTime.toLocaleTimeString([], {
@@ -361,7 +418,9 @@ export const CarRentalSearch = ({
               Pickup date
             </label>
             <DatePicker
+            ref={pickupTimeRef}
               selected={formData.pickupDate}
+              dateFormat="dd-MM-yyyy"
               onChange={(date) => handleDateChange(date, "pickupDate")}
               className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2"
               wrapperClassName="w-full"
@@ -374,6 +433,7 @@ export const CarRentalSearch = ({
               Pickup time
             </label>
             <DatePicker
+            ref={dropOffDateRef}
               selected={formData.pickupTime}
               onChange={(time) => handleTimeChange(time)}
               showTimeSelect
@@ -393,8 +453,9 @@ export const CarRentalSearch = ({
                 Return date
               </label>
               <DatePicker
-                selected={formData.dropoffDate}
-                onChange={(date) => handleDateChange(date, "dropoffDate")}
+                selected={formData.dropOffDate}
+                dateFormat="dd-MM-yyyy"
+                onChange={(date) => handleDateChange(date, "dropOffDate")}
                 className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2"
                 wrapperClassName="w-full"
               />

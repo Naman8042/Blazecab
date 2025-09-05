@@ -14,7 +14,6 @@ export type RideTypeActions = {
 
 export type RideTypeStore = RideTypeState & RideTypeActions;
 
-// ---- Default Initial State ----
 export const defaultInitState: RideTypeState = {
   rideType: "One Way",
 };

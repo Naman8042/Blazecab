@@ -4,29 +4,33 @@ import { CarRentalSearch } from "./CarRentalSearch"; // adjust path as needed
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
+function formatTime(date: Date): string {
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const ampm = hours >= 12 ? "AM" : "PM"; // force uppercase AM/PM
+  const adjustedHours = hours % 12 || 12; // convert 0 → 12
+  const formattedMinutes = minutes.toString().padStart(2, "0");
+  console.log(`${adjustedHours}:${formattedMinutes} ${ampm}`)
+  return `${adjustedHours}:${formattedMinutes} ${ampm}`;
+}
+
 type FormData = {
   pickupLocation: string;
   dropoffLocation: string;
-  pickupDate: Date;
-  pickupTime: Date;
-  dropoffDate: Date;
+  pickupDate: Date | undefined;
+  pickupTime: Date | undefined;
+  dropOffDate?: Date;
+  rideType?: string;
 };
 
 interface Props {
-  pickupLocation: string;
-  dropoffLocation?: string;
-  rideType: string;
   formattedDate: string | null;
-  initialValues?: Partial<FormData> & { rideType?: string };
+  initialValues: FormData;
 }
 
-const Editcar = ({
-  pickupLocation,
-  dropoffLocation,
-  rideType,
-  formattedDate,
-  initialValues,
-}: Props) => {
+const Editcar = ({ formattedDate, initialValues }: Props) => {
+  console.log("initial Values");
+  console.log(initialValues);
   const [showForm, setShowForm] = useState<boolean>(false);
   return (
     <>
@@ -44,12 +48,17 @@ const Editcar = ({
             <div>
               <p className="text-xs text-gray-500">One Way</p>
               <p className="text-sm font-bold text-gray-800">
-                {pickupLocation}{" "}
-                {rideType !== "Local" ? `- ${dropoffLocation}` : ""}
+                {initialValues.pickupLocation}{" "}
+                {initialValues.rideType !== "Local"
+                  ? `- ${initialValues.dropoffLocation}`
+                  : ""}
               </p>
 
               <p className="text-xs text-gray-600">
-                Pickup Date : {formattedDate}
+                Pickup Date : {formattedDate || "N/A"} at{" "}
+                {initialValues?.pickupTime
+                  ? formatTime(new Date(initialValues.pickupTime))
+                  : "N/A"}
               </p>
             </div>
             <div className="">
@@ -67,8 +76,10 @@ const Editcar = ({
             {/* Ride Type */}
             <div className="px-4 py-3 flex flex-col justify-center flex-1">
               <p className="text-xs font-medium text-gray-500">Ride Type</p>
-              <p className="text-lg font-bold text-gray-800">{rideType}</p>
-              {rideType === "Local" && (
+              <p className="text-lg font-bold text-gray-800">
+                {initialValues.rideType}
+              </p>
+              {initialValues.rideType === "Local" && (
                 <p className="text-sm text-gray-600">80 kms & 8 Hours</p>
               )}
             </div>
@@ -77,18 +88,20 @@ const Editcar = ({
             <div className="px-4 py-3 flex flex-col justify-center flex-1">
               <p className="text-xs font-medium text-gray-500">From</p>
               <p className="text-lg font-bold text-gray-800 truncate">
-                {pickupLocation}
+                {initialValues.pickupLocation}
               </p>
             </div>
 
             {/* To */}
-            {rideType !== "Local" && (
+            {initialValues.rideType !== "Local" && (
               <div className="px-4 py-3 flex flex-col justify-center flex-1">
                 <p className="text-xs font-medium text-gray-500">
-                  {rideType === "Round Trip" ? "Destination" : "To"}
+                  {initialValues.rideType === "Round Trip"
+                    ? "Destination"
+                    : "To"}
                 </p>
                 <p className="text-lg font-bold text-gray-800 truncate">
-                  {dropoffLocation}
+                  {initialValues.dropoffLocation}
                 </p>
               </div>
             )}
@@ -98,7 +111,10 @@ const Editcar = ({
               <p className="text-xs font-medium text-gray-500">
                 Pick-Up Date & Time
               </p>
-              <p className="text-lg font-bold text-gray-800">{formattedDate}</p>
+              <p className="text-lg font-bold text-gray-800">{formattedDate} at{" "}
+                {initialValues?.pickupTime
+                  ? formatTime(new Date(initialValues.pickupTime))
+                  : "N/A"}</p>
               {/* <p className="text-sm text-gray-600">{formattedTime}</p> */}
             </div>
 
