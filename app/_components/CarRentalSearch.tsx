@@ -49,8 +49,8 @@ export const CarRentalSearch = ({
   showForm,
   source,
 }: CarRentalSearchProps) => {
-    const pickupTimeRef = useRef<any>(null);
-const dropOffDateRef = useRef<any>(null);
+  const pickupTimeRef = useRef<DatePicker | null>(null);
+const dropOffDateRef = useRef<DatePicker | null>(null);
   const rideType = useRideTypeStore((state) => state.rideType);
   const setRideType = useRideTypeStore((state) => state.setRideType);
 
