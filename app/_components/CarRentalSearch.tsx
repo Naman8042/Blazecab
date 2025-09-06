@@ -49,8 +49,10 @@ export const CarRentalSearch = ({
   showForm,
   source,
 }: CarRentalSearchProps) => {
+  const pickupDateRef = useRef<DatePicker | null>(null);
   const pickupTimeRef = useRef<DatePicker | null>(null);
-const dropOffDateRef = useRef<DatePicker | null>(null);
+  const dropOffDateRef = useRef<DatePicker | null>(null);
+
   const rideType = useRideTypeStore((state) => state.rideType);
   const setRideType = useRideTypeStore((state) => state.setRideType);
 
@@ -96,33 +98,36 @@ const dropOffDateRef = useRef<DatePicker | null>(null);
     let errorMessage = "";
 
     if (formData.pickupDate && formData.pickupTime) {
-    const now = new Date();
-    const pickupDateTime = new Date(
-      formData.pickupDate.getFullYear(),
-      formData.pickupDate.getMonth(),
-      formData.pickupDate.getDate(),
-      formData.pickupTime.getHours(),
-      formData.pickupTime.getMinutes()
-    );
+      const now = new Date();
+      const pickupDateTime = new Date(
+        formData.pickupDate.getFullYear(),
+        formData.pickupDate.getMonth(),
+        formData.pickupDate.getDate(),
+        formData.pickupTime.getHours(),
+        formData.pickupTime.getMinutes()
+      );
 
-    const diffInMs = pickupDateTime.getTime() - now.getTime();
-    const diffInHours = diffInMs / (1000 * 60 * 60);
+      const diffInMs = pickupDateTime.getTime() - now.getTime();
+      const diffInHours = diffInMs / (1000 * 60 * 60);
 
-    if (rideType === "One Way" && diffInHours < 3) {
-  isValid = false;
-  errorMessage = "One Way bookings must be at least 3 hours in advance.";
-}
-if ((rideType === "Round Trip" || rideType === "Local") && diffInHours < 2) {
-  isValid = false;
-  errorMessage = "Round Trip and Local bookings must be at least 2 hours in advance.";
-}
+      if (rideType === "One Way" && diffInHours < 3) {
+        isValid = false;
+        errorMessage = "One Way bookings must be at least 3 hours in advance.";
+      }
+      if (
+        (rideType === "Round Trip" || rideType === "Local") &&
+        diffInHours < 2
+      ) {
+        isValid = false;
+        errorMessage =
+          "Round Trip and Local bookings must be at least 2 hours in advance.";
+      }
+    }
 
-  }
-
-  if (!isValid) {
-    toast.error(errorMessage);
-    return;
-  }
+    if (!isValid) {
+      toast.error(errorMessage);
+      return;
+    }
 
     if (!rideType) {
       errorMessage = "Please select a ride type.";
@@ -200,27 +205,25 @@ if ((rideType === "Round Trip" || rideType === "Local") && diffInHours < 2) {
     router.push(url);
   };
 
-
-
-// Date change par sidha time open ho jaye
-const handleDateChange = (date: Date | null, field: keyof FormData) => {
-  if (date) {
-    setFormData((prev) => ({ ...prev, [field]: date }));
-    if (field === "pickupDate" && pickupTimeRef.current) {
-      pickupTimeRef.current.setFocus();  // 👈 pickup time focus
+  // Date change par sidha time open ho jaye
+  const handleDateChange = (date: Date | null, field: keyof FormData) => {
+    if (date) {
+      setFormData((prev) => ({ ...prev, [field]: date }));
+      if (field === "pickupDate" && pickupTimeRef.current) {
+        pickupTimeRef.current.setFocus(); // 👈 pickup time focus
+      }
     }
-  }
-};
+  };
 
-// Time select hone ke baad Return Date par jaye (agar Round Trip hai)
-const handleTimeChange = (time: Date | null) => {
-  if (time) {
-    setFormData((prev) => ({ ...prev, pickupTime: time }));
-    if (rideType === "Round Trip" && dropOffDateRef.current) {
-      dropOffDateRef.current.setFocus();  // 👈 return date focus
+  // Time select hone ke baad Return Date par jaye (agar Round Trip hai)
+  const handleTimeChange = (time: Date | null) => {
+    if (time) {
+      setFormData((prev) => ({ ...prev, pickupTime: time }));
+      if (rideType === "Round Trip" && dropOffDateRef.current) {
+        dropOffDateRef.current.setFocus(); // 👈 return date focus
+      }
     }
-  }
-};
+  };
 
   const handleAddressSearch = async (
     query: string,
@@ -413,20 +416,27 @@ const handleTimeChange = (time: Date | null) => {
           )}
 
           {/* Pickup Date */}
-          <div>
+          <div className="">
             <label className="block text-sm font-medium mb-1">
               Pickup date
             </label>
             <DatePicker
-  ref={pickupTimeRef}
-  selected={formData.pickupDate}
-  onChange={(date) => handleDateChange(date, "pickupDate")}
-  dateFormat="dd-MM-yyyy"
-  className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2"
-  wrapperClassName="w-full"
-  onFocus={(e) => e.target.blur()}   // 👈 prevents keyboard from opening
-/>
-
+              ref={pickupDateRef}
+              selected={formData.pickupDate}
+              onChange={(date) => handleDateChange(date, "pickupDate")}
+              dateFormat="dd-MM-yyyy"
+              wrapperClassName="w-full"
+              customInput={
+                <button
+                  type="button"
+                  className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2 text-left"
+                >
+                  {formData.pickupDate
+                    ? formData.pickupDate.toLocaleDateString("en-GB")
+                    : "Select date"}
+                </button>
+              }
+            />
           </div>
 
           {/* Pickup Time */}
@@ -435,18 +445,27 @@ const handleTimeChange = (time: Date | null) => {
               Pickup time
             </label>
             <DatePicker
-            ref={dropOffDateRef}
-              selected={formData.pickupTime}
-              onChange={(time) => handleTimeChange(time)}
-              showTimeSelect
-              showTimeSelectOnly
-              timeIntervals={30}
-              timeCaption="Time"
-              dateFormat="h:mm aa"
-              className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2"
-              wrapperClassName="w-full"
-              onFocus={(e) => e.target.blur()}
-            />
+  ref={pickupTimeRef}
+  selected={formData.pickupTime}
+  onChange={(time) => handleTimeChange(time)}
+  showTimeSelect
+  showTimeSelectOnly
+  timeIntervals={30}
+  timeCaption="Time"
+  dateFormat="h:mm aa"
+  wrapperClassName="w-full"
+  customInput={
+    <button className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2 text-left">
+      {formData.pickupTime
+        ? formData.pickupTime.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : "Select time"}
+    </button>
+  }
+/>
+
           </div>
 
           {/* Dropoff Date (if Round Trip) */}
@@ -455,14 +474,20 @@ const handleTimeChange = (time: Date | null) => {
               <label className="block text-sm font-medium mb-1">
                 Return date
               </label>
-              <DatePicker
-                selected={formData.dropOffDate}
-                dateFormat="dd-MM-yyyy"
-                onChange={(date) => handleDateChange(date, "dropOffDate")}
-                className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2"
-                wrapperClassName="w-full"
-                onFocus={(e) => e.target.blur()}
-              />
+               <DatePicker
+    ref={dropOffDateRef}
+    selected={formData.dropOffDate}
+    onChange={(date) => handleDateChange(date, "dropOffDate")}
+    dateFormat="dd-MM-yyyy"
+    wrapperClassName="w-full"
+    customInput={
+      <button className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2 text-left">
+        {formData.dropOffDate
+          ? formData.dropOffDate.toLocaleDateString("en-GB")
+          : "Select date"}
+      </button>
+    }
+/>
             </div>
           )}
         </div>

@@ -10,7 +10,7 @@ function formatTime(date: Date): string {
   const ampm = hours >= 12 ? "AM" : "PM"; // force uppercase AM/PM
   const adjustedHours = hours % 12 || 12; // convert 0 → 12
   const formattedMinutes = minutes.toString().padStart(2, "0");
-  console.log(`${adjustedHours}:${formattedMinutes} ${ampm}`)
+  console.log(`${adjustedHours}:${formattedMinutes} ${ampm}`);
   return `${adjustedHours}:${formattedMinutes} ${ampm}`;
 }
 
@@ -60,6 +60,23 @@ const Editcar = ({ formattedDate, initialValues }: Props) => {
                   ? formatTime(new Date(initialValues.pickupTime))
                   : "N/A"}
               </p>
+
+              {initialValues.rideType === "Round Trip" ? (
+                <p className="text-[10px] text-gray-600">
+                  Return Date :{" "}
+                  {initialValues.dropOffDate
+                    ? `${String(initialValues.dropOffDate.getDate()).padStart(
+                        2,
+                        "0"
+                      )}/${String(
+                        initialValues.dropOffDate.getMonth() + 1
+                      ).padStart(
+                        2,
+                        "0"
+                      )}/${initialValues.dropOffDate.getFullYear()}`
+                    : "N/A"}
+                </p>
+              ) : null}
             </div>
             <div className="">
               <Button
@@ -111,12 +128,32 @@ const Editcar = ({ formattedDate, initialValues }: Props) => {
               <p className="text-xs font-medium text-gray-500">
                 Pick-Up Date & Time
               </p>
-              <p className="text-lg font-bold text-gray-800">{formattedDate} at{" "}
+              <p className="text-lg font-bold text-gray-800">
+                {formattedDate} at{" "}
                 {initialValues?.pickupTime
                   ? formatTime(new Date(initialValues.pickupTime))
-                  : "N/A"}</p>
+                  : "N/A"}
+              </p>
               {/* <p className="text-sm text-gray-600">{formattedTime}</p> */}
             </div>
+            {initialValues.rideType === "Round Trip" ? (
+              <div className="px-4 py-3 flex flex-col justify-center flex-1">
+                <p className="text-xs font-medium text-gray-500">Return Date</p>
+                <p className="text-lg font-bold text-gray-800">
+                  {initialValues.dropOffDate
+                    ? `${String(initialValues.dropOffDate.getDate()).padStart(
+                        2,
+                        "0"
+                      )}/${String(
+                        initialValues.dropOffDate.getMonth() + 1
+                      ).padStart(
+                        2,
+                        "0"
+                      )}/${initialValues.dropOffDate.getFullYear()}`
+                    : "N/A"}
+                </p>
+              </div>
+            ) : null}
 
             {/* Edit Button */}
             <div className="flex items-center justify-center sm:w-36 rounded-b-md sm:rounded-l-none sm:rounded-r-md bg-[#6aa4e0]">
