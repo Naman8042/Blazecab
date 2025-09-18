@@ -56,7 +56,16 @@ export const CarRentalSearch = ({
   const rideType = useRideTypeStore((state) => state.rideType);
   const setRideType = useRideTypeStore((state) => state.setRideType);
 
-  console.log();
+  const getDefaultPickupTime = (rideType: RideType) => {
+    const now = new Date();
+    if (rideType === "One Way") {
+      now.setHours(now.getHours() + 3); // One Way = 3 hours ahead
+    } else {
+      now.setHours(now.getHours() + 2); // Round Trip & Local = 2 hours ahead
+    }
+    return now;
+  };
+
   const [formData, setFormData] = useState<FormData>({
     pickupLocation: initialValues?.pickupLocation || "",
     dropoffLocation:
@@ -70,14 +79,12 @@ export const CarRentalSearch = ({
       ? typeof initialValues.pickupTime === "string"
         ? new Date(`1970-01-01T${initialValues.pickupTime}`)
         : new Date(initialValues.pickupTime)
-      : new Date(),
-
+      : getDefaultPickupTime(rideType),
     dropOffDate: initialValues?.dropOffDate
       ? new Date(initialValues.dropOffDate)
-      : new Date(Date.now() + 86400000),
+      : new Date(new Date().setDate(new Date().getDate() + 1)), // 👈 default return next day
   });
-  console.log("formdata");
-  console.log(formData);
+
   const [pickupSuggestions, setPickupSuggestions] = useState<PhotonFeature[]>(
     []
   );
@@ -124,6 +131,17 @@ export const CarRentalSearch = ({
       }
     }
 
+    if (
+      rideType === "Round Trip" &&
+      formData.pickupDate &&
+      formData.dropOffDate
+    ) {
+      if (formData.dropOffDate < formData.pickupDate) {
+        isValid = false;
+        errorMessage = "Return date cannot be earlier than pickup date.";
+      }
+    }
+
     if (!isValid) {
       toast.error(errorMessage);
       return;
@@ -136,7 +154,6 @@ export const CarRentalSearch = ({
       errorMessage = "Pickup location cannot be empty.";
       isValid = false;
     } else if (rideType !== "Local" && !formData.dropoffLocation.trim()) {
-      // dropoffLocation is required if not "Local"
       errorMessage = "Dropoff location cannot be empty for this ride type.";
       isValid = false;
     } else if (!formData.pickupDate) {
@@ -146,14 +163,13 @@ export const CarRentalSearch = ({
       errorMessage = "Please select a pickup time.";
       isValid = false;
     } else if (rideType === "Round Trip" && !formData.dropOffDate) {
-      // dropoffDate is required for "Round Trip"
       errorMessage = "Please select a dropoff date for round trip.";
       isValid = false;
     }
 
     if (!isValid) {
       toast.error(errorMessage);
-      return; // Stop the function execution if validation fails
+      return;
     }
     // --- End Validation Logic ---
 
@@ -163,13 +179,9 @@ export const CarRentalSearch = ({
 
     const queryParams = new URLSearchParams();
 
-    // Add rideType (already validated)
     queryParams.append("rideType", rideType.replace(/\s+/g, "-"));
-
-    // Add pickupLocation (already validated)
     queryParams.append("pickupLocation", formData.pickupLocation);
 
-    // Add dropoffLocation (conditional based on rideType, already validated)
     if (rideType !== "Local" && formData.dropoffLocation) {
       queryParams.append("dropoffLocation", formData.dropoffLocation);
     } else if (rideType === "Local") {
@@ -177,7 +189,6 @@ export const CarRentalSearch = ({
     }
 
     if (formData.pickupDate) {
-      // Add pickupDate (already validated)
       queryParams.append(
         "pickupDate",
         formData?.pickupDate.toISOString().replace(/:/g, "-")
@@ -185,14 +196,12 @@ export const CarRentalSearch = ({
     }
 
     if (formData.pickupTime) {
-      // Add pickupTime (already validated)
       queryParams.append(
         "pickupTime",
         formData.pickupTime.getTime().toString()
       );
     }
 
-    // Add dropoffDate (only for "Round Trip", already validated)
     if (rideType === "Round Trip" && formData.dropOffDate) {
       queryParams.append(
         "dropoffDate",
@@ -205,22 +214,20 @@ export const CarRentalSearch = ({
     router.push(url);
   };
 
-  // Date change par sidha time open ho jaye
   const handleDateChange = (date: Date | null, field: keyof FormData) => {
     if (date) {
       setFormData((prev) => ({ ...prev, [field]: date }));
       if (field === "pickupDate" && pickupTimeRef.current) {
-        pickupTimeRef.current.setFocus(); // 👈 pickup time focus
+        pickupTimeRef.current.setFocus();
       }
     }
   };
 
-  // Time select hone ke baad Return Date par jaye (agar Round Trip hai)
   const handleTimeChange = (time: Date | null) => {
     if (time) {
       setFormData((prev) => ({ ...prev, pickupTime: time }));
       if (rideType === "Round Trip" && dropOffDateRef.current) {
-        dropOffDateRef.current.setFocus(); // 👈 return date focus
+        dropOffDateRef.current.setFocus();
       }
     }
   };
@@ -235,7 +242,6 @@ export const CarRentalSearch = ({
       } else {
         setDropoffSuggestions([]);
       }
-
       return;
     }
 
@@ -258,7 +264,6 @@ export const CarRentalSearch = ({
       }
     } catch (error) {
       console.error("Error fetching data from Photon API:", error);
-
       if (field === "pickup") {
         setPickupSuggestions([]);
       } else {
@@ -269,9 +274,7 @@ export const CarRentalSearch = ({
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (!formData.pickupTime) {
-      return;
-    }
+    if (!formData.pickupTime) return;
     const formattedData = {
       ...formData,
       pickupTime: formData.pickupTime.toLocaleTimeString([], {
@@ -279,7 +282,6 @@ export const CarRentalSearch = ({
         minute: "2-digit",
       }),
     };
-
     console.log("Form submitted:", formattedData);
   };
 
@@ -299,6 +301,7 @@ export const CarRentalSearch = ({
           source === "home" ? "shadow-2xl" : "border-2"
         } border w-full backdrop-blur-sm`}
       >
+        {/* Ride Type Buttons */}
         <div className="flex flex-wrap justify-between sm:justify-center gap-2 mb-6  px-5 sm:px-6">
           {rideTypes.map((type) => (
             <button
@@ -307,8 +310,8 @@ export const CarRentalSearch = ({
               onClick={() => setRideType(type)}
               className={`px-2.5 md:px-4 py-1 md:py-2 rounded-full font-medium transition-all duration-200 ${
                 rideType === type
-                  ? "bg-[#6aa4e0] text-white text-[13px] text-xs  sm:text-base cursor-pointer uppercase"
-                  : "bg-opacity-20 text-black hover:bg-opacity-30 text-[15px] text-xs  sm:text-base cursor-pointer uppercase"
+                  ? "bg-[#6aa4e0] text-white text-[13px] sm:text-base cursor-pointer uppercase"
+                  : "bg-opacity-20 text-black hover:bg-opacity-30 text-[15px] sm:text-base cursor-pointer uppercase"
               }`}
             >
               {type}
@@ -316,6 +319,7 @@ export const CarRentalSearch = ({
           ))}
         </div>
 
+        {/* Inputs */}
         <div
           className="flex flex-col sm:grid gap-2 md:gap-4 px-6"
           style={{
@@ -371,7 +375,6 @@ export const CarRentalSearch = ({
               <label className="block text-sm font-medium mb-1">
                 {rideType === "One Way" ? "Drop City" : "Destination City"}
               </label>
-
               <input
                 type="text"
                 value={formData.dropoffLocation}
@@ -416,7 +419,7 @@ export const CarRentalSearch = ({
           )}
 
           {/* Pickup Date */}
-          <div className="">
+          <div>
             <label className="block text-sm font-medium mb-1">
               Pickup date
             </label>
@@ -424,15 +427,20 @@ export const CarRentalSearch = ({
               ref={pickupDateRef}
               selected={formData.pickupDate}
               onChange={(date) => handleDateChange(date, "pickupDate")}
-              dateFormat="dd-MM-yyyy"
+              dateFormat="dd MMMM yyyy"
               wrapperClassName="w-full"
+              minDate={new Date()} // 👈 cannot select past
               customInput={
                 <button
                   type="button"
                   className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2 text-left"
                 >
                   {formData.pickupDate
-                    ? formData.pickupDate.toLocaleDateString("en-GB")
+                    ? formData.pickupDate.toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
+                      })
                     : "Select date"}
                 </button>
               }
@@ -445,53 +453,59 @@ export const CarRentalSearch = ({
               Pickup time
             </label>
             <DatePicker
-  ref={pickupTimeRef}
-  selected={formData.pickupTime}
-  onChange={(time) => handleTimeChange(time)}
-  showTimeSelect
-  showTimeSelectOnly
-  timeIntervals={30}
-  timeCaption="Time"
-  dateFormat="h:mm aa"
-  wrapperClassName="w-full"
-  customInput={
-    <button className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2 text-left">
-      {formData.pickupTime
-        ? formData.pickupTime.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })
-        : "Select time"}
-    </button>
-  }
-/>
-
+              ref={pickupTimeRef}
+              selected={formData.pickupTime}
+              onChange={(time) => handleTimeChange(time)}
+              timeFormat="hh:mm aa" // 👈 force 12h format everywhere
+              showTimeSelect
+              showTimeSelectOnly
+              timeIntervals={30}
+              timeCaption="Time"
+              dateFormat="h:mm aa"
+              wrapperClassName="w-full"
+              customInput={
+                <button className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2 text-left">
+                  {formData.pickupTime
+                    ? formData.pickupTime.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    : "Select time"}
+                </button>
+              }
+            />
           </div>
 
-          {/* Dropoff Date (if Round Trip) */}
+          {/* Dropoff Date */}
           {rideType === "Round Trip" && (
             <div>
               <label className="block text-sm font-medium mb-1">
                 Return date
               </label>
-               <DatePicker
-    ref={dropOffDateRef}
-    selected={formData.dropOffDate}
-    onChange={(date) => handleDateChange(date, "dropOffDate")}
-    dateFormat="dd-MM-yyyy"
-    wrapperClassName="w-full"
-    customInput={
-      <button className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2 text-left">
-        {formData.dropOffDate
-          ? formData.dropOffDate.toLocaleDateString("en-GB")
-          : "Select date"}
-      </button>
-    }
-/>
+              <DatePicker
+                ref={dropOffDateRef}
+                selected={formData.dropOffDate}
+                onChange={(date) => handleDateChange(date, "dropOffDate")}
+                dateFormat="dd-MM-yyyy"
+                wrapperClassName="w-full"
+                minDate={formData.pickupDate || new Date()} // 👈 cannot select before pickup
+                customInput={
+                  <button className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2 text-left">
+                    {formData.dropOffDate
+                      ? formData.dropOffDate.toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
+                      })
+                      : "Select date"}
+                  </button>
+                }
+              />
             </div>
           )}
         </div>
 
+        {/* Search Button */}
         <div className="mt-6 flex justify-center">
           <Button
             type="submit"
@@ -510,7 +524,6 @@ function CarSearch() {
   return (
     <section className="relative w-full bg-gray-100 min-h-svh sm:min-h-[calc(100vh-3.5rem)] flex items-center overflow-hidden pt-[20%] sm:pt-0">
       <div className="absolute inset-0 bg-opacity-50 -z-10"></div>
-
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center lg:text-left mb-4 md:mb-8 lg:mb-12">
           <h1 className="text-[#6aa4e0] text-2xl sm:text-4xl md:text-5xl font-bold mb-4">
@@ -521,7 +534,6 @@ function CarSearch() {
             Compare prices from top rental companies and save up to 60%
           </p>
         </div>
-
         <CarRentalSearch />
       </div>
     </section>
