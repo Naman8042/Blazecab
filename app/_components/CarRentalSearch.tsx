@@ -456,7 +456,7 @@ export const CarRentalSearch = ({
               ref={pickupTimeRef}
               selected={formData.pickupTime}
               onChange={(time) => handleTimeChange(time)}
-              timeFormat="hh:mm aa" // 👈 force 12h format everywhere
+              timeFormat="hh:mm aa"
               showTimeSelect
               showTimeSelectOnly
               timeIntervals={30}
@@ -466,9 +466,10 @@ export const CarRentalSearch = ({
               customInput={
                 <button className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2 text-left">
                   {formData.pickupTime
-                    ? formData.pickupTime.toLocaleTimeString([], {
+                    ? formData.pickupTime.toLocaleTimeString("en-US", {
                         hour: "2-digit",
                         minute: "2-digit",
+                        hour12: true, 
                       })
                     : "Select time"}
                 </button>
@@ -493,10 +494,10 @@ export const CarRentalSearch = ({
                   <button className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2 text-left">
                     {formData.dropOffDate
                       ? formData.dropOffDate.toLocaleDateString("en-GB", {
-                        day: "2-digit",
-                        month: "long",
-                        year: "numeric",
-                      })
+                          day: "2-digit",
+                          month: "long",
+                          year: "numeric",
+                        })
                       : "Select date"}
                   </button>
                 }
