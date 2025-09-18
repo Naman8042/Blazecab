@@ -423,28 +423,27 @@ export const CarRentalSearch = ({
             <label className="block text-sm font-medium mb-1">
               Pickup date
             </label>
-            <DatePicker
-              ref={pickupDateRef}
-              selected={formData.pickupDate}
-              onChange={(date) => handleDateChange(date, "pickupDate")}
-              dateFormat="dd MMMM yyyy"
-              wrapperClassName="w-full"
-              minDate={new Date()} // 👈 cannot select past
-              customInput={
-                <button
-                  type="button"
-                  className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2 text-left"
-                >
-                  {formData.pickupDate
-                    ? formData.pickupDate.toLocaleDateString("en-GB", {
-                        day: "2-digit",
-                        month: "long",
-                        year: "numeric",
-                      })
-                    : "Select date"}
-                </button>
-              }
-            />
+            <DatePicker 
+  ref={pickupDateRef}
+  selected={formData.pickupDate}
+  onChange={(date) => handleDateChange(date, "pickupDate")}
+  dateFormat="dd MMM yyyy"
+  wrapperClassName="w-full"
+  minDate={new Date()}
+  customInput={
+    <button
+      type="button"
+      className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2 text-left"
+    >
+      {formData.pickupDate
+        ? `${String(formData.pickupDate.getDate()).padStart(2, "0")}-${
+            formData.pickupDate.toLocaleString("en-US", { month: "short" })
+          }-${formData.pickupDate.getFullYear()}`
+        : "Select date"}
+    </button>
+  }
+/>
+
           </div>
 
           {/* Pickup Time */}
@@ -493,12 +492,11 @@ export const CarRentalSearch = ({
                 customInput={
                   <button className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2 text-left">
                     {formData.dropOffDate
-                      ? formData.dropOffDate.toLocaleDateString("en-GB", {
-                          day: "2-digit",
-                          month: "long",
-                          year: "numeric",
-                        })
-                      : "Select date"}
+  ? `${String(formData.dropOffDate.getDate()).padStart(2, "0")}-${
+      formData.dropOffDate.toLocaleString("en-US", { month: "short" })
+    }-${formData.dropOffDate.getFullYear()}`
+  : "Select date"}
+
                   </button>
                 }
               />
