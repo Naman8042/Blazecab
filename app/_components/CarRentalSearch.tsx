@@ -56,13 +56,12 @@ export const CarRentalSearch = ({
   const rideType = useRideTypeStore((state) => state.rideType);
   const setRideType = useRideTypeStore((state) => state.setRideType);
 
-  const getDefaultPickupTime = (rideType: RideType) => {
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1); // kal ka din
-  tomorrow.setHours(6, 0, 0, 0); // 6 AM fix
-  return tomorrow;
-};
-
+  const getDefaultPickupTime = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1); // kal ka din
+    tomorrow.setHours(6, 0, 0, 0); // 6 AM fix
+    return tomorrow;
+  };
 
   const [formData, setFormData] = useState<FormData>({
     pickupLocation: initialValues?.pickupLocation || "",
@@ -72,12 +71,12 @@ export const CarRentalSearch = ({
         : initialValues?.dropoffLocation ?? "",
     pickupDate: initialValues?.pickupDate
       ? new Date(initialValues.pickupDate)
-      :  new Date(new Date().setDate(new Date().getDate() + 1)),
+      : new Date(new Date().setDate(new Date().getDate() + 1)),
     pickupTime: initialValues?.pickupTime
       ? typeof initialValues.pickupTime === "string"
         ? new Date(`1970-01-01T${initialValues.pickupTime}`)
         : new Date(initialValues.pickupTime)
-      : getDefaultPickupTime(rideType),
+      : getDefaultPickupTime(),
     dropOffDate: initialValues?.dropOffDate
       ? new Date(initialValues.dropOffDate)
       : new Date(new Date().setDate(new Date().getDate() + 2)), // 👈 default return next day
@@ -421,87 +420,86 @@ export const CarRentalSearch = ({
             <label className="block text-sm font-medium mb-1">
               Pickup date
             </label>
-            <DatePicker 
-  ref={pickupDateRef}
-  selected={formData.pickupDate}
-  onChange={(date) => handleDateChange(date, "pickupDate")}
-  dateFormat="dd MMM yyyy"
-  wrapperClassName="w-full"
-  minDate={new Date()}
-  customInput={
-    <button
-      type="button"
-      className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2 text-left"
-    >
-      {formData.pickupDate
-        ? `${String(formData.pickupDate.getDate()).padStart(2, "0")}-${
-            formData.pickupDate.toLocaleString("en-US", { month: "short" })
-          }-${formData.pickupDate.getFullYear()}`
-        : "Select date"}
-    </button>
-  }
-/>
-
+            <DatePicker
+              ref={pickupDateRef}
+              selected={formData.pickupDate}
+              onChange={(date) => handleDateChange(date, "pickupDate")}
+              dateFormat="dd MMM yyyy"
+              wrapperClassName="w-full"
+              minDate={new Date()}
+              customInput={
+                <button
+                  type="button"
+                  className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2 text-left"
+                >
+                  {formData.pickupDate
+                    ? `${String(formData.pickupDate.getDate()).padStart(
+                        2,
+                        "0"
+                      )}-${formData.pickupDate.toLocaleString("en-US", {
+                        month: "short",
+                      })}-${formData.pickupDate.getFullYear()}`
+                    : "Select date"}
+                </button>
+              }
+            />
           </div>
 
           {/* Pickup Time */}
           {/* Pickup Time */}
-<div>
-  <label className="block text-sm font-medium mb-1">Pickup time</label>
-  <DatePicker
-    ref={pickupTimeRef}
-    selected={formData.pickupTime}
-    onChange={(time) => handleTimeChange(time)}
-    showTimeSelect
-    showTimeSelectOnly
-    timeIntervals={30}
-    timeCaption="Time"
-    dateFormat="h:mm aa"
-    wrapperClassName="w-full"
-    
-    minTime={
-  (() => {
-    const now = new Date();
-    const pickupDate = formData.pickupDate || new Date();
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Pickup time
+            </label>
+            <DatePicker
+              ref={pickupTimeRef}
+              selected={formData.pickupTime}
+              onChange={(time) => handleTimeChange(time)}
+              showTimeSelect
+              showTimeSelectOnly
+              timeIntervals={30}
+              timeCaption="Time"
+              dateFormat="h:mm aa"
+              wrapperClassName="w-full"
+              minTime={(() => {
+                const now = new Date();
+                const pickupDate = formData.pickupDate || new Date();
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
 
-    // Agar pickup date aaj hai
-    if (
-      pickupDate.getDate() === today.getDate() &&
-      pickupDate.getMonth() === today.getMonth() &&
-      pickupDate.getFullYear() === today.getFullYear()
-    ) {
-      if (rideType === "One Way") {
-        return new Date(now.getTime() + 3 * 60 * 60 * 1000); // now + 3h
-      } else {
-        return new Date(now.getTime() + 2 * 60 * 60 * 1000); // now + 2h
-      }
-    }
+                // Agar pickup date aaj hai
+                if (
+                  pickupDate.getDate() === today.getDate() &&
+                  pickupDate.getMonth() === today.getMonth() &&
+                  pickupDate.getFullYear() === today.getFullYear()
+                ) {
+                  if (rideType === "One Way") {
+                    return new Date(now.getTime() + 3 * 60 * 60 * 1000); // now + 3h
+                  } else {
+                    return new Date(now.getTime() + 2 * 60 * 60 * 1000); // now + 2h
+                  }
+                }
 
-    // Agar kal ya future date hai → 12:00 AM se select kar sakta hai
-    const midnight = new Date(pickupDate);
-    midnight.setHours(0, 0, 0, 0);
-    return midnight;
-  })()
-}
-
-    maxTime={new Date(new Date().setHours(23, 59, 59, 999))}
-    customInput={
-      <button className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2 text-left">
-        {formData.pickupTime
-          ? formData.pickupTime.toLocaleTimeString("en-US", {
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: true,
-            })
-          : "Select time"}
-      </button>
-    }
-  />
-</div>
-
+                // Agar kal ya future date hai → 12:00 AM se select kar sakta hai
+                const midnight = new Date(pickupDate);
+                midnight.setHours(0, 0, 0, 0);
+                return midnight;
+              })()}
+              maxTime={new Date(new Date().setHours(23, 59, 59, 999))}
+              customInput={
+                <button className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2 text-left">
+                  {formData.pickupTime
+                    ? formData.pickupTime.toLocaleTimeString("en-US", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                      })
+                    : "Select time"}
+                </button>
+              }
+            />
+          </div>
 
           {/* Dropoff Date */}
           {rideType === "Round Trip" && (
@@ -519,11 +517,13 @@ export const CarRentalSearch = ({
                 customInput={
                   <button className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2 text-left">
                     {formData.dropOffDate
-  ? `${String(formData.dropOffDate.getDate()).padStart(2, "0")}-${
-      formData.dropOffDate.toLocaleString("en-US", { month: "short" })
-    }-${formData.dropOffDate.getFullYear()}`
-  : "Select date"}
-
+                      ? `${String(formData.dropOffDate.getDate()).padStart(
+                          2,
+                          "0"
+                        )}-${formData.dropOffDate.toLocaleString("en-US", {
+                          month: "short",
+                        })}-${formData.dropOffDate.getFullYear()}`
+                      : "Select date"}
                   </button>
                 }
               />
