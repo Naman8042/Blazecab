@@ -13,6 +13,17 @@ interface BookingPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
+function formatTimeFromMillis(ms: string): string {
+  if (!ms) return "";
+  const date = new Date(Number(ms));
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const ampm = hours >= 12 ? "PM" : "AM";
+  const adjustedHours = hours % 12 || 12; // convert 0 → 12
+  const formattedMinutes = minutes.toString().padStart(2, "0");
+  return `${adjustedHours}:${formattedMinutes} ${ampm}`;
+}
+
 
 export const metadata = {
   title: "Booking Page | BlazeCab",
@@ -24,10 +35,12 @@ export const metadata = {
 // Your page component, accepting 'props' with the specified searchParams type
 export default async function Page(props: BookingPageProps): Promise<JSX.Element> {
   
-
+  
   // Await searchParams to resolve the Promise.
   // This is now explicitly typed as a Promise, matching the error's expectation.
   const resolvedSearchParams = await props.searchParams;
+
+  console.log(resolvedSearchParams)
 
   // Extract and parse search parameters from the resolved object.
   // Add 'as string' to cast the value, ensuring it's treated as a single string.
@@ -60,13 +73,10 @@ export default async function Page(props: BookingPageProps): Promise<JSX.Element
     day: 'numeric'
   }) : "";
 
-  const formattedTime = rawTime
-    ? new Date(Number(rawTime)).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      })
-    : "";
+  let formattedTime = formatTimeFromMillis(rawTime);
+
+
+    // formattedTime = formatTime(formattedTime)
 
   return (
     <Suspense fallback={<Loading />}>

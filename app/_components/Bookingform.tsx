@@ -345,8 +345,8 @@ export function BookingFormClient({
           </Card>
 
           {/* Right Booking Summary */}
-          <div className="flex flex-col gap-4 w-full md:w-[39%]">
-            <Card className="shadow-md rounded-2xl border border-gray-200">
+          <div className="flex flex-col gap-4 w-full md:w-[39%]  justify-between">
+            <Card className="shadow-md rounded-2xl border border-gray-200 sm:h-[55%]">
               <CardHeader className="text-center pb-2">
                 <h2 className="text-lg font-bold text-gray-800">
                   YOUR BOOKING DETAILS
@@ -394,7 +394,7 @@ export function BookingFormClient({
               </CardContent>
             </Card>
 
-            <Card className="shadow-lg bg-white p-4 md:p-6 relative">
+            <Card className="shadow-lg bg-white p-4 md:p-6 relative sm:h-[35%] flex justify-center">
               <Tabs defaultValue="inclusions">
                 <TabsList className="flex justify-between bg-gray-200 rounded-lg p-1 w-full text-xs md:text-sm">
                   <TabsTrigger value="inclusions">Inclusions</TabsTrigger>

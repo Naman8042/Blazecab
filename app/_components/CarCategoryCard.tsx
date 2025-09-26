@@ -24,6 +24,7 @@ interface CarCategoryCardProps {
   initialValues: initialValues;
 }
 
+
 const CarCategoryCard = ({
   category,
   image,
