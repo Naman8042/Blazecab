@@ -18,9 +18,9 @@ const Contact = () => {
                   GET IN TOUCH WITH US
                 </h2>
                 <p className="text-sm font-normal text-gray-500 max-w-xl mx-auto md:text-lg">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eius tempor incididunt ut labore e dolore magna aliqua. Ut
-                  enim adiqua minim veniam quis nostrud exercitation ullamco
+                   Have questions about our services, pricing, or bookings? Our team is always 
+  here to help you with quick assistance. Reach out by phone, email, or visit 
+  our office, and we’ll be glad to assist you.
                 </p>
                 <div className=" flex w-full max-w-[400px] items-center">
                   <div className="mr-6 flex h-[60px] w-full max-w-[60px] items-center justify-center overflow-hidden rounded bg-primary/5 text-primary sm:h-[70px] sm:max-w-[70px]">
@@ -59,7 +59,7 @@ const Contact = () => {
                       Email Address
                     </h4>
                     <p className="text-base text-gray-500 text-body-color dark:text-dark-6">
-                      info@yourdomain.com
+                      info@blazeCab.com
                     </p>
                   </div>
                 </div>

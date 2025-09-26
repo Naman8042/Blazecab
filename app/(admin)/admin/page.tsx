@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 
 const Sidebar = ({ setActive }: { setActive: (val: string) => void }) => {
   return (
-    <div className="w-80 h-full bg-[#6aa4e0] text-white p-4 hidden sm:block overflow-y-auto">
+    <div className="w-80 h-full bg-[#6aa4e0] text-white p-4 hidden sm:block overflow-y-auto fixed left-0">
       <h2 className="text-xl font-bold mb-6">Admin Dashboard</h2>
       <nav className="space-y-8">
         <button
@@ -455,7 +455,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="flex flex-col sm:flex-row h-[89.75vh]">
+    <div className="flex flex-col sm:flex-row h-[89.75vh] ml-80">
       <Sidebar setActive={setActive} />
       <header className="sm:hidden bg-[#6aa4e0] text-white p-4 flex justify-between items-center w-full">
         <h1 className="text-lg font-bold">Dashboard</h1>

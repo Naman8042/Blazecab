@@ -231,44 +231,51 @@ export const CarRentalSearch = ({
   };
 
   const handleAddressSearch = async (
-    query: string,
-    field: "pickup" | "dropoff"
-  ) => {
-    if (!query || query.length < 3) {
-      if (field === "pickup") {
-        setPickupSuggestions([]);
-      } else {
-        setDropoffSuggestions([]);
-      }
-      return;
+  query: string,
+  field: "pickup" | "dropoff"
+) => {
+  if (!query || query.length < 3) {
+    if (field === "pickup") {
+      setPickupSuggestions([]);
+    } else {
+      setDropoffSuggestions([]);
     }
+    return;
+  }
 
-    try {
-      const response = await axios.get<{ features: PhotonFeature[] }>(
-        `https://photon.komoot.io/api/?q=${encodeURIComponent(query)}`
-      );
+  try {
+    const response = await axios.get<{ features: PhotonFeature[] }>(
+      `https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&lang=en`
+    );
 
-      const features = response?.data?.features ?? [];
+    const features = response?.data?.features ?? [];
 
-      const uniqueResults = features.filter((place, i, self) => {
-        const osmId = place?.properties?.osm_id;
-        return i === self.findIndex((p) => p?.properties?.osm_id === osmId);
-      });
+    // ✅ Only keep India results
+    const indiaResults = features.filter(
+      (place) => place?.properties?.country === "India"
+    );
 
-      if (field === "pickup") {
-        setPickupSuggestions(uniqueResults);
-      } else {
-        setDropoffSuggestions(uniqueResults);
-      }
-    } catch (error) {
-      console.error("Error fetching data from Photon API:", error);
-      if (field === "pickup") {
-        setPickupSuggestions([]);
-      } else {
-        setDropoffSuggestions([]);
-      }
+    // ✅ Keep only unique major cities
+    const uniqueResults = indiaResults.filter((place, i, self) => {
+      const osmId = place?.properties?.osm_id;
+      return i === self.findIndex((p) => p?.properties?.osm_id === osmId);
+    });
+
+    if (field === "pickup") {
+      setPickupSuggestions(uniqueResults);
+    } else {
+      setDropoffSuggestions(uniqueResults);
     }
-  };
+  } catch (error) {
+    console.error("Error fetching data from Photon API:", error);
+    if (field === "pickup") {
+      setPickupSuggestions([]);
+    } else {
+      setDropoffSuggestions([]);
+    }
+  }
+};
+
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();

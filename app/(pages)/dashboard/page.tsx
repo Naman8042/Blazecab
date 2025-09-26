@@ -39,7 +39,7 @@ const Dashboard = async () => {
   const bookings = await getBookings(userEmail);
 
   return (
-    <div className="px-4 sm:px-8 py-10 max-w-5xl mx-auto min-h-dvh pt-[20%] sm:pt-0">
+    <div className="px-4 sm:px-8 py-10 max-w-7xl mx-auto min-h-dvh pt-[20%] sm:pt-0">
       <div className="container mx-auto">
         <div className="flex justify-end mt-2">
           <Logoutbutton/>

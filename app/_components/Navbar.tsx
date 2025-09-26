@@ -27,22 +27,21 @@ const Navbar = () => {
 
           {/* 24x7 Support Button - Centered and Styled */}
           <div className="flex items-center border border-[#6aa4e0] rounded-md overflow-hidden h-8 sm:h-9 min-w-[120px] sm:min-w-[140px]">
-  {/* Icon box - auto width */}
-  <div className="bg-white px-2 flex items-center justify-center">
-    <FaPhoneAlt className="text-[#6aa4e0]" size={12} />
-  </div>
+            {/* Icon box - auto width */}
+            <div className="bg-white px-2 flex items-center justify-center">
+              <FaPhoneAlt className="text-[#6aa4e0]" size={12} />
+            </div>
 
-  {/* Phone number box - takes remaining width */}
-  <a
-    href="tel:7703821374"
-    className="bg-[#6aa4e0] flex-1 h-full flex items-center justify-center text-white px-2 font-bold"
-  >
-    <span className="text-[10px] sm:text-xs md:text-sm">
-      7703821374
-    </span>
-  </a>
-</div>
-
+            {/* Phone number box - takes remaining width */}
+            <a
+              href="tel:7703821374"
+              className="bg-[#6aa4e0] flex-1 h-full flex items-center justify-center text-white px-2 font-bold"
+            >
+              <span className="text-[10px] sm:text-xs md:text-sm">
+                7703821374
+              </span>
+            </a>
+          </div>
 
           {/* Conditional Rendering based on Authentication Status */}
           <div className="flex items-center space-x-2 min-w-16 sm:min-w-40  justify-end">
@@ -51,7 +50,10 @@ const Navbar = () => {
               <div className=""></div>
             ) : session ? (
               // Show user icon if the user is logged in
-              <Link href="/dashboard" className="flex items-center justify-end w-full">
+              <Link
+                href="/dashboard"
+                className="flex items-center justify-end w-full"
+              >
                 <FaUserCircle className="text-[#6aa4e0] w-7 h-7 sm:w-8 sm:h-8" />
               </Link>
             ) : (

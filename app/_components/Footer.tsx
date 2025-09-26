@@ -78,10 +78,17 @@ const Footer = () => {
     },
   ];
 
+    const getDefaultPickupTime = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1); // kal ka din
+    tomorrow.setHours(6, 0, 0, 0); // 6 AM fix
+    return tomorrow;
+  };
+
   function onClickHandler(start: string, end: string, rideType: string) {
-    const pickupDate = new Date();
-    const pickupTime = new Date();
-    const dropoffDate = new Date(Date.now() + 86400000);
+    const pickupDate = new Date(new Date().setDate(new Date().getDate() + 1));
+    const pickupTime = getDefaultPickupTime();
+    const dropoffDate = new Date(new Date().setDate(new Date().getDate() + 1));
 
     const queryParams = new URLSearchParams();
 
@@ -228,7 +235,7 @@ const Footer = () => {
               {roundTripCities.map((city, index) => (
                 <li key={index}>
                   <div
-                    className="hover:underline"
+                    className="hover:underline hover:cursor-pointer"
                     onClick={() =>
                       onClickHandler(city.start, city.end, "Round-Trip")
                     }
@@ -247,7 +254,7 @@ const Footer = () => {
               {oneWayRoutes.map((route, index) => (
                 <li key={index}>
                   <div
-                    className="hover:underline"
+                    className="hover:underline hover:cursor-pointer"
                     onClick={() =>
                       onClickHandler(route.start, route.end, "One-Way")
                     }

@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 interface initialValues {
   pickupLocation: string;
@@ -36,15 +37,15 @@ const CarCategoryCard = ({
   initialValues,
   distance,
 }: CarCategoryCardProps) => (
-  <div className="mb-12">
+  <div className="mb-12 border-2 p-4 rounded-2xl shadow-lg hover:shadow-xl transition-all">
     <h2 className="text-2xl font-bold text-[#6aa4e0] mb-4 text-center sm:text-left">
       {category}
     </h2>
 
-    <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col sm:flex-row sm:items-center p-5 gap-6 transition-all hover:shadow-xl">
+    <div className=" bg-white overflow-hidden flex flex-col sm:flex-row sm:items-center p-5 gap-6  ">
       {/* Car Image */}
       <div className="flex justify-center sm:w-1/3">
-        <img src={image} alt={name} className="w-48 h-32 object-contain" />
+        <Image src={image} width={100} height={100} alt={name} className="w-48 h-32 object-contain" />
       </div>
 
       {/* Car Info and Tabs */}
@@ -79,9 +80,9 @@ const CarCategoryCard = ({
                 termscondition: JSON.stringify(termscondition),
               },
             }}
-            className="w-full sm:w-2/5 flex justify-center "
+            className="w-full sm:w-2/5 flex justify-center h-full"
           >
-            <Button className="w-full  px-6 py-2">Select Car</Button>
+            <Button className="w-full  px-6 py-2 text-base">Select Car</Button>
           </Link>
         </div>
 

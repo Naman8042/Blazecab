@@ -56,7 +56,7 @@ export function SigninForm({
               </div>
                 
               <Button type="submit" className="w-full">
-                Signin
+                Signup
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">
