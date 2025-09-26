@@ -8,7 +8,7 @@ const layout = ({
 }>) => {
   return (
     <Session>
-      <div>
+      <div className="mt-16">
         <AdminNav />
         {children}
       </div>
