@@ -73,7 +73,7 @@ export default async function Page(props: BookingPageProps): Promise<JSX.Element
     day: 'numeric'
   }) : "";
 
-  let formattedTime = formatTimeFromMillis(rawTime);
+  const formattedTime = formatTimeFromMillis(rawTime);
 
 
     // formattedTime = formatTime(formattedTime)
