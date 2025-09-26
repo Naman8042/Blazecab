@@ -15,13 +15,12 @@ interface BookingPageProps {
 
 function formatTimeFromMillis(ms: string): string {
   if (!ms) return "";
-  const date = new Date(Number(ms));
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const ampm = hours >= 12 ? "PM" : "AM";
-  const adjustedHours = hours % 12 || 12; // convert 0 → 12
-  const formattedMinutes = minutes.toString().padStart(2, "0");
-  return `${adjustedHours}:${formattedMinutes} ${ampm}`;
+  return new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+    timeZone: "Asia/Kolkata", // 👈 force IST
+  }).format(new Date(Number(ms)));
 }
 
 
