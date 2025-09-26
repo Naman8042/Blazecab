@@ -4,7 +4,7 @@ import { FaAngleDown } from "react-icons/fa";
 
 const Accordion = () => {
   return (
-    <section className="relative z-20 overflow-hidden px-4 sm:px-0 max-w-7xl mx-auto">
+    <section className="relative z-20 overflow-hidden px-4  max-w-7xl mx-auto ">
       <div className="container mx-auto">
         <div className="-mx-4 flex flex-wrap">
           <div className="w-full px-4">
@@ -16,14 +16,15 @@ const Accordion = () => {
                 Any Questions? Look Here
               </h2>
               <p className="text-sm font-normal text-gray-500 max-w-xl mx-auto md:text-lg">
-                Find quick answers to the most common questions about BlazeCab rides, pricing, and policies.
+                Find quick answers to the most common questions about BlazeCab
+                rides, pricing, and policies.
               </p>
             </div>
           </div>
         </div>
 
-        <div className="-mx-4 flex flex-wrap bg-white">
-          <div className="w-full px-4 lg:w-full">
+        <div className="px-4 flex flex-wrap bg-white">
+          <div className="w-full  lg:w-full">
             <AccordionItem
               header="In which cities are Blazecab services available?"
               text="Blazecab operates pan-India, including Delhi, Gurugram, Noida, Mumbai, Bengaluru, and Chennai. We provide both local and outstation rides."
@@ -113,10 +114,10 @@ const AccordionItem = ({ header, text }: AccordionItemInterface) => {
   };
 
   return (
-    <div className="mb-1 w-full border-b">
+    <div className="mb-1 w-full border-b ">
       {/* Header */}
       <div
-        className="flex items-center w-full cursor-pointer px-5 py-2"
+        className="flex items-center w-full cursor-pointer py-2"
         onClick={handleToggle}
       >
         {/* Icon */}

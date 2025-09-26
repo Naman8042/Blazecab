@@ -8,6 +8,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Button } from "@/components/ui/button";
 import { useRideTypeStore } from "../Providers";
+import { IoClose } from "react-icons/io5";
 import { RideType } from "@/state/counter-store";
 
 const rideTypes: RideType[] = ["One Way", "Round Trip", "Local"];
@@ -74,7 +75,7 @@ export const CarRentalSearch = ({
       : new Date(new Date().setDate(new Date().getDate() + 1)),
     pickupTime: initialValues?.pickupTime
       ? typeof initialValues.pickupTime === "string"
-        ? new Date(`1970-01-01T${initialValues.pickupTime}`)
+        ? new Date(initialValues.pickupTime)
         : new Date(initialValues.pickupTime)
       : getDefaultPickupTime(),
     dropOffDate: initialValues?.dropOffDate
@@ -299,6 +300,17 @@ export const CarRentalSearch = ({
         } border w-full backdrop-blur-sm`}
       >
         {/* Ride Type Buttons */}
+        {source === "carride" ? (
+          <div className=" flex justify-end pr-4 py-2">
+            <IoClose
+              size={20}
+              onClick={() => setShowForm?.(false)}
+              className="hover:cursor-pointer"
+            />
+          </div>
+        ) : (
+          <></>
+        )}
         <div className="flex flex-wrap justify-between sm:justify-center gap-2 mb-6  px-5 sm:px-6">
           {rideTypes.map((type) => (
             <button
@@ -550,13 +562,22 @@ function CarSearch() {
   return (
     <section className="relative w-full bg-gray-100 min-h-svh sm:min-h-[calc(100vh-3.5rem)] flex items-center overflow-hidden pt-[20%] sm:pt-0">
       <div className="absolute inset-0 bg-opacity-50 -z-10"></div>
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 ">
         <div className="text-center lg:text-left mb-4 md:mb-8 lg:mb-12">
-          <h1 className="text-[#6aa4e0] text-2xl sm:text-4xl md:text-5xl font-bold mb-4">
-            Ride Smart → Ride Safe → Ride with Blaze
-            <span className="text-[#fbd20b]">Cab</span>
+          <h1 className="text-[#6aa4e0] font-bold text-center mb-3 leading-snug">
+            {/* Mobile version (shortened) */}
+            <span className="block text-2xl sm:hidden">
+              Ride Smart with <span className="text-[#fbd20b]">BlazeCab</span>
+            </span>
+
+            {/* Larger screens version (full text) */}
+            <span className="hidden sm:block text-2xl md:text-4xl lg:text-5xl">
+              Ride Smart → Ride Safe → Ride with{" "}
+              <span className="text-[#fbd20b]">BlazeCab</span>
+            </span>
           </h1>
-          <p className="text-[#6aa4e0] text-lg sm:text-xl max-w-2xl mx-auto lg:mx-0 hidden sm:block">
+
+          <p className="text-[#6aa4e0] text-lg sm:text-xl  mx-auto lg:mx-0 hidden sm:block text-center">
             Compare prices from top rental companies and save up to 60%
           </p>
         </div>

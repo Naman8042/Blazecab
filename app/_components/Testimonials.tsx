@@ -1,113 +1,70 @@
 "use client";
-import { useState, useEffect } from "react";
-import { User } from "lucide-react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/autoplay";
+import { FaUser } from "react-icons/fa";
 
-export default function Example() {
+
+export default function TestimonialCarousel() {
   const testimonials = [
-  {
-    id: 1,
-    name: "Naman Sharma",
-    role: "",
-    image:
-      "https://images.unsplash.com/photo-1544725176-7c40e5a2c9f2?q=80&w=100&auto=format&fit=crop",
-    review:
-      "Blazecab has been my go-to for daily commutes. The rides are always on time and the drivers are super professional. I’ve stopped worrying about being late for work.",
-    rating: 5,
-  },
-  {
-    id: 2,
-    name: "Prabhakar",
-    role: "",
-    image:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=100&auto=format&fit=crop",
-    review:
-      "The app is simple and reliable. I book a ride in seconds, and the pricing is very transparent. I also love how smooth the payment process is!",
-    rating: 5,
-  },
-  {
-    id: 3,
-    name: "Shaurya Sharma",
-    role: "",
-    image:
-      "https://images.unsplash.com/photo-1603415526960-f7e0328dd352?q=80&w=100&auto=format&fit=crop",
-    review:
-      "I started using Blazecab for my weekend trips and I’ve been impressed with the comfort and cleanliness. Definitely better than my previous ride apps.",
-    rating: 4,
-  },
-  {
-    id: 4,
-    name: "Samyak Jain",
-    role: "",
-    image:
-      "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=100&auto=format&fit=crop",
-    review:
-      "The best thing about Blazecab is consistency. No random cancellations, no long wait times. It just works every single time I book a ride.",
-    rating: 5,
-  },
-  {
-    id: 5,
-    name: "Vimarsh Gurka",
-    role: "",
-    image:
-      "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=100&auto=format&fit=crop",
-    review:
-      "Blazecab is a lifesaver when I’m rushing to the airport. The scheduling feature is spot on—I can pre-book and never stress about catching a flight again.",
-    rating: 5,
-  },
-];
-
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [itemsPerSlide, setItemsPerSlide] = useState(3);
-
-  // Detect screen size and adjust items per slide
-  useEffect(() => {
-    const updateItems = () => {
-      if (window.innerWidth < 640) {
-        setItemsPerSlide(1);
-      } else if (window.innerWidth < 1024) {
-        setItemsPerSlide(2);
-      } else {
-        setItemsPerSlide(3);
-      }
-    };
-
-    updateItems();
-    window.addEventListener("resize", updateItems);
-    return () => window.removeEventListener("resize", updateItems);
-  }, []);
-
-  // Auto-rotation
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => 
-        prev >= testimonials.length - itemsPerSlide ? 0 : prev + 1
-      );
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [itemsPerSlide, testimonials.length]);
-
-  const goToSlide = (index:number) => {
-    setCurrentIndex(index);
-  };
-
-  // Get visible testimonials
-  const getVisibleTestimonials = () => {
-    const visible = [];
-    for (let i = 0; i < itemsPerSlide; i++) {
-      const index = (currentIndex + i) % testimonials.length;
-      visible.push(testimonials[index]);
-    }
-    return visible;
-  };
-
-  const visibleTestimonials = getVisibleTestimonials();
-  const maxSlides = testimonials.length - itemsPerSlide + 1;
+    {
+      id: 1,
+      name: "Naman Sharma",
+      role: "",
+      image:
+        "https://images.unsplash.com/photo-1544725176-7c40e5a2c9f2?q=80&w=100&auto=format&fit=crop",
+      review:
+        "Blazecab has been my go-to for daily commutes. The rides are always on time and the drivers are super professional. I’ve stopped worrying about being late for work.",
+      rating: 3.5,
+    },
+    {
+      id: 2,
+      name: "Prabhakar",
+      role: "",
+      image:
+        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=100&auto=format&fit=crop",
+      review:
+        "The app is simple and reliable. I book a ride in seconds, and the pricing is very transparent. I also love how smooth the payment process is!",
+      rating: 4,
+    },
+    {
+      id: 3,
+      name: "Shaurya Sharma",
+      role: "",
+      image:
+        "https://images.unsplash.com/photo-1603415526960-f7e0328dd352?q=80&w=100&auto=format&fit=crop",
+      review:
+        "I started using Blazecab for my weekend trips and I’ve been impressed with the comfort and cleanliness. Definitely better than my previous ride apps.",
+      rating: 4,
+    },
+    {
+      id: 4,
+      name: "Samyak Jain",
+      role: "",
+      image:
+        "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=100&auto=format&fit=crop",
+      review:
+        "The best thing about Blazecab is consistency. No random cancellations, no long wait times. It just works every single time I book a ride.",
+      rating: 5,
+    },
+    {
+      id: 5,
+      name: "Vimarsh Gurka",
+      role: "",
+      image:
+        "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=100&auto=format&fit=crop",
+      review:
+        "Blazecab is a lifesaver when I’m rushing to the airport. The scheduling feature is spot on—I can pre-book and never stress about catching a flight again.",
+      rating: 3,
+    },
+  ];
 
   return (
-    <div className="text-center px-4">
+    <div className="text-center px-4 py-12 ">
       <span className="bg-[#FFB300] text-white px-3 py-1 rounded-full text-xs font-semibold">
-              Testimonials
+        Testimonials
       </span>
       <h1 className="text-2xl font-bold text-[#6aa4e0] py-4 md:text-4xl">
         What Our Riders Say
@@ -117,15 +74,23 @@ export default function Example() {
       </p>
 
       <div className="max-w-7xl mx-auto mt-16">
-        {/* Cards Container */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 transition-all duration-500">
-          {visibleTestimonials.map((t) => (
-            <div
-              key={`${t.id}-${currentIndex}`}
-              className="h-[275px] flex flex-col justify-between border border-gray-200 p-5 rounded-lg bg-white shadow-sm hover:shadow-md transition-all duration-300"
-            >
-              {/* Quote Icon */}
-              <div>
+        <Swiper
+          spaceBetween={20}
+          loop={true}
+          autoplay={{ delay: 3000, disableOnInteraction: false }}
+          pagination={{ clickable: true }}
+          modules={[Autoplay, Pagination]}
+          breakpoints={{
+            0: { slidesPerView: 1 },
+            1024: { slidesPerView: 2 },
+            1280: { slidesPerView: 3 },
+          }}
+          className="!pb-12"
+        >
+          {testimonials.map((t) => (
+            <SwiperSlide key={t.id}>
+              <div className="flex flex-col h-[300px] justify-between border border-gray-200 p-6 rounded-xl bg-white shadow-lg hover:shadow-2xl transition-all duration-300 ">
+                {/* Quote */}
                 <svg
                   width="44"
                   height="40"
@@ -139,8 +104,9 @@ export default function Example() {
                   />
                 </svg>
 
-                {/* Stars */}
-                <div className="flex items-center mt-3 gap-1">
+                {/* Rating */}
+              
+                <div className="flex items-center mt-4 gap-1 justify-center">
                   {Array.from({ length: t.rating }).map((_, i) => (
                     <svg
                       key={i}
@@ -158,37 +124,22 @@ export default function Example() {
                   ))}
                 </div>
 
-                <p className="text-sm mt-3 text-gray-500 line-clamp-5">
-                  {t.review}
-                </p>
-              </div>
+                {/* Review */}
+                <p className="text-gray-600 mt-4 flex-1">{t.review}</p>
 
-              {/* User Info */}
-              <div className="flex items-center gap-3 mt-4">
-                <User className="w-7 h-7 text-gray-500 border-2 rounded-full" />
-                <div className="text-left">
-                  <h2 className="text-lg text-gray-900 font-medium">{t.name}</h2>
-                  <p className="text-sm text-gray-500">{t.role}</p>
+                
+                {/* User Info */}
+                <div className="flex items-center mt-6 gap-3">
+                  <FaUser className="w-10 h-10 text-gray-500 border-2 rounded-full" />
+                  <div className="text-left">
+                    <h2 className="text-gray-900 font-medium">{t.name}</h2>
+                    <p className="text-gray-500 text-sm">{t.role}</p>
+                  </div>
                 </div>
               </div>
-            </div>
+            </SwiperSlide>
           ))}
-        </div>
-
-        {/* Dots Navigation */}
-        <div className="flex justify-center mt-8 gap-2">
-          {Array.from({ length: maxSlides }).map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                currentIndex === index
-                  ? "bg-[#6aa4e0] scale-110"
-                  : "bg-gray-300 hover:bg-gray-400"
-              }`}
-            />
-          ))}
-        </div>
+        </Swiper>
       </div>
     </div>
   );

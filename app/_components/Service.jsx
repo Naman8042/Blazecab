@@ -98,25 +98,25 @@ const Service = () => {
   const cards = [ 
   {
     imageSrc: Oneway,
-    title: 'One Way Cab Service',
+    title: 'Oneway Drops',
     value: 'One Way',
     description: 'Travel one way across India with ease. No return fare, just pay for your ride.'
   },
   {
     imageSrc: Roundtrip,
-    title: 'Round Trip Cab Service',
+    title: 'Roundtrip Cabs',
     value: 'Round Trip',
     description: 'Plan a round trip anywhere in India. Clean cars, expert drivers & punctual service.'
   },
   {
     imageSrc: Local,
-    title: 'Local Taxi Service',
+    title: 'Local Rentals',
     value: 'Local',
-    description: 'Your trusted local taxi, available 24x7. Perfect for shopping, city rides & sightseeing.'
+    description: 'Your trusted local taxi, available 24x7. Perfect for city rides & sightseeing.'
   },
   {
     imageSrc: Airport,
-    title: 'Airport Taxi Service',
+    title: 'Airport Transfers',
     value: 'Local',
     description: '24x7 airport cabs – day or night. Guaranteed pickup, fixed price & on-time drop.'
   }
@@ -128,7 +128,7 @@ const Service = () => {
     <section className="">
       <div className=" flex flex-wrap">
         {" "}
-        <div className="w-full px-4">
+        <div className="w-full ">
           {" "}
           <div className="mx-auto mb-12 max-w-[510px] text-center lg:mb-20">
             {" "}
@@ -139,14 +139,14 @@ const Service = () => {
               {" "}
               What We Offer{" "}
             </h2>{" "}
-            <p className="text-sm font-normal text-gray-500 max-w-xl mx-auto md:text-lg">
+            <p className="text-sm font-normal text-gray-500 px-4 sm:max-w-xl mx-auto md:text-lg">
               {" "}
               From local rides to airport transfers, Blazecab offers trusted cab services tailored to meet all your travel needs.{" "}
             </p>{" "}
           </div>{" "}
         </div>{" "}
       </div>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 ">
   <div className="grid grid-cols-2 gap-3 sm:gap-5 md:gap-6 lg:flex lg:flex-row lg:justify-between lg:gap-x-8">
     {cards.map((card, index) => (
       <Card key={index} {...card} />
@@ -167,7 +167,7 @@ const Card = ({ imageSrc, title, description, value }) => {
     document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
   }
   return (
-    <div onClick={onCLickHandler} className="group relative w-full bg-gray-50 cursor-pointer rounded-2xl p-2 sm:p-6 transition-all duration-500 hover:bg-[#6aa4e0] min-h-[200px] sm:min-h-[220px]">
+    <div onClick={onCLickHandler} className="group relative w-full bg-gray-50 cursor-pointer rounded-2xl p-2 sm:p-6 transition-all duration-500 hover:bg-[#6aa4e0] min-h-[180px] sm:min-h-[220px]">
       <div className="bg-white rounded-full flex justify-center mx-auto items-center mb-4 w-13 h-13 sm:w-14 sm:h-14 p-1 sm:p-0">
         <Image src={imageSrc} alt={title} className="w-9 h-9 " width={100} height={100}/>
       </div>

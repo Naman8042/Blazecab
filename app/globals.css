@@ -5,6 +5,19 @@ svg[width="auto"] {
   width: 1.5rem !important;
 }
 
+.swiper-pagination {
+    bottom: -1.5rem !important;
+  }
+
+  /* Optional: style bullets */
+  .swiper-pagination-bullet {
+    background-color: #FFB300;
+    opacity: 1;
+  }
+  .swiper-pagination-bullet-active {
+    /* background-color: #6aa4e0; */
+  }
+
 
 @custom-variant dark (&:is(.dark *));
 

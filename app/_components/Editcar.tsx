@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 function formatTime(date: Date): string {
   const hours = date.getHours();
   const minutes = date.getMinutes();
-  const ampm = hours >= 12 ? "AM" : "PM"; // force uppercase AM/PM
+  const ampm = hours >= 12 ? "PM" : "AM"; // force uppercase AM/PM
   const adjustedHours = hours % 12 || 12; // convert 0 → 12
   const formattedMinutes = minutes.toString().padStart(2, "0");
   console.log(`${adjustedHours}:${formattedMinutes} ${ampm}`);

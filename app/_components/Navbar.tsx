@@ -13,7 +13,7 @@ const Navbar = () => {
   const { data: session, status } = useSession();
 
   return (
-    <div className="absolute top-0 sm:relative shadow-md  w-full z-50 bg-white">
+    <div className="absolute top-0 sm:relative shadow-md  w-full z-50 bg-white ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-6 py-1 sm:py-2">
         <div className="flex justify-between items-center h-14 gap-2 sm:gap-4">
           {/* Logo */}

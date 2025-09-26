@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
   razorpayPaymentId,
   razorpayOrderId,
   razorpaySignature,
-  booking, // ✅ correct key
+  booking, 
 } = await req.json();
 
 
@@ -35,7 +35,9 @@ export async function POST(req: NextRequest) {
       status:booking.paymentStatus
     });
 
-    sendEmail({email:booking.email,emailType:"Book"})
+    console.log(booking)
+    
+    sendEmail({email:booking.email,emailType:"Booking",booking})
 
     return NextResponse.json({ isOk: true, booking: saved }); // ✅ fix missing return
   } catch (err) {

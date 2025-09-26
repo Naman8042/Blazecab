@@ -7,7 +7,7 @@ import Image from "next/image";
 const Featuresection = () => {
   return (
     <section className="  md:py-">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 ">
         <div className="mb-10 text-center md:mb-14">
           <span className="bg-[#FFB300] text-white px-3 py-1 rounded-full text-xs font-semibold">
             Why Choose Us
