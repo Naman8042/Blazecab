@@ -14,7 +14,7 @@ export default function BookingSuccessPage() {
   const date = params.get("date");
   const time = params.get("time");
   const carType = params.get("carType");
-  const km = params.get("km");
+//   const km = params.get("km");
   const fare = params.get("fare");
   const paid = params.get("paid");
   const status = params.get("status");
