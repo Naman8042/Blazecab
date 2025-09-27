@@ -240,9 +240,9 @@ export function BookingFormClient({
 
           const result = await res.json();
           if (result.isOk) {
-            toast.success(`Booking ${bookingStatus} ✅`);
+            toast.success(`Booking ${bookingStatus} `);
           } else {
-            toast.error(result.message || "Payment failed ❌");
+            toast.error(result.message || "Payment failed ");
           }
         },
         prefill: { name, email, contact: phone },

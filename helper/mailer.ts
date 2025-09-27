@@ -54,33 +54,153 @@ export async function sendEmail({ email, emailType, booking }: EmailInterface) {
         <br/><strong>Team BlazeCab</strong>
       `;
     } else if (emailType === "Booking" && booking) {
-      htmlContent = `
-        <h2>Your BlazeCab Booking Details 🚖</h2>
-      <ul>
-        <li><b>Customer Name:</b> ${booking.customerName}</li>
-        <li><b>Email:</b> ${booking.email}</li>
-        <li><b>Phone:</b> ${booking.phone}</li>
-        <li><b>Pickup Address:</b> ${booking.pickupAddress}</li>
-        ${booking.dropAddress ? `<li><b>Drop Address:</b> ${booking.dropAddress}</li>` : ""}
-        <li><b>Pickup City:</b> ${booking.pickupCity}</li>
-        <li><b>Destination:</b> ${booking.destination}</li>
-        <li><b>Pickup Date:</b> ${new Date(booking.pickupDate).toLocaleString()}</li>
-        <li><b>Car Type:</b> ${booking.carType}</li>
-        <li><b>Total Km:</b> ${booking.totalKm} km</li>
-        <li><b>Price:</b> ₹${booking.price}</li>
-        <li><b>Amount Paid:</b> ₹${booking.amountPaid}</li>
-        <li><b>Trip Type:</b> ${booking.type}</li>
-        <li><b>Booking Status:</b> ${booking.bookingStatus}</li>
-        <li><b>Payment Status:</b> ${booking.paymentStatus}</li>
-        <li><b>Payment Option:</b> ${booking.paymentOption}</li>
-      </ul>
-      <h3>Inclusions:</h3>
-      <ul>${booking.inclusions.map(item => `<li>${item}</li>`).join("")}</ul>
-      <h3>Exclusions:</h3>
-      <ul>${booking.exclusions.map(item => `<li>${item}</li>`).join("")}</ul>
-      <h3>Terms & Conditions:</h3>
-      <ul>${booking.termscondition.map(item => `<li>${item}</li>`).join("")}</ul>
-        <br/><strong>Safe Travels, Team BlazeCab</strong>
+      htmlContent = `<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #6aa4e0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+        }
+        .header {
+            background-color: #007bff; /* Example main color for BlazeCab */
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            padding: 20px;
+        }
+        .driver-info-alert {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .booking-details-box {
+            border: 1px solid #eee;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+        }
+        .support-info {
+            padding: 15px 0;
+            text-align: center;
+            border-top: 1px solid #eee;
+            margin-top: 20px;
+        }
+        .support-info a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        h2, h3 {
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+            margin-top: 20px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+        ul li {
+            padding: 5px 0;
+            line-height: 1.5;
+        }
+        ul li b {
+            display: inline-block;
+            width: 150px; /* Aligns the data */
+        }
+        .footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 12px;
+            color: #777;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Ride Safe with BlazeCab</h1>
+    </div>
+
+    <div class="content">
+        <p><strong>Hi ${booking.customerName},</strong></p>
+
+        <p>Your ${booking.type} booking on ${new Date(booking.pickupDate).toLocaleDateString()} from ${booking.pickupAddress} is confirmed!</p>
+        
+        <div class="driver-info-alert">
+            You will receive your driver details within 30 minutes .
+        </div>
+        
+        <div class="booking-details-box">
+            <h2>Your BlazeCab Booking Details</h2>
+            <ul>
+                <li><b>Customer Name:</b> ${booking.customerName}</li>
+                <li><b>Email:</b> ${booking.email}</li>
+                <li><b>Phone:</b> ${booking.phone}</li>
+                <li><b>Pickup Address:</b> ${booking.pickupAddress}</li>
+                ${booking.dropAddress ? `<li><b>Drop Address:</b> ${booking.dropAddress}</li>` : ""}
+                <li><b>Pickup City:</b> ${booking.pickupCity}</li>
+                <li><b>Destination:</b> ${booking.destination}</li>
+                <li><b>Pickup Date/Time:</b> ${new Date(booking.pickupDate).toLocaleString()}</li>
+                <li><b>Car Type:</b> ${booking.carType}</li>
+                <li><b>Total Km:</b> ${booking.totalKm} km</li>
+                <li><b>Price:</b> ₹${booking.price}</li>
+                <li><b>Amount Paid:</b> ₹${booking.amountPaid}</li>
+                <li><b>Trip Type:</b> ${booking.type}</li>
+                <li><b>Booking Status:</b> ${booking.bookingStatus}</li>
+                <li><b>Payment Status:</b> ${booking.paymentStatus}</li>
+                <li><b>Payment Option:</b> ${booking.paymentOption}</li>
+            </ul>
+        </div>
+        
+        <h3>Inclusions:</h3>
+        <ul>${booking.inclusions.map(item => `<li>${item}</li>`).join("")}</ul>
+        
+        <h3>Exclusions:</h3>
+        <ul>${booking.exclusions.map(item => `<li>${item}</li>`).join("")}</ul>
+        
+        <h3>Important Terms & Conditions:</h3>
+        <ul>${booking.termscondition.map(item => `<li>${item}</li>`).join("")}</ul>
+        
+        <div class="support-info">
+            If you have any requests or concerns, feel free to call our 24x7 helpline at- <a href="tel:7703821374">7703821374</a> or email us at- <a href="mailto:info@blazecab.com">info@blazecab.com</a> and we will take care of the rest.
+        </div>
+        
+        <p><strong>Thank You,</strong><br/>Team BlazeCab</p>
+    </div>
+
+    <div class="footer">
+        Safe Travels, Team BlazeCab
+    </div>
+</div>
+
+</body>
+</html>
       `;
     }
 
