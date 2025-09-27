@@ -1,15 +1,13 @@
-import { FaCarSide } from "react-icons/fa"; 
+import Image from 'next/image'; 
+import CarLoader from '@/assets/carloader.gif'
 
 const Loading = () => {
   return (
     <div
       role="status"
-      className="h-[89.75vh] w-full flex items-center justify-center bg-white"
+      className="h-[89vh] w-full flex items-center justify-center bg-white"
     >
-      <div className="rounded-full p-6 border-4 border-gray-200 border-t-[#6aa4e0] animate-spin">
-        <FaCarSide className="text-[#6aa4e0] text-3xl" />
-      </div>
-      <span className="sr-only">Loading...</span>
+    <Image src={CarLoader} width={500} height={500} alt='Car Loader'/>
     </div>
   );
 };

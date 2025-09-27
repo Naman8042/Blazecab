@@ -20,7 +20,7 @@ export async function GET(request: Request) {
     console.log("Fetching bookings for Email:", userEmail);
 
     // Find bookings associated with the provided email
-    const bookings = await Booking.find({ email: userEmail });
+    const bookings = await Booking.find({ email: userEmail }).sort({ createdAt: -1 });
 
     console.log("Fetched bookings:", bookings);
 

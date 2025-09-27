@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 interface RazorpayResponse {
   razorpay_payment_id: string;
@@ -81,6 +82,7 @@ export function BookingFormClient({
   const [phone, setPhone] = useState("");
   const [pickupAddress, setPickupAddress] = useState("");
   const [dropAddress, setDropAddress] = useState("");
+  const router = useRouter()
 
   const formFields = [
     {
@@ -241,6 +243,9 @@ export function BookingFormClient({
           const result = await res.json();
           if (result.isOk) {
             toast.success(`Booking ${bookingStatus} `);
+             router.push(
+      `/bookingstatus?name=${encodeURIComponent(name)}&rideType=${rideType}&from=${startLocation}&to=${endLocation}&date=${formattedDate}&time=${formattedTime}&carType=${carType}&km=${totalKm}&fare=${fullPrice}&paid=${amountToPay}&status=${bookingStatus}&payment=${paymentStatus}`
+    );
           } else {
             toast.error(result.message || "Payment failed ");
           }
