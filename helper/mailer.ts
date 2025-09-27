@@ -21,6 +21,7 @@ interface Booking {
   paymentOption: string;
   bookingStatus: string;
   paymentStatus: string;
+  bookingId:string
 }
 
 interface EmailInterface {
@@ -150,10 +151,10 @@ export async function sendEmail({ email, emailType, booking }: EmailInterface) {
     <div class="content">
         <p><strong>Hi ${booking.customerName},</strong></p>
 
-        <p>Your ${booking.type} booking on ${new Date(booking.pickupDate).toLocaleDateString()} from ${booking.pickupAddress} is confirmed!</p>
+        <p>Your ${booking.type} booking with ID ${booking.bookingId} from ${booking.pickupCity} to ${booking.destination} is confirmed!</p>
         
         <div class="driver-info-alert">
-            You will receive your driver details within 30 minutes .
+            You will receive your driver details before 4 hours of your pickup time .
         </div>
         
         <div class="booking-details-box">
@@ -169,12 +170,10 @@ export async function sendEmail({ email, emailType, booking }: EmailInterface) {
                 <li><b>Pickup Date/Time:</b> ${new Date(booking.pickupDate).toLocaleString()}</li>
                 <li><b>Car Type:</b> ${booking.carType}</li>
                 <li><b>Total Km:</b> ${booking.totalKm} km</li>
-                <li><b>Price:</b> ₹${booking.price}</li>
-                <li><b>Amount Paid:</b> ₹${booking.amountPaid}</li>
-                <li><b>Trip Type:</b> ${booking.type}</li>
-                <li><b>Booking Status:</b> ${booking.bookingStatus}</li>
-                <li><b>Payment Status:</b> ${booking.paymentStatus}</li>
-                <li><b>Payment Option:</b> ${booking.paymentOption}</li>
+               <li><b>Total Price:</b> ₹${Math.round(booking.price)}</li>
+<li><b>Advance Paid:</b> ₹${Math.round(booking.amountPaid)}</li>
+<li><b>Remaining Amount:</b> ₹${Math.round(booking.price - booking.amountPaid)}</li>
+
             </ul>
         </div>
         
@@ -194,9 +193,7 @@ export async function sendEmail({ email, emailType, booking }: EmailInterface) {
         <p><strong>Thank You,</strong><br/>Team BlazeCab</p>
     </div>
 
-    <div class="footer">
-        Safe Travels, Team BlazeCab
-    </div>
+    
 </div>
 
 </body>

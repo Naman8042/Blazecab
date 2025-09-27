@@ -35,7 +35,8 @@ export async function POST(req: NextRequest) {
       status:booking.paymentStatus
     });
 
-    console.log(booking)
+    console.log(saved)
+    booking.bookingId = saved.bookingId
     
     sendEmail({email:booking.email,emailType:"Booking",booking})
 

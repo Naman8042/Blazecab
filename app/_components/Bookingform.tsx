@@ -232,6 +232,7 @@ export function BookingFormClient({
                 inclusions,
                 exclusions,
                 termscondition,
+                orderId:orderId,
                 type: rideType,
                 paymentOption: paymentOption, // This state directly reflects the user's choice (full or partial)
                 bookingStatus: bookingStatus,
