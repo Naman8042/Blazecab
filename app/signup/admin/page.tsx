@@ -12,13 +12,13 @@ const Page = () => {
   const [adminSecret, setAdminSecret] = useState<string>("");
 
   const signinHandler = async (e: React.FormEvent) => {
-    e.preventDefault(); // Prevent form default submission behavior
+    e.preventDefault(); 
       try{
-        const {data} = await axios.post("/api/signup",{email,password,adminSecret})
+        const {data} = await axios.post("/api/signup/admin",{email,password,adminSecret})
 
         if(data.success){
           toast.success("Signup Successful")
-          router.push("/")
+          router.push("/admin")
         }
         else{
           toast.error("Error Occured Please Try Again ")

@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const Sidebar = ({ setActive }: { setActive: (val: string) => void }) => {
   return (
@@ -451,8 +452,11 @@ export default function Dashboard() {
   if (!session) return;
 
   if(!session.user.isAdmin){
+    toast.error("You are Not admin")
     router.push("/login")
   }
+
+
 
   return (
     <div className="flex flex-col sm:flex-row h-[89.75vh] sm:ml-80">
