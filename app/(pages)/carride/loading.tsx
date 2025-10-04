@@ -5,7 +5,7 @@ const Loading = () => {
   return (
     <div
       role="status"
-      className="h-[56vh] w-full flex items-center justify-center bg-white"
+      className="h-screen sm:h-[56vh] w-full flex items-center justify-center bg-white"
     >
     <Image src={CarLoader} width={500} height={500} alt='Car Loader'/>
     </div>
