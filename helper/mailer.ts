@@ -21,7 +21,7 @@ interface Booking {
   paymentOption: string;
   bookingStatus: string;
   paymentStatus: string;
-  bookingId:string
+  bookingId: string;
 }
 
 interface EmailInterface {
@@ -33,17 +33,19 @@ interface EmailInterface {
 export async function sendEmail({ email, emailType, booking }: EmailInterface) {
   try {
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.hostinger.com", // Hostinger SMTP server
+      port: 465, // Use 465 for SSL or 587 for TLS
+      secure: true, // true for port 465, false for 587
       auth: {
-        user: process.env.user, // your Gmail address
-        pass: process.env.pass, // your App Password
+        user: "bookings@blazecab.com", // your full Hostinger email
+        pass: process.env.EMAIL_PASS, // password (set in .env)
       },
     });
 
     const subject =
       emailType === "Signup"
-        ? "Welcome to BlazeCab 🚖 - Your Account is Ready!"
-        : "BlazeCab 🚖 - Your Booking Details";
+        ? "Welcome to BlazeCab - Your Account is Ready!"
+        : "BlazeCab  - Your Booking Details";
 
     let htmlContent = "";
 
@@ -151,7 +153,9 @@ export async function sendEmail({ email, emailType, booking }: EmailInterface) {
     <div class="content">
         <p><strong>Hi ${booking.customerName},</strong></p>
 
-        <p>Your ${booking.type} booking with ID ${booking.bookingId} from ${booking.pickupCity} to ${booking.destination} is confirmed!</p>
+        <p>Your ${booking.type} booking with ID ${booking.bookingId} from ${
+        booking.pickupCity
+      } to ${booking.destination} is confirmed!</p>
         
         <div class="driver-info-alert">
             You will receive your driver details before 4 hours of your pickup time .
@@ -164,27 +168,41 @@ export async function sendEmail({ email, emailType, booking }: EmailInterface) {
                 <li><b>Email:</b> ${booking.email}</li>
                 <li><b>Phone:</b> ${booking.phone}</li>
                 <li><b>Pickup Address:</b> ${booking.pickupAddress}</li>
-                ${booking.dropAddress ? `<li><b>Drop Address:</b> ${booking.dropAddress}</li>` : ""}
+                ${
+                  booking.dropAddress
+                    ? `<li><b>Drop Address:</b> ${booking.dropAddress}</li>`
+                    : ""
+                }
                 <li><b>Pickup City:</b> ${booking.pickupCity}</li>
                 <li><b>Destination:</b> ${booking.destination}</li>
-                <li><b>Pickup Date/Time:</b> ${new Date(booking.pickupDate).toLocaleString()}</li>
+                <li><b>Pickup Date/Time:</b> ${new Date(
+                  booking.pickupDate
+                ).toLocaleString()}</li>
                 <li><b>Car Type:</b> ${booking.carType}</li>
                 <li><b>Total Km:</b> ${booking.totalKm} km</li>
                <li><b>Total Price:</b> ₹${Math.round(booking.price)}</li>
 <li><b>Advance Paid:</b> ₹${Math.round(booking.amountPaid)}</li>
-<li><b>Remaining Amount:</b> ₹${Math.round(booking.price - booking.amountPaid)}</li>
+<li><b>Remaining Amount:</b> ₹${Math.round(
+        booking.price - booking.amountPaid
+      )}</li>
 
             </ul>
         </div>
         
         <h3>Inclusions:</h3>
-        <ul>${booking.inclusions.map(item => `<li>${item}</li>`).join("")}</ul>
+        <ul>${booking.inclusions
+          .map((item) => `<li>${item}</li>`)
+          .join("")}</ul>
         
         <h3>Exclusions:</h3>
-        <ul>${booking.exclusions.map(item => `<li>${item}</li>`).join("")}</ul>
+        <ul>${booking.exclusions
+          .map((item) => `<li>${item}</li>`)
+          .join("")}</ul>
         
         <h3>Important Terms & Conditions:</h3>
-        <ul>${booking.termscondition.map(item => `<li>${item}</li>`).join("")}</ul>
+        <ul>${booking.termscondition
+          .map((item) => `<li>${item}</li>`)
+          .join("")}</ul>
         
         <div class="support-info">
             If you have any requests or concerns, feel free to call our 24x7 helpline at- <a href="tel:7703821374">7703821374</a> or email us at- <a href="mailto:info@blazecab.com">info@blazecab.com</a> and we will take care of the rest.
@@ -202,7 +220,7 @@ export async function sendEmail({ email, emailType, booking }: EmailInterface) {
     }
 
     const mailOptions = {
-      from: process.env.FROM_EMAIL || "namansharma8042@gmail.com",
+      from: process.env.FROM_EMAIL || "bookings@blazecab.com",
       to: email,
       subject,
       text: subject,
