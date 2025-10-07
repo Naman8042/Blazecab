@@ -30,45 +30,44 @@
     <priority>0.5</priority>
   </url>
 
-  <!-- Round Trip Routes -->
-  <url>
-    <loc>https://www.blazecab.com/carride?rideType=Round-Trip&pickupLocation=Delhi&dropoffLocation=Agra</loc>
+   <url>
+    <loc>https://www.blazecab.com/carride?rideType=Round-Trip&amp;pickupLocation=Delhi&amp;dropoffLocation=Agra</loc>
     <lastmod>2025-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.blazecab.com/carride?rideType=Round-Trip&pickupLocation=Delhi&dropoffLocation=Manali</loc>
+    <loc>https://www.blazecab.com/carride?rideType=Round-Trip&amp;pickupLocation=Delhi&amp;dropoffLocation=Manali</loc>
     <lastmod>2025-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.blazecab.com/carride?rideType=Round-Trip&pickupLocation=Mumbai&dropoffLocation=Pune</loc>
+    <loc>https://www.blazecab.com/carride?rideType=Round-Trip&amp;pickupLocation=Mumbai&amp;dropoffLocation=Pune</loc>
     <lastmod>2025-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.blazecab.com/carride?rideType=Round-Trip&pickupLocation=Bengalore&dropoffLocation=Mysore</loc>
+    <loc>https://www.blazecab.com/carride?rideType=Round-Trip&amp;pickupLocation=Bengalore&amp;dropoffLocation=Mysore</loc>
     <lastmod>2025-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.blazecab.com/carride?rideType=Round-Trip&pickupLocation=Chennai&dropoffLocation=Tirupati</loc>
+    <loc>https://www.blazecab.com/carride?rideType=Round-Trip&amp;pickupLocation=Chennai&amp;dropoffLocation=Tirupati</loc>
     <lastmod>2025-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.blazecab.com/carride?rideType=Round-Trip&pickupLocation=Mumbai&dropoffLocation=Shirdi</loc>
+    <loc>https://www.blazecab.com/carride?rideType=Round-Trip&amp;pickupLocation=Mumbai&amp;dropoffLocation=Shirdi</loc>
     <lastmod>2025-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.blazecab.com/carride?rideType=Round-Trip&pickupLocation=Kolkata&dropoffLocation=Digha</loc>
+    <loc>https://www.blazecab.com/carride?rideType=Round-Trip&amp;pickupLocation=Kolkata&amp;dropoffLocation=Digha</loc>
     <lastmod>2025-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -76,46 +75,45 @@
 
   <!-- One Way Routes -->
   <url>
-    <loc>https://www.blazecab.com/carride?rideType=One-Way&pickupLocation=Delhi&dropoffLocation=Agra</loc>
+    <loc>https://www.blazecab.com/carride?rideType=One-Way&amp;pickupLocation=Delhi&amp;dropoffLocation=Agra</loc>
     <lastmod>2025-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.blazecab.com/carride?rideType=One-Way&pickupLocation=Bengalore&dropoffLocation=Mysore</loc>
+    <loc>https://www.blazecab.com/carride?rideType=One-Way&amp;pickupLocation=Bengalore&amp;dropoffLocation=Mysore</loc>
     <lastmod>2025-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.blazecab.com/carride?rideType=One-Way&pickupLocation=Mumbai&dropoffLocation=Nashik</loc>
+    <loc>https://www.blazecab.com/carride?rideType=One-Way&amp;pickupLocation=Mumbai&amp;dropoffLocation=Nashik</loc>
     <lastmod>2025-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.blazecab.com/carride?rideType=One-Way&pickupLocation=Chennai&dropoffLocation=Bengalore</loc>
+    <loc>https://www.blazecab.com/carride?rideType=One-Way&amp;pickupLocation=Chennai&amp;dropoffLocation=Bengalore</loc>
     <lastmod>2025-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.blazecab.com/carride?rideType=One-Way&pickupLocation=Chandigarh&dropoffLocation=Manali</loc>
+    <loc>https://www.blazecab.com/carride?rideType=One-Way&amp;pickupLocation=Chandigarh&amp;dropoffLocation=Manali</loc>
     <lastmod>2025-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.blazecab.com/carride?rideType=One-Way&pickupLocation=Delhi&dropoffLocation=Haridwar</loc>
+    <loc>https://www.blazecab.com/carride?rideType=One-Way&amp;pickupLocation=Delhi&amp;dropoffLocation=Haridwar</loc>
     <lastmod>2025-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.blazecab.com/carride?rideType=One-Way&pickupLocation=Bengalore&dropoffLocation=Ooty</loc>
+    <loc>https://www.blazecab.com/carride?rideType=One-Way&amp;pickupLocation=Bengalore&amp;dropoffLocation=Ooty</loc>
     <lastmod>2025-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-
 </urlset>
