@@ -197,6 +197,7 @@ export default async function CarList({ initialValues }: PageProps) {
           .filter(Boolean) as CarCategoryCardProps[];
       }
     } else if (rideType === "Local" && pickupLocation) {
+      console.log("Hello")
       const res = await axios.get(
         `${baseUrl}/api/localroute?city=${pickupLocation}`
       );
