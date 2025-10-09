@@ -409,6 +409,14 @@ export default function RouteList() {
           </tbody>
         </table>
       </div>
+      {!pickup && !drop && (
+        <div
+          ref={bottomRef}
+          className="h-12 flex items-center justify-center text-gray-500"
+        >
+          {isValidating && "Loading more..."}
+        </div>
+      )}
 
       {searchLoading && (
         <p className="text-center text-gray-500 mt-4">Searching...</p>
