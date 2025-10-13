@@ -70,7 +70,7 @@ export default async function CarList({ initialValues }: PageProps) {
       const fixedResponse = await axios.get(
         `${baseUrl}/api/routes?pickup=${pickupLocation}&drop=${dropoffLocation}`
       );
-      const fixedPrices = fixedResponse.data.data;
+      const fixedPrices = fixedResponse.data;
 
       if (!fixedPrices.length) {
         error = true;
