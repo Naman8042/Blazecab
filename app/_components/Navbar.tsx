@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 
 const Navbar = () => {
-  const { data: session, status } = useSession();
+  const { data: session} = useSession();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
