@@ -2,34 +2,30 @@ import { NextRequest, NextResponse } from "next/server";
 import { connect } from "@/dbConfig/dbConfig";
 import oneWayRoute from "@/models/onewayroute";
 
-export async function GET(request: NextRequest) {
+export async function GET(req: NextRequest) {
+  const pickup = req.nextUrl.searchParams.get('pickup')?.toLowerCase();
+  const drop = req.nextUrl.searchParams.get('drop')?.toLowerCase();
+
   try {
     await connect();
 
-    const searchParams = request.nextUrl.searchParams;
-    const pickup = searchParams.get("pickup");
-    const drop = searchParams.get("drop");
-
-    const route = await oneWayRoute
-      .find({
-        pickup: String(pickup),
-        drop: String(drop),
-      })
-      .sort({ price: 1 });
-
-    console.log(route);
-
-    // ✅ return empty array instead of error
-    if (!route || route.length === 0) {
+    if (!pickup || !drop) {
       return NextResponse.json(
-        { message: "No routes found", data: [] },
-        { status: 200 }
+        { error: 'Both pickup and drop locations are required' },
+        { status: 400 }
       );
     }
 
-    return NextResponse.json({ data: route }, { status: 200 });
-  } catch (err) {
-    console.log(err);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    const results = await oneWayRoute.find({
+      pickup: { $regex: new RegExp(pickup, 'i') },
+      drop: { $regex: new RegExp(drop, 'i') },
+    });
+
+    console.log(results)
+    
+    return NextResponse.json(results);
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: 'Error fetching routes' }, { status: 500 });
   }
 }

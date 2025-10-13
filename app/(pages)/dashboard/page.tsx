@@ -39,11 +39,16 @@ const Dashboard = async () => {
   const bookings = await getBookings(userEmail);
 
   return (
-    <div className="px-4 sm:px-8 py-10 max-w-7xl mx-auto min-h-dvh pt-[20%] sm:pt-0">
+    <div className="px-4 sm:px-8 py-10 max-w-7xl mx-auto min-h-dvh pt-[22%] sm:pt-0">
       <div className="container mx-auto">
-        <div className="flex justify-end mt-2">
-          <Logoutbutton/>
+        <div className="flex flex-col gap-4 sm:flex-row justify-between items-center mb-6">
+          <div className="text-center sm:text-left">
+            <h1 className="text-2xl font-semibold text-gray-800">Welcome!</h1>
+            <p className="text-sm sm:text-base text-gray-600 mt-1">{userEmail}</p>
+          </div>
+          <Logoutbutton />
         </div>
+
         <BookingsList bookings={bookings} />
       </div>
     </div>
