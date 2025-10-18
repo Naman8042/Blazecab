@@ -95,38 +95,3 @@ export default Sidebar
 
  
 
-// const Content = ({ active }: { active: string }) => {
-//   const [routeType, setRouteType] = useState<
-//     "oneway" | "roundtrip" | "localtrip"
-//   >("oneway");
-
-//   return (
-//     <div className=" w-full">
-//       {/* {active === "home" && <div>Welcome to the Admin Dashboard</div>} */}
-//       {active === "routes" && (
-//         <div className="p-4 h-full ">
-//           <Tabs
-//             defaultValue="oneway"
-//             className=" w-full flex   items-center sm:items-start"
-//             onValueChange={(val) =>
-//               setRouteType(val as "oneway" | "roundtrip" | "localtrip")
-//             }
-//           >
-//             <TabsList className="mb-4">
-//               <TabsTrigger value="oneway">One Way</TabsTrigger>
-//               <TabsTrigger value="roundtrip">Round Trip</TabsTrigger>
-//               <TabsTrigger value="localtrip">Local Trip</TabsTrigger>
-//             </TabsList>
-//           </Tabs>
-
-//           {routeType === "oneway" && <OnewayRoute />}
-//           {routeType === "roundtrip" && <RoundtripRoute />}
-//           {routeType === "localtrip" && <LocalRoute />}
-//         </div>
-//       )}
-
-//       {active === "bookings" && <BookingsView />}
-//       {active === "cars" && <CarsView />}
-//     </div>
-//   );
-// };
