@@ -7,7 +7,7 @@ import RoundTrip from '@/app/_components/TwowayRoute'
 import LocalRoute from '@/app/_components/LocalRoute'
 
 
-const page = () => {
+const Routes = () => {
   const [routeType, setRouteType] = useState<
     "oneway" | "roundtrip" | "localtrip"
   >("oneway");
@@ -33,4 +33,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Routes;
