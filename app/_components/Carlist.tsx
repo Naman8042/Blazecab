@@ -162,7 +162,7 @@ export default async function CarList({ initialValues }: PageProps) {
             if (tripDays <= 0) tripDays = 1;
 
             // ✅ Fixed minimum limit 250 km per day
-            const dailyLimit = match.limit;
+            const dailyLimit = match.minimum_per_day_km;
             const minDistance = tripDays * dailyLimit;
 
             // Chargeable kms
