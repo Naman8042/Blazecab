@@ -54,7 +54,7 @@ import { Menu,Book } from "lucide-react";
           <Menu size={20} /> Routes
         </button>
         <button
-          onClick={() => router.push("/admin/bookings")}
+          onClick={() => router.push("/admin")}
           className="flex items-center gap-2 hover:text-gray-300"
         >
           <Book size={20} /> Bookings
@@ -71,7 +71,7 @@ import { Menu,Book } from "lucide-react";
         <h1 className="text-lg font-bold">Dashboard</h1>
         <nav className="space-x-4">
           <button
-            onClick={() => router.push("/admin/bookings")}
+            onClick={() => router.push("/admin")}
           >
             Bookings
           </button>
