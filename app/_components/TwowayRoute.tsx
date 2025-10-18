@@ -11,7 +11,6 @@ type Route = {
   distance: number;
   per_kms_charge: number;
   minimum_per_day_km: number;
-  limit: number;
   driver_allowance: number;
 };
 
@@ -75,7 +74,6 @@ export default function RouteList() {
     cabs: "",
     per_kms_charge: "",
     minimum_per_day_km: "",
-    limit: "",
     driver_allowance: "",
   });
   useEffect(() => {
@@ -145,7 +143,6 @@ export default function RouteList() {
         cabs: "",
         per_kms_charge: "",
         minimum_per_day_km: "",
-        limit: "",
         driver_allowance: "",
       });
       mutate();
@@ -245,13 +242,6 @@ export default function RouteList() {
           className="border p-2 rounded"
         />
         <input
-          name="limit"
-          placeholder="Limit"
-          value={newRoute.limit}
-          onChange={handleNewChange}
-          className="border p-2 rounded"
-        />
-        <input
           name="driver_allowance"
           placeholder="Driver Allowance"
           value={newRoute.driver_allowance}
@@ -276,7 +266,6 @@ export default function RouteList() {
               <th className="p-1 sm:p-2 border text-xs sm:text-sm">
                 Minimum Per Day Km
               </th>
-              <th className="p-1 sm:p-2 border text-xs sm:text-sm">limit</th>
               <th className="p-1 sm:p-2 border text-xs sm:text-sm">
                 Driver Allowance
               </th>
@@ -338,14 +327,7 @@ export default function RouteList() {
                         className="w-full border p-1 rounded"
                       />
                     </td>
-                    <td className="p-1 sm:p-2 border">
-                      <input
-                        name="limit"
-                        value={form.limit}
-                        onChange={handleChange}
-                        className="w-full border p-1 rounded"
-                      />
-                    </td>
+                    
 
                     <td className="p-1 sm:p-2 border">
                       <input
@@ -385,9 +367,7 @@ export default function RouteList() {
                     <td className="p-1 sm:p-2 border text-center">
                       {route.minimum_per_day_km}
                     </td>
-                    <td className="p-1 sm:p-2 border text-center">
-                      {route.limit}
-                    </td>
+                    
                     <td className="p-1 sm:p-2 border text-center">
                       {route.driver_allowance}
                     </td>

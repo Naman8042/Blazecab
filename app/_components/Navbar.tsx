@@ -25,7 +25,7 @@ const Navbar = () => {
             <Image
               src={Logo}
               alt="BlazeCab Logo"
-              className="w-24 sm:w-28 md:w-36 h-auto"
+              className="w-[110px] sm:w-28 md:w-40 h-auto"
             />
           </Link>
 

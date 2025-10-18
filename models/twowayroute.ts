@@ -7,7 +7,6 @@ export interface IShowRoute extends Document {
   distance:number;
   per_kms_charge:number
   minimum_per_day_km:number
-  limit:number
   driver_allowance:number
 }
 
@@ -19,7 +18,6 @@ const ShowRouteSchema = new Schema<IShowRoute>({
   distance: { type: Number, required: true },
   minimum_per_day_km: { type: Number, required: true },
   driver_allowance: { type: Number, required: true },
-  limit: { type: Number, required: true },
 });
 
 

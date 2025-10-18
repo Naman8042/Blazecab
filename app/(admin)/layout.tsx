@@ -1,5 +1,6 @@
 import AdminNav from "@/app/_components/Adminnav";
 import Session from "./Session";
+import Adminsidebar from '@/app/_components/Adminsidebar'
 
 const layout = ({
   children,
@@ -8,9 +9,12 @@ const layout = ({
 }>) => {
   return (
     <Session>
-      <div className="mt-16">
+      <div className="mt-12">
         <AdminNav />
-        {children}
+        <div className="flex flex-col sm:flex-row sm:ml-80 justify-between">
+          <Adminsidebar/>
+          {children}
+        </div>
       </div>
     </Session>
   );

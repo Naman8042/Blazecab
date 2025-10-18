@@ -1,4 +1,4 @@
-import Logo from "@/assets/blazecab_logo.webp";
+import Logo from "@/assets/photo_2025-10-13_20-42-02.png";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -11,7 +11,7 @@ const Adminnav = () => {
         <Image
           src={Logo}
           alt="BlazeCab Logo"
-          className=" w-32 h-12 sm:w-32 md:h-[55px] md:w-[160px]"
+          className="w-[110px] sm:w-28 md:w-40 h-auto"
         />
       </Link>
     </div>

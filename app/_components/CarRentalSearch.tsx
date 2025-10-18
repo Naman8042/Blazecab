@@ -574,13 +574,13 @@ function CarSearch() {
           <h1 className="text-[#6aa4e0] font-bold text-center mb-3 leading-snug">
             {/* Mobile version (shortened) */}
             <span className="block text-2xl sm:hidden">
-              Ride Smart with <span className="text-[#fbd20b]">BlazeCab</span>
+              Ride Smart with Blaze<span className="text-[#fbd20b]">Cab</span>
             </span>
 
             {/* Larger screens version (full text) */}
             <span className="hidden sm:block text-2xl md:text-4xl lg:text-5xl">
               Ride Smart → Ride Safe → Ride with{" "}
-              <span className="text-[#fbd20b]">BlazeCab</span>
+              Blaze<span className="text-[#fbd20b]">Cab</span>
             </span>
           </h1>
 

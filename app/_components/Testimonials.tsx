@@ -21,7 +21,7 @@ export default function TestimonialCarousel() {
     },
     {
       id: 2,
-      name: "Prabhakar",
+      name: "Prabhakar Kumar Mandal",
       role: "",
       image:
         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=100&auto=format&fit=crop",
@@ -51,7 +51,7 @@ export default function TestimonialCarousel() {
     },
     {
       id: 5,
-      name: "Vimarsh Gurka",
+      name: "Vimarsh Gurkha",
       role: "",
       image:
         "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=100&auto=format&fit=crop",
