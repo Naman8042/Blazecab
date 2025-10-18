@@ -1,5 +1,4 @@
 "use client"
-import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -94,16 +93,7 @@ import { Menu,Book } from "lucide-react";
 
 export default Sidebar
 
- function Dashboard() {
-  const [active, setActive] = useState("bookings");
-  
-
-  return (
-    <div className="flex flex-col sm:flex-row h-[89.75vh] sm:ml-80">
-      
-    </div>
-  );
-}
+ 
 
 // const Content = ({ active }: { active: string }) => {
 //   const [routeType, setRouteType] = useState<
