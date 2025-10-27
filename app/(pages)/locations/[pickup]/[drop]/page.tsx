@@ -9,15 +9,12 @@ import { AccordionItem } from "@/app/_components/FAQ";
 type Params = { pickup: string; drop: string };
 
 // --- START: Type Definitions ---
-// These types match the structure of your cabFares.json
-// and are used to remove the 'any' type.
 
 type FaqItem = {
   question: string;
   answer: string;
 };
 
-// 1. Uncommented FareItem type
 type FareItem = {
   type: string;
   capacity: string;
@@ -25,22 +22,21 @@ type FareItem = {
   maxFare: number;
 };
 
-// 2. Added type for the 'info' object
 type RouteInfo = {
   distance: string;
   time: string;
   startingFare: number;
 };
 
-// 3. Added type for the data associated with each route key
+// 1. THIS IS THE FIX: Made 'fares' optional by adding a '?'
+// This allows routes in your JSON to exist without a 'fares' array.
 type RouteData = {
   info: RouteInfo;
   cars: CarCategoryCardProps[];
   faq: FaqItem[];
-  fares: FareItem[];
+  fares?: FareItem[]; // <--- Changed
 };
 
-// 4. Defined the overall shape of the cabFares.json file
 type CabFaresData = Record<string, RouteData>;
 
 // --- END: Type Definitions ---
@@ -105,14 +101,13 @@ export default async function Page({ params }: { params: Promise<Params> }) {
     dropoffDate,
   };
 
-  // 5. Fixed the 'any' error by casting to the specific type
+  // This cast is now correct because 'fares' is optional
   const routeData = (cabFares as CabFaresData)[routeKey];
   const routeInfo = routeData?.info || null;
 
   const cars: CarCategoryCardProps[] = routeData?.cars || [];
   const faqs: FaqItem[] = routeData?.faq || [];
-  // 6. Uncommented the 'fares' variable
-  const fares: FareItem[] | null = routeData?.fares || null;
+  const fares: FareItem[] | null = routeData?.fares || null; // This line is fine
 
   return (
     <main className="max-w-7xl mx-auto p-4 sm:p-6 space-y-8 pt-26">
@@ -145,7 +140,6 @@ export default async function Page({ params }: { params: Promise<Params> }) {
         ))}
       </div>
 
-      {/* 7. Uncommented the entire Fares Table section */}
       {/* 🔹 Dynamic Content - Fares Table */}
       {fares && fares.length > 0 ? (
         <section className="space-y-6">
@@ -183,7 +177,6 @@ export default async function Page({ params }: { params: Promise<Params> }) {
                 </tr>
               </thead>
               <tbody>
-                {/* Type for 'fare' is now inferred as FareItem */}
                 {fares.map((fare) => (
                   <tr key={fare.type}>
                     <td className="p-3 border-b">{fare.type}</td>
@@ -238,6 +231,7 @@ interface CarCategoryCardProps {
   price: number;
   seats: number; // e.g., 4
   description: string; // e.g., "Economy Cabs"
+  name?: string; // Also added 'name' as optional since your error showed it
 }
 
 const CarCategoryCard = ({
