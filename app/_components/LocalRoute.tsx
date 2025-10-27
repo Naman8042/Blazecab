@@ -123,7 +123,7 @@ export default function RouteList() {
     if (res.ok) mutate();
   };
 
-  const handleNewChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNewChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setNewRoute({ ...newRoute, [e.target.name]: e.target.value });
   };
 
@@ -194,17 +194,51 @@ export default function RouteList() {
           "perkmextra_charge",
           "time",
           "per_hour_charge",
-        ].map((field) => (
-          <input
-            key={field}
-            name={field}
-            placeholder={field.replace(/_/g, " ")}
-            value={newRoute[field as keyof typeof newRoute] ?? ""}
-            onChange={handleNewChange}
-            className="border p-2 rounded"
-          />
-        ))}
-
+        ].map((field) =>
+          field === "cabs" ? (
+            <select
+              key={field}
+              name={field}
+              value={newRoute[field as keyof typeof newRoute] ?? ""}
+              onChange={handleNewChange}
+              className="border p-2 rounded"
+            >
+              {/* --- Replace these with your actual cab options --- */}
+              <option value="">Select Cab</option>
+              <option value="Traveller">Traveller</option>
+              <option value="Tempo Traveller 11+1">Tempo Traveller 11+1</option>
+              <option value="Urbania Traveller 15+1">Urbania Traveller 15+1</option>
+              <option value="Urbania Traveller 11+1">Urbania Traveller 11+1</option>
+              <option value="Toyota Innova 6+1">Toyota Innova 6+1</option>
+              <option value="Sedan">Sedan</option>
+              <option value="Suv">Suv</option>
+              <option value="Innova Crysta 6+1">Innova Crysta 6+1</option>
+              <option value="Hatchback">Hatchback</option>
+              <option value="Innova Crysta 7+1">Innova Crysta 7+1</option>
+              {/* -------------------------------------------------- */}
+            </select>
+          ) : (
+            <input
+              key={field}
+              name={field}
+              placeholder={field.replace(/_/g, " ")}
+              value={newRoute[field as keyof typeof newRoute] ?? ""}
+              onChange={handleNewChange}
+              className="border p-2 rounded"
+              // Conditionally set type to "number" for price/distance if needed
+              type={
+                field === "price" ||
+                field === "distance" ||
+                field === "per_hour_charge" ||
+                field === "time" ||
+                field === "cities" ||
+                field === "perkmextra_charge"
+                  ? "number"
+                  : "text"
+              }
+            />
+          )
+        )}
         <Button onClick={handleAddNew}>Add</Button>
       </div>
 

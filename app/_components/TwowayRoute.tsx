@@ -96,7 +96,9 @@ export default function RouteList() {
     setForm(route);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -124,12 +126,14 @@ export default function RouteList() {
     if (res.ok) mutate();
   };
 
-  const handleNewChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNewChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setNewRoute({ ...newRoute, [e.target.name]: e.target.value });
   };
 
   const handleAddNew = async () => {
-    console.log(newRoute)
+    console.log(newRoute);
     const res = await fetch("/api/twoway", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -220,13 +224,26 @@ export default function RouteList() {
           onChange={handleNewChange}
           className="border p-2 rounded"
         />
-        <input
+        <select
           name="cabs"
-          placeholder="Cab"
           value={newRoute.cabs}
           onChange={handleNewChange}
           className="border p-2 rounded"
-        />
+        >
+          {/* --- Replace these with your actual cab options --- */}
+          <option value="">Select Cab</option>
+          <option value="Traveller">Traveller</option>
+          <option value="Tempo Traveller 11+1">Tempo Traveller 11+1</option>
+          <option value="Urbania Traveller 15+1">Urbania Traveller 15+1</option>
+          <option value="Urbania Traveller 11+1">Urbania Traveller 11+1</option>
+          <option value="Toyota Innova 6+1">Toyota Innova 6+1</option>
+          <option value="Sedan">Sedan</option>
+          <option value="Suv">Suv</option>
+          <option value="Innova Crysta 6+1">Innova Crysta 6+1</option>
+          <option value="Hatchback">Hatchback</option>
+          <option value="Innova Crysta 7+1">Innova Crysta 7+1</option>
+          {/* -------------------------------------------------- */}
+        </select>
         <input
           name="per_kms_charge"
           placeholder="Per Km Charge"
@@ -327,7 +344,6 @@ export default function RouteList() {
                         className="w-full border p-1 rounded"
                       />
                     </td>
-                    
 
                     <td className="p-1 sm:p-2 border">
                       <input
@@ -367,7 +383,7 @@ export default function RouteList() {
                     <td className="p-1 sm:p-2 border text-center">
                       {route.minimum_per_day_km}
                     </td>
-                    
+
                     <td className="p-1 sm:p-2 border text-center">
                       {route.driver_allowance}
                     </td>

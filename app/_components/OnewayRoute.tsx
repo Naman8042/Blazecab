@@ -52,7 +52,6 @@ export default function RouteList() {
     fetcher
   );
 
-
   const {
     data: paginatedData,
     setSize,
@@ -132,7 +131,9 @@ export default function RouteList() {
     }
   };
 
-  const handleNewChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNewChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setNewRoute({ ...newRoute, [e.target.name]: e.target.value });
   };
 
@@ -212,16 +213,50 @@ export default function RouteList() {
           "distance",
           "cabs",
           "per_kms_extra_charge",
-        ].map((field) => (
-          <input
-            key={field}
-            name={field}
-            placeholder={field.replace(/_/g, " ")}
-            value={newRoute[field as keyof typeof newRoute] ?? ""}
-            onChange={handleNewChange}
-            className="border p-2 rounded"
-          />
-        ))}
+        ].map((field) =>
+          field === "cabs" ? (
+            <select
+              key={field}
+              name={field}
+              value={newRoute[field as keyof typeof newRoute] ?? ""}
+              onChange={handleNewChange}
+              className="border p-2 rounded"
+            >
+              <option value="">Select Cab</option>
+              <option value="Traveller">Traveller</option>
+              <option value="Tempo Traveller 11+1">Tempo Traveller 11+1</option>
+              <option value="Urbania Traveller 15+1">
+                Urbania Traveller 15+1
+              </option>
+              <option value="Urbania Traveller 11+1">
+                Urbania Traveller 11+1
+              </option>
+              <option value="Toyota Innova 6+1">Toyota Innova 6+1</option>
+              <option value="Sedan">Sedan</option>
+              <option value="Suv">Suv</option>
+              <option value="Innova Crysta 6+1">Innova Crysta 6+1</option>
+              <option value="Hatchback">Hatchback</option>
+              <option value="Innova Crysta 7+1">Innova Crysta 7+1</option>
+            </select>
+          ) : (
+            <input
+              key={field}
+              name={field}
+              placeholder={field.replace(/_/g, " ")}
+              value={newRoute[field as keyof typeof newRoute] ?? ""}
+              onChange={handleNewChange}
+              className="border p-2 rounded"
+              // Conditionally set type to "number" for price/distance if needed
+              type={
+                field === "price" ||
+                field === "distance" ||
+                field === "per_kms_extra_charge"
+                  ? "number"
+                  : "text"
+              }
+            />
+          )
+        )}
         <Button onClick={handleAddNew}>Add</Button>
       </div>
 
@@ -230,16 +265,22 @@ export default function RouteList() {
         <table className="min-w-full border rounded shadow-sm text-sm">
           <thead className="bg-gray-100">
             <tr>
-              {["Pickup", "Drop", "Price", "Distance", "Cab", "Per kms extra charge","Actions"].map(
-                (header) => (
-                  <th
-                    key={header}
-                    className="p-1 sm:p-2 border whitespace-nowrap text-xs sm:text-sm"
-                  >
-                    {header}
-                  </th>
-                )
-              )}
+              {[
+                "Pickup",
+                "Drop",
+                "Price",
+                "Distance",
+                "Cab",
+                "Per kms extra charge",
+                "Actions",
+              ].map((header) => (
+                <th
+                  key={header}
+                  className="p-1 sm:p-2 border whitespace-nowrap text-xs sm:text-sm"
+                >
+                  {header}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -247,26 +288,31 @@ export default function RouteList() {
               <tr key={route._id} className="odd:bg-white even:bg-gray-50">
                 {editIndex === index ? (
                   <>
-                    {["pickup", "drop", "price", "distance", "cabs","per_kms_extra_charge"].map(
-                      (field) => (
-                        <td
-                          key={field}
-                          className="p-1 sm:p-2 border text-xs sm:text-sm"
-                        >
-                          <input
-                            name={field}
-                            type={
-                              field === "price" || field === "distance"
-                                ? "number"
-                                : "text"
-                            }
-                            value={form[field as keyof Route] ?? ""}
-                            onChange={handleChange}
-                            className="w-full border p-1 rounded"
-                          />
-                        </td>
-                      )
-                    )}
+                    {[
+                      "pickup",
+                      "drop",
+                      "price",
+                      "distance",
+                      "cabs",
+                      "per_kms_extra_charge",
+                    ].map((field) => (
+                      <td
+                        key={field}
+                        className="p-1 sm:p-2 border text-xs sm:text-sm"
+                      >
+                        <input
+                          name={field}
+                          type={
+                            field === "price" || field === "distance"
+                              ? "number"
+                              : "text"
+                          }
+                          value={form[field as keyof Route] ?? ""}
+                          onChange={handleChange}
+                          className="w-full border p-1 rounded"
+                        />
+                      </td>
+                    ))}
                     <td className="p-1 sm:p-2 border flex flex-col gap-2 sm:flex-row text-xs sm:text-sm">
                       <Button onClick={handleSave}>Save</Button>
                       <Button
