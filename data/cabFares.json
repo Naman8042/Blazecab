@@ -1,0 +1,88 @@
+{
+  "delhi-agra": {
+    "info": {
+      "distance": "215-220 km",
+      "time": "3-4 hrs",
+      "startingFare": 1956
+    },
+    "cars": [
+      {
+        "category": "AC Hatchback",
+        "image": "/images/cars/hatchback.png",
+        "name": "Indica, Swift",
+        "price": 1956,
+        "seats": 4,
+        "description": "Economy Cabs"
+      },
+      {
+        "category": "AC Sedan",
+        "image": "/images/cars/sedan.png",
+        "name": "Dzire, Etios",
+        "price": 2003,
+        "seats": 4,
+        "description": "Premium Economy Cabs"
+      },
+      {
+        "category": "AC SUV Large",
+        "image": "/images/cars/suv.png",
+        "name": "Ertiga, Xylo",
+        "price": 3243,
+        "seats": 7,
+        "description": "Perfect for Families"
+      },
+      {
+        "category": "Full Size Van",
+        "image": "/images/cars/van.png",
+        "name": "Tempo Traveller",
+        "price": 5770,
+        "seats": 12,
+        "description": "Group Travel Friendly"
+      }
+    ],
+    "faq": [
+      {
+        "question": "What is included in the cab fare?",
+        "answer": "The fare includes the driver's allowance, fuel charges, and state taxes. Toll charges and parking fees are extra unless specified."
+      },
+      {
+        "question": "Can I book a one-way cab from Delhi to Agra?",
+        "answer": "Yes, you can easily book a one-way cab. The prices listed in the grid above are for one-way trips. Just select your car and proceed to book."
+      },
+      {
+        "question": "What happens if I cancel my booking?",
+        "answer": "You can cancel your booking up to 24 hours before the pickup time for a full refund. A cancellation fee may apply for cancellations within 24 hours."
+      }
+    ]
+  },
+  "mumbai-jaipur": {
+    "info": {
+      "distance": "1140 km",
+      "time": "18-20 hrs",
+      "startingFare": 7500
+    },
+    "cars": [
+      {
+        "category": "AC Hatchback",
+        "image": "/images/cars/hatchback.png",
+        "name": "Indica, Swift",
+        "price": 7500,
+        "seats": 4,
+        "description": "Economy Cabs"
+      }
+    ],
+    "faq": [
+      {
+        "question": "What is included in the cab fare?",
+        "answer": "The fare includes the driver's allowance, fuel charges, and state taxes. Toll charges and parking fees are extra unless specified."
+      },
+      {
+        "question": "Can I book a one-way cab from Delhi to Agra?",
+        "answer": "Yes, you can easily book a one-way cab. The prices listed in the grid above are for one-way trips. Just select your car and proceed to book."
+      },
+      {
+        "question": "What happens if I cancel my booking?",
+        "answer": "You can cancel your booking up to 24 hours before the pickup time for a full refund. A cancellation fee may apply for cancellations within 24 hours."
+      }
+    ]
+  }
+}

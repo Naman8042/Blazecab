@@ -105,7 +105,7 @@ interface AccordionItemInterface {
   text: string;
 }
 
-const AccordionItem = ({ header, text }: AccordionItemInterface) => {
+export const AccordionItem = ({ header, text }: AccordionItemInterface) => {
   const [active, setActive] = useState(false);
 
   const handleToggle = (event: React.SyntheticEvent) => {

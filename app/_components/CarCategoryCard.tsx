@@ -52,7 +52,7 @@ const CarCategoryCard = ({
       <div className="flex-1 w-full sm:w-2/3">
         <div className="flex flex-col sm:flex-row gap-3 justify-between items-center sm:items-start mb-4 ">
           <div className="text-center sm:text-left  sm:w-3/5">
-            <h3 className="text-xl font-semibold text-gray-800">{name}</h3>
+            <h3 className="text-xl font-bold text-gray-800">{name}</h3>
             <p className="text-[#6aa4e0] font-bold text-xl flex items-center gap-2 justify-center sm:justify-start">
               ₹{price}{" "}
               <span className="text-xs font-medium text-gray-500">

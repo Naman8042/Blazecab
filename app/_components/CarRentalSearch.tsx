@@ -322,7 +322,7 @@ export const CarRentalSearch = ({
           {rideTypes.map((type) => (
             <button
               key={type}
-              type="button"
+              // type="button"
               onClick={() => setRideType(type)}
               className={`px-2.5 md:px-4 py-1 md:py-2 rounded-full font-medium transition-all duration-200 ${
                 rideType === type
