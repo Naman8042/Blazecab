@@ -6,7 +6,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { AccordionItem } from "@/app/_components/FAQ";
 
-type Params = { pickup: string; drop: string };
+// ⬅️ UPDATED: Page params type
+type PageParams = {
+  slug: string;
+};
 
 // --- START: Consolidated Type Definitions ---
 
@@ -22,7 +25,6 @@ interface BaseCarData {
   name: string;
   capacity: number;
   description: string;
-  // It can have inclusions/exclusions here, but we will ignore them
   inclusions?: string[];
   exclusions?: string[];
   termscondition?: string[];
@@ -37,7 +39,6 @@ type FixedPrice = {
 };
 
 // 3. This is the props interface for the CarCategoryCard component
-// It needs all data to pass to the booking page
 interface CarCategoryCardProps {
   category: string;
   image: string;
@@ -52,7 +53,6 @@ interface CarCategoryCardProps {
 }
 
 // 4. This is the interface for the data returned by our fetcher
-// It includes car data + pickup/drop, but NOT date/time.
 interface FetchedCarData {
   category: string;
   image: string;
@@ -86,29 +86,70 @@ type DynamicRouteInfo = { distance: string; time: string };
 
 // --- END: Consolidated Type Definitions ---
 
-// 🔹 Generate static params
-export async function generateStaticParams(): Promise<Params[]> {
+// --- START: NEW SLUG HELPER FUNCTIONS ---
+
+/**
+ * Parses a slug like "delhi-to-agra-cabs" into its components.
+ */
+function parseSlug(slug: string): { pickup: string; drop: string; routeKey: string } {
+  const parts = slug.split('-to-');
+  const pickup = parts[0] || "default"; // Handle potential error
+  
+  // Removes "-cabs" from the end of the second part
+  const dropPart = parts[1] || "default-cabs"; 
+  const drop = dropPart.replace('-cabs', '');
+  
+  // Re-create the key for cabFares.json (e.g., "delhi-agra")
+  const routeKey = `${pickup}-${drop}`;
+  
+  return { pickup, drop, routeKey };
+}
+
+/**
+ * Creates a slug like "delhi-to-agra-cabs" from "delhi" and "agra".
+ */
+function createSlug(pickup: string, drop: string): string {
+  return `${pickup}-to-${drop}-cabs`;
+}
+
+// --- END: NEW SLUG HELPER FUNCTIONS ---
+
+
+// 🔹 Generate static params (UPDATED)
+export async function generateStaticParams(): Promise<PageParams[]> {
   return Object.keys(cabFares).map((key) => {
+    // key is "delhi-agra"
     const [pickup, drop] = key.split("-");
-    return { pickup, drop };
+    return { 
+      slug: createSlug(pickup, drop) // Returns "delhi-to-agra-cabs"
+    };
   });
 }
 
-// 🔹 Generate SEO metadata
-export async function generateMetadata(props: {
-  params: Promise<Params>;
-}): Promise<Metadata> {
-  const params = await props.params;
-  const pickup = capitalize(params.pickup);
-  const drop = capitalize(params.drop);
+// 🔹 Generate SEO metadata (FIXED)
+export async function generateMetadata(
+  // 1. Rename prop to await it
+  { params: paramsPromise }: { params: Promise<PageParams> }
+): Promise<Metadata> {
+  
+  // 2. Await the params promise
+  const params = await paramsPromise;
+
+  // 3. Parse the slug
+  const { pickup, drop } = parseSlug(params.slug);
+
+  // 4. Capitalize
+  const pickupCap = capitalize(pickup);
+  const dropCap = capitalize(drop);
 
   return {
-    title: `${pickup} to ${drop} Cabs | BlazeCab`,
-    description: `Book ${pickup} to ${drop} cab service with BlazeCab. Transparent pricing, clean cars, and professional drivers.`,
+    title: `${pickupCap} to ${dropCap} Cabs | BlazeCab`,
+    description: `Book ${pickupCap} to ${dropCap} cab service with BlazeCab. Transparent pricing, clean cars, and professional drivers.`,
     openGraph: {
-      title: `${pickup} to ${drop} Cabs | BlazeCab`,
-      description: `Enjoy affordable and comfortable rides from ${pickup} to ${drop} with BlazeCab.`,
-      url: `https://blazecab.in/${params.pickup}/${params.drop}`,
+      title: `${pickupCap} to ${dropCap} Cabs | BlazeCab`,
+      description: `Enjoy affordable and comfortable rides from ${pickupCap} to ${dropCap} with BlazeCab.`,
+      // 5. Update the URL to use the new structure
+      url: `https://blazecab.in/location/${params.slug}`,
       siteName: "BlazeCab",
       type: "website",
     },
@@ -127,7 +168,7 @@ const getDefaultPickupTime = () => {
   return tomorrow;
 };
 
-// --- START: OSRM/Nominatim API Helpers ---
+// --- START: OSRM/Nominatim API Helpers (Unchanged) ---
 function formatDuration(seconds: number): string {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
@@ -184,7 +225,7 @@ async function fetchDynamicRouteInfo(
 }
 // --- END: OSRM/Nominatim API Helpers ---
 
-// --- START: DYNAMIC CAR PRICE FETCHER (UPDATED) ---
+// --- START: DYNAMIC CAR PRICE FETCHER (Unchanged) ---
 /**
  * Fetches dynamic car prices by merging /api/car and /api/routes
  */
@@ -263,12 +304,21 @@ async function fetchDynamicCarPrices(
 }
 // --- END: DYNAMIC CAR PRICE FETCHER ---
 
-// 🔹 Main dynamic route page
-export default async function Page({ params }: { params: Promise<Params> }) {
-  const { pickup, drop } = await params;
+// 🔹 Main dynamic route page (FIXED)
+export default async function Page(
+  // 1. Rename prop to await it
+  { params: paramsPromise }: { params: Promise<PageParams> }
+) {
+  
+  // 2. Await the params promise
+  const params = await paramsPromise;
+
+  // 3. Parse the slug to get pickup, drop, and routeKey
+  const { pickup, drop, routeKey } = parseSlug(params.slug);
+  
+  // 4. Capitalize
   const pickupCap = capitalize(pickup);
   const dropCap = capitalize(drop);
-  const routeKey = `${pickup}-${drop}`.toLowerCase();
 
   // Define dates and times for the page
   const pickupDate = new Date(new Date().setDate(new Date().getDate() + 1));
@@ -276,19 +326,19 @@ export default async function Page({ params }: { params: Promise<Params> }) {
   const dropoffDate = new Date(new Date().setDate(new Date().getDate() + 1));
 
   const initialValues: InitialValues = {
-    pickupLocation: pickup,
-    dropoffLocation: drop,
+    pickupLocation: pickup, // Use parsed (lowercase) pickup
+    dropoffLocation: drop, // Use parsed (lowercase) drop
     pickupDate,
     pickupTime,
     dropoffDate,
   };
 
-  // 1. Get STATIC data from JSON
+  // 1. Get STATIC data from JSON (use parsed routeKey)
   const staticRouteData = (cabFares as CabFaresData)[routeKey];
   const faqs: FaqItem[] = staticRouteData?.faq || [];
   const seoContent: string | null = staticRouteData?.seoContent || null;
 
-  // 2. Fetch DYNAMIC data
+  // 2. Fetch DYNAMIC data (use capitalized, parsed values)
   const dynamicInfo = await fetchDynamicRouteInfo(pickupCap, dropCap);
   const { cars: dynamicCars, minPrice: dynamicMinPrice } =
     await fetchDynamicCarPrices(pickupCap, dropCap);
@@ -384,7 +434,7 @@ export default async function Page({ params }: { params: Promise<Params> }) {
   );
 }
 
-// 🔹 CarCategoryCard Component (UPDATED)
+// 🔹 CarCategoryCard Component (Unchanged from your version)
 const CarCategoryCard = ({
   category,
   image,
@@ -434,3 +484,4 @@ const CarCategoryCard = ({
     </div>
   </Link>
 );
+
