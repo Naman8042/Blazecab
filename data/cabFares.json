@@ -1,88 +1,539 @@
 {
   "delhi-agra": {
-    "info": {
-      "distance": "215-220 km",
-      "time": "3-4 hrs",
-      "startingFare": 1956
-    },
-    "cars": [
-      {
-        "category": "AC Hatchback",
-        "image": "/images/cars/hatchback.png",
-        "name": "Indica, Swift",
-        "price": 1956,
-        "seats": 4,
-        "description": "Economy Cabs"
-      },
-      {
-        "category": "AC Sedan",
-        "image": "/images/cars/sedan.png",
-        "name": "Dzire, Etios",
-        "price": 2003,
-        "seats": 4,
-        "description": "Premium Economy Cabs"
-      },
-      {
-        "category": "AC SUV Large",
-        "image": "/images/cars/suv.png",
-        "name": "Ertiga, Xylo",
-        "price": 3243,
-        "seats": 7,
-        "description": "Perfect for Families"
-      },
-      {
-        "category": "Full Size Van",
-        "image": "/images/cars/van.png",
-        "name": "Tempo Traveller",
-        "price": 5770,
-        "seats": 12,
-        "description": "Group Travel Friendly"
-      }
-    ],
+    "seoContent": "<h2>Why Book a Cab from Delhi to Agra?</h2><p>Agra is one of India's most iconic cities, best known for the iconic Taj Mahal, but there is plenty more to see. The Yamuna Expressway makes for one of the smoothest highway drives in the country. Just before reaching Agra, you will pass Mathura and Vrindavan, the birthplace of Lord Krishna. If you have time, a short detour to Prem Mandir, Banke Bihari Temple, or ISKCON Vrindavan is well worth it. The Delhi to Agra distance is approximately 220 kilometers, with a travel time of around 3-4 hours via Yamuna Expressway.</p><p>If you don't want to deal with unpredictable road conditions, book a cab service from Delhi to Agra with BlazeCab for a stress-free journey. Enjoy a smooth ride while a skilled chauffeur takes care of the drive for you.</p><h3>Here are some advantages of choosing our Delhi to Agra taxi:</h3><ul><li><strong>Options for one-way drops and round-trips:</strong> BlazeCab offers both one-way drops (charging only one-way fares) and round-trip rides, so you do not have to worry about finding a last-minute ride back or dealing with unplanned delays.</li><li><strong>Sit back and relax:</strong> With BlazeCab, you can just lean back, roll down the windows, and let the road unfold in front of you. You will pass through sprawling farmlands, small historic towns, and the bustling outskirts of Mathura and Vrindavan.</li><li><strong>Explore Agra at your own pace:</strong> With a Delhi to Agra cab service, discover iconic sites like Akbar's Tomb in Sikandra and the Mughal grandeur of Fatehpur Sikri, all before immersing yourself in the heart of Agra.</li><li><strong>Travel with expert drivers:</strong> BlazeCab chauffeurs know the Delhi-Agra route inside and out. Beyond that, they bring local knowledge, personal recommendations, and a friendly presence that makes the journey even better.</li></ul>",
     "faq": [
       {
-        "question": "What is included in the cab fare?",
-        "answer": "The fare includes the driver's allowance, fuel charges, and state taxes. Toll charges and parking fees are extra unless specified."
+        "question": "What is the cab fare from Delhi to Agra?",
+        "answer": "The fare for a Delhi to Agra taxi starts from ₹2499 for a sedan. The final price depends on the car type (sedan, SUV) and whether it's a one-way or round-trip booking."
       },
       {
-        "question": "Can I book a one-way cab from Delhi to Agra?",
-        "answer": "Yes, you can easily book a one-way cab. The prices listed in the grid above are for one-way trips. Just select your car and proceed to book."
+        "question": "How can I book a cab from Delhi to Agra with BlazeCab?",
+        "answer": "You can easily book your cab online through our website. Just enter your pickup/drop locations, choose your car, and confirm your ride. You can also call our 24/7 customer support."
       },
       {
-        "question": "What happens if I cancel my booking?",
-        "answer": "You can cancel your booking up to 24 hours before the pickup time for a full refund. A cancellation fee may apply for cancellations within 24 hours."
+        "question": "Are the fares all-inclusive? What about toll charges?",
+        "answer": "Our fares include the driver's allowance, fuel, and state taxes. Toll charges for the Yamuna Expressway and parking fees are extra and payable to the driver."
+      },
+      {
+        "question": "Can I book a one-way taxi from Delhi to Agra?",
+        "answer": "Yes, BlazeCab specializes in one-way intercity travel. We offer competitive one-way fares so you only pay for the distance you travel."
+      },
+      {
+        "question": "What types of cars are available for the Delhi to Agra route?",
+        "answer": "We offer sedans (like Dzire, Etios), spacious SUVs (like Innova, Ertiga), and premium cars for your comfort."
+      },
+      {
+        "question": "How long does the journey from Delhi to Agra take?",
+        "answer": "The approximate travel time is 3-4 hours, covering a distance of ~220 km via the Yamuna Expressway. This can vary based on traffic."
+      },
+      {
+        "question": "Is it safe to travel from Delhi to Agra at night?",
+        "answer": "Yes, it is very safe. The Yamuna Expressway is well-lit and maintained. Our drivers are experienced in night driving, and our cabs are equipped with safety features."
+      },
+      {
+        "question": "What is your cancellation policy?",
+        "answer": "You can cancel your booking free of charge up to 24 hours before your pickup time. A cancellation fee may apply for last-minute cancellations."
+      },
+      {
+        "question": "Can we make a stop at Mathura or Vrindavan?",
+        "answer": "Yes, you can request brief stops. For longer detours or sightseeing, please inform us at the time of booking, as it may affect the fare (especially for one-way trips)."
+      },
+      {
+        "question": "Do I need to pay an advance amount to book my cab?",
+        "answer": "Yes, we require a small advance payment to confirm your booking. The remaining amount can be paid to the driver at the end of your trip."
       }
     ]
   },
-  "mumbai-jaipur": {
-    "info": {
-      "distance": "1140 km",
-      "time": "18-20 hrs",
-      "startingFare": 7500
-    },
-    "cars": [
-      {
-        "category": "AC Hatchback",
-        "image": "/images/cars/hatchback.png",
-        "name": "Indica, Swift",
-        "price": 7500,
-        "seats": 4,
-        "description": "Economy Cabs"
-      }
-    ],
+  "delhi-manali": {
+    "seoContent": "<h2>Your Premier Delhi to Manali Cab Service</h2><p>Embark on a seamless journey from <strong>Delhi to Manali</strong> with BlazeCab. We offer the most reliable cab service for your Himalayan adventure. The route covers approximately 550 km and takes about 12-14 hours, taking you through the beautiful highways of Haryana, Punjab, and into Himachal Pradesh.</p><p>Forget the hassle of overnight buses or the stress of self-driving. Booking a Delhi to Manali cab with BlazeCab ensures a relaxing ride with a professional chauffeur, with stops for food and refreshments at your convenience.</p><h3>Why Choose BlazeCab for Your Delhi to Manali Trip?</h3><ul><li><strong>Expert Hill Drivers:</strong> Our chauffeurs are specially trained and highly experienced in hill driving, ensuring your safety on the winding mountain roads.</li><li><strong>Comfort for Long Journeys:</strong> Choose from our range of spacious SUVs (like Innova or Ertiga) perfect for long-distance travel with family and luggage.</li><li><strong>Transparent Pricing:</strong> We offer all-inclusive fares for both one-way and round-trip packages with no hidden charges.</li><li><strong>24/7 Customer Support:</strong> Our support team is available round-the-clock to assist with your booking or any queries during your journey.</li></ul><p>Book your cab to the 'Valley of the Gods' today and enjoy a breathtaking drive into the mountains with BlazeCab.</p>",
     "faq": [
       {
-        "question": "What is included in the cab fare?",
-        "answer": "The fare includes the driver's allowance, fuel charges, and state taxes. Toll charges and parking fees are extra unless specified."
+        "question": "What is the cab fare from Delhi to Manali?",
+        "answer": "The fare for a Delhi to Manali taxi starts from ₹7999 for a sedan. The final price depends on the car type (sedan, SUV) and the season."
       },
       {
-        "question": "Can I book a one-way cab from Delhi to Agra?",
-        "answer": "Yes, you can easily book a one-way cab. The prices listed in the grid above are for one-way trips. Just select your car and proceed to book."
+        "question": "How can I book a cab from Delhi to Manali?",
+        "answer": "You can easily book your cab online on our website. Just enter your details, choose your car, and confirm. You can also call our 24/7 customer support."
       },
       {
-        "question": "What happens if I cancel my booking?",
-        "answer": "You can cancel your booking up to 24 hours before the pickup time for a full refund. A cancellation fee may apply for cancellations within 24 hours."
+        "question": "Are the fares all-inclusive? What about toll charges?",
+        "answer": "Our fares typically include the driver's allowance, fuel, and state taxes. Toll charges and parking fees are usually extra unless specified otherwise."
+      },
+      {
+        "question": "Can I book a one-way taxi from Delhi to Manali?",
+        "answer": "Yes, BlazeCab offers reliable one-way taxis from Delhi to Manali, so you only pay for the drop."
+      },
+      {
+        "question": "What types of cars are available for the Delhi to Manali route?",
+        "answer": "We highly recommend SUVs (like Innova, Ertiga) for this long, mountainous journey. We also offer sedans (like Dzire, Etios) for budget-conscious travelers."
+      },
+      {
+        "question": "How long does the journey from Delhi to Manali take?",
+        "answer": "The approximate travel time is 12-14 hours, covering a distance of ~550 km. This can vary based on traffic and weather conditions."
+      },
+      {
+        "question": "Is it safe to travel from Delhi to Manali at night?",
+        "answer": "Yes, our drivers are experts in hill driving, including at night. However, we often recommend starting early in the morning to enjoy the scenic beauty and avoid potential delays."
+      },
+      {
+        "question": "What is your cancellation policy?",
+        "answer": "You can cancel your booking free of charge up to 24 hours before your pickup time. A cancellation fee may apply for last-minute cancellations."
+      },
+      {
+        "question": "Can we make stops at Chandigarh or Mandi?",
+        "answer": "Yes, brief stops for food or refreshments are included. For longer sightseeing detours, please inform us at the time of booking as it may affect the fare."
+      },
+      {
+        "question": "Do I need to pay an advance amount to book my cab?",
+        "answer": "Yes, a small advance payment is required to confirm your booking. The remaining amount can be paid to the driver at the end of your trip."
       }
+    ]
+  },
+  "mumbai-pune": {
+    "seoContent": "<h2>Your Fastest Mumbai to Pune Cab Service</h2><p>Travel seamlessly from <strong>Mumbai to Pune</strong> with BlazeCab. We offer the most reliable taxi service, perfect for business meetings or a quick weekend getaway. The route covers approximately 150 km via the Mumbai-Pune Expressway and takes about 3-4 hours, making it the fastest way to travel.</p><p>Forget the hassle of crowded trains or buses. Booking a Mumbai to Pune cab with BlazeCab ensures a punctual, relaxing ride with a professional chauffeur. Our transparent pricing and commitment to quality make us the top choice for this popular route.</p><h3>Why Choose BlazeCab for Your Mumbai to Pune Trip?</h3><ul><li><strong>One-Way & Round-Trip Options:</strong> We provide flexible booking for both one-way drops and round-trip packages, with all-inclusive fares.</li><li><strong>Punctual Service:</strong> We value your time. Our drivers ensure on-time pickup from your doorstep in Mumbai and a timely arrival in Pune.</li><li><strong>Clean & Sanitized Fleet:</strong> Choose from a range of vehicles, including sedans, SUVs, and premium cars, all maintained to the highest standards.</li><li><strong>24/7 Customer Support:</strong> Our support team is available round-the-clock to assist with your booking or any queries.</li></ul><p>Whether it's for work or leisure, book your Mumbai to Pune taxi with BlazeCab for a premium and hassle-free experience.</p>",
+    "faq": [
+      {
+        "question": "What is the cab fare from Mumbai to Pune?",
+        "answer": "The fare for a Mumbai to Pune taxi starts from ₹2499 for a sedan. The final price depends on the car type and whether it's a one-way or round-trip booking."
+      },
+      {
+        "question": "How can I book a cab from Mumbai to Pune?",
+        "answer": "You can easily book your cab online on our website. Just enter your pickup/drop locations, choose your car, and confirm your ride in minutes."
+      },
+      {
+        "question": "Are the fares all-inclusive? What about toll charges?",
+        "answer": "Our fares typically include the driver's allowance, fuel, and state taxes. Toll charges for the Mumbai-Pune Expressway are extra and payable to the driver."
+      },
+      {
+        "question": "Can I book a one-way taxi from Mumbai to Pune?",
+        "answer": "Yes, BlazeCab offers competitive one-way fares so you only pay for the distance you travel."
+      },
+      {
+        "question": "What types of cars are available for the Mumbai to Pune route?",
+        "answer": "We offer a wide range of vehicles, including comfortable sedans (like Dzire, Etios) and spacious SUVs (like Innova, Ertiga)."
+      },
+      {
+        "question": "How long does the journey from Mumbai to Pune take?",
+        "answer": "The approximate travel time is 3-4 hours, covering a distance of ~150 km. This can vary based on traffic conditions in Mumbai and Pune."
+      },
+      {
+        "question": "Is it safe to travel from Mumbai to Pune at night?",
+        "answer": "Yes, the Mumbai-Pune Expressway is very safe for night travel. Our drivers are experienced, and our cabs are well-maintained for your safety."
+      },
+      {
+        "question": "What is your cancellation policy?",
+        "answer": "You can cancel your booking free of charge up to 24 hours before your pickup time. A cancellation fee may apply for last-minute cancellations."
+      },
+      {
+        "question": "Can we make a stop at Lonavala?",
+        "answer": "Yes, you can request a brief stop for food at a food mall in Lonavala. For longer sightseeing, it's recommended to book a separate Lonavala package."
+      },
+      {
+        "question": "Do you offer services from Mumbai Airport to Pune?",
+        "answer": "Yes, we provide reliable pickup services from Mumbai's Chhatrapati Shivaji Maharaj International Airport (CSMIA) directly to any address in Pune."
+      }
+    ]
+  },
+  "bangalore-mysore": {
+    "seoContent": "<h2>Your Trusted Bangalore to Mysore Cab Service</h2><p>Embark on a delightful journey from <strong>Bangalore to Mysore</strong> with BlazeCab. Our reliable taxi service is perfect for exploring the 'City of Palaces.' The route covers approximately 145 km and takes about 3-3.5 hours, offering a smooth ride through the vibrant landscapes of Karnataka.</p><p>Booking a Bangalore to Mysore cab with BlazeCab ensures a relaxing ride, allowing you to bypass the complexities of public transport. Our professional chauffeurs and clean cars make your travel comfortable and memorable.</p><h3>Why Choose BlazeCab for Your Bangalore to Mysore Trip?</h3><ul><li><strong>One-Way & Round-Trip Options:</strong> We provide flexible booking for both one-way drops and round-trip packages, perfect for a day trip or a longer stay.</li><li><strong>Professional Chauffeurs:</strong> Our drivers are courteous, speak English and Kannada, and are experts on the Bangalore-Mysore route.</li><li><strong>Clean & Sanitized Fleet:</strong> Choose from a range of sedans and SUVs, all maintained to the highest standards of hygiene.</li><li><strong>24/7 Customer Support:</strong> Our support team is available round-the-clock to assist with your booking.</li></ul><p>Visit the majestic Mysore Palace and Chamundi Hills with ease. Book your BlazeCab today for a royal travel experience!</p>",
+    "faq": [
+      {
+        "question": "What is the cab fare from Bangalore to Mysore?",
+        "answer": "The fare for a Bangalore to Mysore taxi starts from ₹2399 for a sedan. The final price depends on the car type and your specific pickup/drop locations."
+      },
+      {
+        "question": "How can I book a cab from Bangalore to Mysore?",
+        "answer": "You can easily book your cab online on our website. Just enter your details, choose your car, and confirm your ride. You can also call our 24/7 customer support."
+      },
+      {
+        "question": "Are the fares all-inclusive? What about toll charges?",
+        "answer": "Our fares include the driver's allowance, fuel, and state taxes. Toll charges on the new expressway are extra and payable to the driver."
+      },
+      {
+        "question": "Can I book a one-way taxi from Bangalore to Mysore?",
+        "answer": "Yes, BlazeCab offers competitive one-way fares so you only pay for the distance you travel."
+      },
+      {
+        "question": "What types of cars are available for the Bangalore to Mysore route?",
+        "answer": "We offer a wide range of vehicles, including comfortable sedans (like Dzire, Etios) and spacious SUVs (like Innova, Ertiga)."
+      },
+      {
+        "question": "How long does the journey from Bangalore to Mysore take?",
+        "answer": "The approximate travel time is 3-3.5 hours, covering a distance of ~145 km. This can vary based on traffic."
+      },
+      {
+        "question": "Is it safe to travel from Bangalore to Mysore at night?",
+        "answer": "Yes, the route is safe for night travel. Our drivers are experienced, and our cabs are well-maintained for your safety."
+      },
+      {
+        "question": "What is your cancellation policy?",
+        "answer": "You can cancel your booking free of charge up to 24 hours before your pickup time. A cancellation fee may apply for last-minute cancellations."
+      },
+      {
+        "question": "Can we make stops at Srirangapatna or Channapatna?",
+        "answer": "Yes, you can request brief stops. For longer detours or sightseeing, please inform us at the time of booking as it may affect the fare."
+      },
+      {
+        "question": "Do you provide pickups from Bangalore Airport (BIAL)?",
+        "answer": "Yes, we offer reliable cab services from Kempegowda International Airport (BIAL) directly to Mysore."
+      }
+    ]
+  },
+  "chennai-tirupati": {
+    "seoContent": "<h2>Your Devotional Chennai to Tirupati Cab Service</h2><p>Embark on a blessed journey from <strong>Chennai to Tirupati</strong> with BlazeCab. We offer a reliable and comfortable taxi service, perfect for your pilgrimage to the sacred Tirumala temple. The route covers approximately 135 km and takes about 3-4 hours, ensuring you reach on time for your darshan.</p><p>Booking a Chennai to Tirupati cab with BlazeCab ensures a comfortable and timely journey. Our drivers are experienced with the pilgrimage route and procedures, making your travel completely stress-free.</p><h3>Why Choose BlazeCab for Your Chennai to Tirupati Trip?</h3><ul><li><strong>Pilgrimage-Ready Packages:</strong> We offer packages that include the drive up to Tirumala hills and waiting time for darshan (in round-trip bookings).</li><li><strong>Professional Chauffeurs:</strong> Our drivers understand the requirements of a pilgrimage trip, ensuring a respectful and smooth journey.</li><li><strong>Clean & Sanitized Fleet:</strong> Choose from sedans or SUVs, perfect for individuals, families, and groups.</li><li><strong>24/7 Customer Support:</strong> Our support team is available to help you plan your trip perfectly.</li></ul><p>Focus on your prayers and leave the driving to us. Book your Chennai to Tirupati taxi for a divine journey.</p>",
+    "faq": [
+      {
+        "question": "What is the cab fare from Chennai to Tirupati?",
+        "answer": "The fare for a Chennai to Tirupati taxi starts from ₹2299 for a sedan. This may or may not include the drive up to Tirumala hills, so please check your booking details."
+      },
+      {
+        "question": "How can I book a cab from Chennai to Tirupati?",
+        "answer": "You can easily book your cab online on our website. For specific pilgrimage packages, you can also call our 24/7 customer support for assistance."
+      },
+      {
+        "question": "Are the fares all-inclusive? What about toll and hill charges?",
+        "answer": "Our fares include the driver's allowance, fuel, and state taxes. Toll charges and the Tirumala hill entry fee (Alipiri toll) are usually extra."
+      },
+      {
+        "question": "Can I book a one-way taxi from Chennai to Tirupati?",
+        "answer": "Yes, we offer one-way drops to Tirupati town. If you wish to be dropped at Tirumala, please specify at the time of booking."
+      },
+      {
+        "question": "What types of cars are available for the Chennai to Tirupati route?",
+        "answer": "We offer comfortable sedans (like Dzire, Etios) and spacious SUVs (like Innova, Ertiga) suitable for families."
+      },
+      {
+        "question": "How long does the journey from Chennai to Tirupati take?",
+        "answer": "The approximate travel time is 3-4 hours, covering a distance of ~135 km to Tirupati town. The drive up the hill takes an additional 45 minutes."
+      },
+      {
+        "question": "Is it safe to travel from Chennai to Tirupati at night?",
+        "answer": "Yes, the route is safe. However, please note the Tirumala ghat roads are closed for vehicles from 12 AM to 3 AM."
+      },
+      {
+        "question": "What is your cancellation policy?",
+        "answer": "You can cancel your booking free of charge up to 24 hours before your pickup time. A cancellation fee may apply for last-minute cancellations."
+      },
+      {
+        "question": "Can the driver wait while we go for darshan?",
+        "answer": "Yes, in our round-trip packages, the driver will wait for a specified duration while you complete your darshan. This is not applicable for one-way bookings."
+      },
+      {
+        "question": "Do I need to pay an advance amount to book my cab?",
+        "answer": "Yes, a small advance payment is required to confirm your booking. The remaining amount can be paid to the driver at the end of your trip."
+      }
+    ]
+  },
+  "mumbai-shirdi": {
+    "seoContent": "<h2>Your Trusted Mumbai to Shirdi Cab Service</h2><p>Embark on a peaceful pilgrimage from <strong>Mumbai to Shirdi</strong> with BlazeCab. We provide a safe, reliable, and comfortable taxi service for your journey to the home of Sai Baba. The route covers approximately 245 km and takes about 5-6 hours, allowing you to travel with ease.</p><p>Booking a Mumbai to Shirdi cab with BlazeCab ensures a stress-free trip. Our professional drivers are experienced on this route and prioritize your comfort and timely arrival for darshan.</p><h3>Why Choose BlazeCab for Your Mumbai to Shirdi Trip?</h3><ul><li><strong>One-Way & Round-Trip Options:</strong> We offer flexible one-way drops to Shirdi and round-trip packages, which can also include visits to nearby temples.</li><li><strong>Professional Chauffeurs:</strong> Our drivers are courteous, experienced, and ensure a safe and devotional journey.</li><li><strong>Clean & Sanitized Fleet:</strong> Choose from a range of sedans and SUVs, perfect for individuals or families.</li><li><strong>24/7 Customer Support:</strong> Our team is available to help you plan your pilgrimage 24/7.</li></ul><p>Travel with peace of mind. Book your Mumbai to Shirdi taxi for a divine and comfortable journey.</p>",
+    "faq": [
+      {
+        "question": "What is the cab fare from Mumbai to Shirdi?",
+        "answer": "The fare for a Mumbai to Shirdi taxi starts from ₹4499 for a sedan. The final price depends on the car type and whether it's a one-way or round-trip."
+      },
+      {
+        "question": "How can I book a cab from Mumbai to Shirdi?",
+        "answer": "You can easily book your cab online on our website. Just enter your details, choose your car, and confirm. You can also call our 24/7 customer support."
+      },
+      {
+        "question": "Are the fares all-inclusive? What about toll charges?",
+        "answer": "Our fares typically include the driver's allowance, fuel, and state taxes. Toll charges and parking fees are extra unless specified otherwise."
+      },
+      {
+        "question": "Can I book a one-way taxi from Mumbai to Shirdi?",
+        "answer": "Yes, BlazeCab offers reliable one-way taxis from Mumbai to Shirdi. We drop you right at your hotel or temple location."
+      },
+      {
+        "question": "What types of cars are available for the Mumbai to Shirdi route?",
+        "answer": "We offer comfortable sedans (like Dzire, Etios) and spacious SUVs (like Innova, Ertiga) suitable for families."
+      },
+      {
+        "question": "How long does the journey from Mumbai to Shirdi take?",
+        "answer": "The approximate travel time is 5-6 hours, covering a distance of ~245 km. This can vary based on traffic."
+      },
+      {
+        "question": "Is it safe to travel from Mumbai to Shirdi at night?",
+        "answer": "Yes, the route is safe for night travel. Our drivers are experienced, and our cabs are well-maintained for your safety."
+      },
+      {
+        "question": "What is your cancellation policy?",
+        "answer": "You can cancel your booking free of charge up to 24 hours before your pickup time. A cancellation fee may apply for last-minute cancellations."
+      },
+      {
+        "question": "Can we visit Shani Shingnapur with this booking?",
+        "answer": "A standard one-way booking is for Shirdi only. You can book a round-trip package that includes a visit to Shani Shingnapur. Please discuss this while booking."
+      },
+      {
+        "question": "Do you provide pickups from Mumbai Airport?",
+        "answer": "Yes, we provide reliable pickup services from Mumbai's Chhatrapati Shivaji Maharaj International Airport (CSMIA) directly to Shirdi."
+      }
+    ]
+  },
+  "kolkata-digha": {
+    "seoContent": "<h2>Your Perfect Kolkata to Digha Cab Service</h2><p>Plan your perfect beach getaway from <strong>Kolkata to Digha</strong> with BlazeCab. We offer the most reliable and affordable taxi service for your weekend trip. The route covers approximately 185 km and takes about 4-5 hours, making it an easy and comfortable drive.</p><p>Forget the hassle of crowded buses. Booking a Kolkata to Digha cab with BlazeCab is the best way to start your holiday. Enjoy a smooth ride with a professional chauffeur and a clean, comfortable car.</p><h3>Why Choose BlazeCab for Your Kolkata to Digha Trip?</h3><ul><li><strong>One-Way & Round-Trip Options:</strong> We provide flexible booking for both one-way drops and round-trip packages for your weekend stay.</li><li><strong>Professional Chauffeurs:</strong> Our drivers are courteous and experts on the route, ensuring your safety and punctuality.</li><li><strong>Clean & Sanitized Fleet:</strong> Choose from a range of vehicles, including hatchbacks, sedans, and SUVs to fit your group size and budget.</li><li><strong>24/7 Customer Support:</strong> Our support team is available round-the-clock to assist with your booking.</li></ul><p>Get ready to hit the beach! Book your Kolkata to Digha taxi for a fun, affordable, and relaxing trip.</p>",
+    "faq": [
+      {
+        "question": "What is the cab fare from Kolkata to Digha?",
+        "answer": "The fare for a Kolkata to Digha taxi starts from ₹2999 for a sedan. The final price depends on the car type and whether it's a one-way or round-trip."
+      },
+      {
+        "question": "How can I book a cab from Kolkata to Digha?",
+        "answer": "You can easily book your cab online on our website. Just enter your details, choose your car, and confirm. You can also call our 24/7 customer support."
+      },
+      {
+        "question": "Are the fares all-inclusive? What about toll charges?",
+        "answer": "Our fares typically include the driver's allowance, fuel, and state taxes. Toll charges and parking fees are extra unless specified otherwise."
+      },
+      {
+        "question": "Can I book a one-way taxi from Kolkata to Digha?",
+        "answer": "Yes, BlazeCab offers competitive one-way fares so you only pay for the distance you travel."
+      },
+      {
+        "question": "What types of cars are available for the Kolkata to Digha route?",
+        "answer": "We offer a wide range of vehicles, including budget-friendly hatchbacks, comfortable sedans (like Dzire, Etios), and spacious SUVs (like Innova, Ertiga)."
+      },
+      {
+        "question": "How long does the journey from Kolkata to Digha take?",
+        "answer": "The approximate travel time is 4-5 hours, covering a distance of ~185 km. This can vary based on traffic and road conditions."
+      },
+      {
+        "question": "Is it safe to travel from Kolkata to Digha?",
+        "answer": "Yes, the route is very safe for travel. Our drivers are experienced, and our cabs are well-maintained."
+      },
+      {
+        "question": "What is your cancellation policy?",
+        "answer": "You can cancel your booking free of charge up to 24 hours before your pickup time. A cancellation fee may apply for last-minute cancellations."
+      },
+      {
+        "question": "Can we make stops for food on the way?",
+        "answer": "Yes, absolutely. There are many good dhabas and restaurants on the way. Our driver can stop at a clean and hygienic place for a break."
+      },
+      {
+        "question": "Do I need to pay an advance amount to book my cab?",
+        "answer": "Yes, a small advance payment is required to confirm your booking. The remaining amount can be paid to the driver at the end of your trip."
+      }
+    ]
+  },
+  "mumbai-nashik": {
+    "seoContent": "<h2>Your Premier Mumbai to Nashik Cab Service</h2><p>Travel with ease from <strong>Mumbai to Nashik</strong> with BlazeCab. We offer a top-rated taxi service, whether you are traveling for a pilgrimage, a visit to the vineyards, or a business trip. The route covers approximately 170 km and takes about 3-4 hours, offering a smooth and scenic drive.</p><p>Booking a Mumbai to Nashik cab with BlazeCab ensures a comfortable ride. Our professional drivers and clean vehicles make your journey relaxing and efficient. We also offer packages to visit Trimbakeshwar Temple.</p><h3>Why Choose BlazeCab for Your Mumbai to Nashik Trip?</h3><ul><li><strong>One-Way & Round-Trip Options:</strong> We provide flexible booking for both one-way drops and round-trip packages.</li><li><strong>Visit Vineyards & Temples:</strong> Easily book packages that include visits to Sula Vineyards or the Trimbakeshwar Temple.</li><li><strong>Clean & Sanitized Fleet:</strong> Choose from a range of sedans and SUVs, all maintained to the highest standards.</li><li><strong>24/7 Customer Support:</strong> Our support team is available round-the-clock to assist with your booking.</li></ul><p>Explore the 'Wine Capital of India' or visit holy sites in comfort. Book your Mumbai to Nashik taxi with BlazeCab today!</p>",
+    "faq": [
+      {
+        "question": "What is the cab fare from Mumbai to Nashik?",
+        "answer": "The fare for a Mumbai to Nashik taxi starts from ₹2799 for a sedan. The final price depends on the car type and your specific itinerary."
+      },
+      {
+        "question": "How can I book a cab from Mumbai to Nashik?",
+        "answer": "You can easily book your cab online on our website. Just enter your details, choose your car, and confirm. You can also call our 24/7 customer support."
+      },
+      {
+        "question": "Are the fares all-inclusive? What about toll charges?",
+        "answer": "Our fares typically include the driver's allowance, fuel, and state taxes. Toll charges and parking fees are extra unless specified otherwise."
+      },
+      {
+        "question": "Can I book a one-way taxi from Mumbai to Nashik?",
+        "answer": "Yes, BlazeCab offers reliable one-way taxis from Mumbai to Nashik city."
+      },
+      {
+        "question": "What types of cars are available for the Mumbai to Nashik route?",
+        "answer": "We offer a wide range of vehicles, including comfortable sedans (like Dzire, Etios) and spacious SUVs (like Innova, Ertiga)."
+      },
+      {
+        "question": "How long does the journey from Mumbai to Nashik take?",
+        "answer": "The approximate travel time is 3-4 hours, covering a distance of ~170 km. This can vary based on traffic."
+      },
+      {
+        "question": "Is it safe to travel from Mumbai to Nashik at night?",
+        "answer": "Yes, the route is very safe for night travel. Our drivers are experienced, and our cabs are well-maintained."
+      },
+      {
+        "question": "What is your cancellation policy?",
+        "answer": "You can cancel your booking free of charge up to 24 hours before your pickup time. A cancellation fee may apply for last-minute cancellations."
+      },
+      {
+        "question": "Can we visit Trimbakeshwar Temple with this booking?",
+        "answer": "A standard one-way booking is for Nashik city. You can book a round-trip package that includes Trimbakeshwar sightseeing. Please discuss this while booking."
+      },
+      {
+        "question": "Can I also book a cab for a Sula Vineyards tour?",
+        "answer": "Yes, we offer round-trip packages from Mumbai that include a tour of Sula Vineyards and other wineries in Nashik."
+      }
+    ]
+  },
+  "chennai-bangalore": {
+    "seoContent": "<h2>Your Reliable Chennai to Bangalore Cab Service</h2><p>Travel comfortably from <strong>Chennai to Bangalore</strong> with BlazeCab. Our reliable taxi service is perfect for both corporate travel and personal trips, connecting the two major IT hubs. The route covers approximately 350 km and takes about 6-7 hours, offering a safe and smooth ride.</p><p>Booking a Chennai to Bangalore cab with BlazeCab ensures a productive and relaxing journey. Forget the stress of driving or public transport, and enjoy our door-to-door service with a professional chauffeur.</p><h3>Why Choose BlazeCab for Your Chennai to Bangalore Trip?</h3><ul><li><strong>One-Way & Round-Trip Options:</strong> We provide flexible booking for both one-way drops and round-trip packages.</li><li><strong>Ideal for Business Travel:</strong> Our punctual service and comfortable sedans are perfect for corporate travelers.</li><li><strong>Clean & Sanitized Fleet:</strong> Choose from a range of sedans and SUVs, all maintained to the highest standards of hygiene.</li><li><strong>24/7 Customer Support:</strong> Our support team is available round-the-clock to assist with your booking.</li></ul><p>Travel between the two major South Indian cities in comfort. Book your Chennai to Bangalore taxi with BlazeCab now.</p>",
+    "faq": [
+      {
+        "question": "What is the cab fare from Chennai to Bangalore?",
+        "answer": "The fare for a Chennai to Bangalore taxi starts from ₹4999 for a sedan. The final price depends on the car type and your specific pickup/drop locations."
+      },
+      {
+        "question": "How can I book a cab from Chennai to Bangalore?",
+        "answer": "You can easily book your cab online on our website. Just enter your details, choose your car, and confirm. You can also call our 24/7 customer support."
+      },
+      {
+        "question": "Are the fares all-inclusive? What about toll charges?",
+        "answer": "Our fares typically include the driver's allowance, fuel, and state taxes. Toll charges are extra and payable to the driver."
+      },
+      {
+        "question": "Can I book a one-way taxi from Chennai to Bangalore?",
+        "answer": "Yes, BlazeCab specializes in one-way intercity travel and offers competitive fares for this route."
+      },
+      {
+        "question": "What types of cars are available for the Chennai to Bangalore route?",
+        "answer": "We offer a wide range of vehicles, including comfortable sedans (like Dzire, Etios) perfect for business, and spacious SUVs (like Innova)."
+      },
+      {
+        "question": "How long does the journey from Chennai to Bangalore take?",
+        "answer": "The approximate travel time is 6-7 hours, covering a distance of ~350 km. This can vary based on traffic."
+      },
+      {
+        "question": "Is it safe to travel from Chennai to Bangalore at night?",
+        "answer": "Yes, the highway is safe for night travel. Our drivers are experienced on this route, and our cabs are well-maintained."
+      },
+      {
+        "question": "What is your cancellation policy?",
+        "answer": "You can cancel your booking free of charge up to 24 hours before your pickup time. A cancellation fee may apply for last-minute cancellations."
+      },
+      {
+        "question": "Can we make a stop at Vellore (Golden Temple)?",
+        "answer": "Yes, you can request a brief stop. For a longer detour, please inform us at the time of booking as it may be chargeable."
+      },
+      {
+        "question": "Do you provide pickups from Chennai Airport (MAA)?",
+        "answer": "Yes, we offer reliable cab services from Chennai International Airport (MAA) directly to any address in Bangalore."
+      }
+    ]
+  },
+  "chandigarh-manali": {
+    "seoContent": "<h2>Your Scenic Chandigarh to Manali Cab Service</h2><p>Start your Himalayan adventure from <strong>Chandigarh to Manali</strong> with BlazeCab. This is one of the most beautiful road trips, taking you from the plains into the heart of the mountains. The route covers approximately 300 km and takes about 8-9 hours.</p><p>Booking a Chandigarh to Manali cab with BlazeCab is the best way to enjoy the stunning valleys and river views. Our expert hill drivers navigate the winding roads safely, ensuring you have a comfortable and memorable journey.</p><h3>Why Choose BlazeCab for Your Chandigarh to Manali Trip?</h3><ul><li><strong>Expert Hill Drivers:</strong> Our chauffeurs are specially trained and highly experienced in hill driving, ensuring your safety.</li><li><strong>Scenic Stops:</strong> Our drivers know the best, most hygienic places to stop for food and the best spots for scenic photos.</li><li><strong>Clean & Sanitized Fleet:</strong> Choose from sedans or SUVs, all perfectly maintained for mountain roads.</li><li><strong>24/7 Customer Support:</strong> Our support team is available round-the-clock to assist with your booking.</li></ul><p>Your mountain adventure begins here. Book your Chandigarh to Manali taxi with BlazeCab and travel with peace of mind.</p>",
+    "faq": [
+      {
+        "question": "What is the cab fare from Chandigarh to Manali?",
+        "answer": "The fare for a Chandigarh to Manali taxi starts from ₹4999 for a sedan. The final price depends on the car type (SUV recommended) and the season."
+      },
+      {
+        "question": "How can I book a cab from Chandigarh to Manali?",
+        "answer": "You can easily book your cab online on our website. Just enter your details, choose your car, and confirm. You can also call our 24/7 customer support."
+      },
+      {
+        "question": "Are the fares all-inclusive? What about toll charges?",
+        "answer": "Our fares typically include the driver's allowance, fuel, and state taxes. Toll charges and parking fees are extra unless specified otherwise."
+      },
+      {
+        "question": "Can I book a one-way taxi from Chandigarh to Manali?",
+        "answer": "Yes, BlazeCab offers reliable one-way taxis from Chandigarh to Manali."
+      },
+      {
+        "question": "What types of cars are available for the Chandigarh to Manali route?",
+        "answer": "We highly recommend SUVs (like Innova, Ertiga) for comfort and safety on hill roads. We also offer sedans (like Dzire, Etios)."
+      },
+      {
+        "question": "How long does the journey from Chandigarh to Manali take?",
+        "answer": "The approximate travel time is 8-9 hours, covering a distance of ~300 km. This can vary based on road conditions and traffic."
+      },
+      {
+        "question": "Is it safe to travel from Chandigarh to Manali at night?",
+        "answer": "We generally advise against starting this journey at night due to the nature of hill driving. Starting early in the morning is the safest and most scenic option."
+      },
+      {
+        "question": "What is your cancellation policy?",
+        "answer": "You can cancel your booking free of charge up to 24 hours before your pickup time. A cancellation fee may apply for last-minute cancellations."
+      },
+      {
+        "question": "Can we make stops at Mandi or Kullu?",
+        "answer": "Yes, brief stops for food and photos are included. For longer sightseeing in Kullu (like rafting), we recommend booking a customized package."
+      },
+      {
+        "question": "Do you provide pickups from Chandigarh Airport (IXC)?",
+        "answer": "Yes, we offer reliable cab services from Shaheed Bhagat Singh International Airport, Chandigarh (IXC) directly to Manali."
+      }
+    ]
+  },
+  "delhi-haridwar": {
+    "seoContent": "<h2>Your Sacred Delhi to Haridwar Cab Service</h2><p>Embark on a holy pilgrimage from <strong>Delhi to Haridwar</strong> with BlazeCab. We provide a safe and comfortable taxi service to the banks of the Ganges. The route covers approximately 220 km and now takes only about 4-5 hours, thanks to the new expressway.</p><p>Booking a Delhi to Haridwar cab with BlazeCab ensures a timely and peaceful journey. Avoid the rush of trains and buses, and travel at your own pace with our door-to-door service.</p><h3>Why Choose BlazeCab for Your Delhi to Haridwar Trip?</h3><ul><li><strong>One-Way & Round-Trip Options:</strong> We offer flexible one-way drops and round-trip packages, which can also include Rishikesh.</li><li><strong>Punctual & Reliable:</strong> Our drivers are always on time, ensuring you can reach for the Ganga Aarti or your other commitments.</li><li><strong>Clean & Sanitized Fleet:</strong> Choose from a range of sedans and SUVs, all maintained to the highest standards.</li><li><strong>24/7 Customer Support:</strong> Our support team is available round-the-clock to assist with your booking.</li></ul><p>Attend the Ganga Aarti at Har Ki Pauri without any travel stress. Book your Delhi to Haridwar taxi with BlazeCab today.</p>",
+    "faq": [
+      {
+        "question": "What is the cab fare from Delhi to Haridwar?",
+        "answer": "The fare for a Delhi to Haridwar taxi starts from ₹2999 for a sedan. The final price depends on the car type and whether it's a one-way or round-trip."
+      },
+      {
+        "question": "How can I book a cab from Delhi to Haridwar?",
+        "answer": "You can easily book your cab online on our website. Just enter your details, choose your car, and confirm. You can also call our 24/7 customer support."
+      },
+      {
+        "question": "Are the fares all-inclusive? What about toll charges?",
+        "answer": "Our fares typically include the driver's allowance, fuel, and state taxes. Toll charges for the expressway are extra and payable to the driver."
+      },
+      {
+        "question": "Can I book a one-way taxi from Delhi to Haridwar?",
+        "answer": "Yes, BlazeCab offers reliable one-way taxis from Delhi to Haridwar at competitive prices."
+      },
+      {
+        "question": "What types of cars are available for the Delhi to Haridwar route?",
+        "answer": "We offer a wide range of vehicles, including comfortable sedans (like Dzire, Etios) and spacious SUVs (like Innova, Ertiga)."
+      },
+      {
+        "question": "How long does the journey from Delhi to Haridwar take?",
+        "answer": "The approximate travel time is 4-5 hours, covering a distance of ~220 km. This is much faster now with the new expressway."
+      },
+      {
+        "question": "Is it safe to travel from Delhi to Haridwar at night?",
+        "answer": "Yes, the route is very safe for night travel. The new highway is well-lit and our drivers are experienced."
+      },
+      {
+        "question": "What is your cancellation policy?",
+        "answer": "You can cancel your booking free of charge up to 24 hours before your pickup time. A cancellation fee may apply for last-minute cancellations."
+      },
+      {
+        "question": "Can we visit Rishikesh with this booking?",
+        "answer": "A standard one-way booking is for Haridwar only. You can book a round-trip package that includes both Haridwar and Rishikesh sightseeing."
+      },
+      {
+        "question": "Do I need to pay an advance amount to book my cab?",
+        "answer": "Yes, a small advance payment is required to confirm your booking. The remaining amount can be paid to the driver at the end of your trip."
+      }
+    ]
+  },
+  "bangalore-ooty": {
+    "seoContent": "<h2>Your Breathtaking Bangalore to Ooty Cab Service</h2><p>Embark on a stunning journey from <strong>Bangalore to Ooty</strong> with BlazeCab. We offer the best taxi service for your trip to the 'Queen of Hill Stations.' The route covers approximately 270 km and takes about 7-8 hours, taking you through the magnificent Bandipur Tiger Reserve.</p><p>Booking a Bangalore to Ooty cab with BlazeCab is the best way to enjoy the winding roads and stunning Nilgiri views. Our expert hill drivers ensure your journey is as safe as it is beautiful. You might even spot wildlife like deer or elephants on the way!</p><h3>Why Choose BlazeCab for Your Bangalore to Ooty Trip?</h3><ul><li><strong>Expert Hill Drivers:</strong> Our chauffeurs are specially trained for the 36 hairpin bends of the Ooty ghat road, ensuring a smooth and safe ride.</li><li><strong>Scenic Forest Route:</strong> Enjoy the drive through Bandipur and Mudumalai Tiger Reserves. Our drivers time the trip to cross the forest during open hours.</li><li><strong>Clean & Sanitized Fleet:</strong> Choose from sedans or spacious SUVs, all perfectly maintained for mountain roads.</li><li><strong>24/7 Customer Support:</strong> Our support team is available round-the-clock to assist with your booking.</li></ul><p>Enjoy the cool mountain air and stunning vistas. Book your Bangalore to Ooty taxi with BlazeCab now.</p>",
+    "faq": [
+      {
+        "question": "What is the cab fare from Bangalore to Ooty?",
+        "answer": "The fare for a Bangalore to Ooty taxi starts from ₹4799 for a sedan. The final price depends on the car type (SUV recommended) and season."
+      },
+      {
+        "question": "How can I book a cab from Bangalore to Ooty?",
+        "answer": "You can easily book your cab online on our website. Just enter your details, choose your car, and confirm. You can also call our 24/7 customer support."
+      },
+      {
+        "question": "Are the fares all-inclusive? What about toll and forest entry?",
+        "answer": "Our fares include the driver's allowance, fuel, and state taxes. Toll charges and forest entry fees are usually extra unless specified."
+      },
+      {
+        "question": "Can I book a one-way taxi from Bangalore to Ooty?",
+        "answer": "Yes, BlazeCab offers reliable one-way taxis from Bangalore to Ooty."
+      },
+      {
+        "question": "What types of cars are available for the Bangalore to Ooty route?",
+        "answer": "We highly recommend SUVs (like Innova, Ertiga) for comfort on the ghat roads. We also offer sedans (like Dzire, Etios)."
+      },
+      {
+        "question": "How long does the journey from Bangalore to Ooty take?",
+        "answer": "The approximate travel time is 7-8 hours, covering a distance of ~270 km. This includes the slower drive through the forest and up the ghats."
+      },
+      {
+        "question": "Can we travel through the Bandipur forest at night?",
+        "answer": "No, the Bandipur-Mudumalai forest road is closed to traffic from 9 PM to 6 AM. Our bookings are timed to ensure we cross this section during the day."
+      },
+      {
+        "question": "What is your cancellation policy?",
+        "answer": "You can cancel your booking free of charge up to 24 hours before your pickup time. A cancellation fee may apply for last-minute cancellations."
+      },
+      {
+        "question": "Can we stop for photos in the forest?",
+        "answer": "Stopping or getting out of the car inside the Bandipur and Mudumalai Tiger Reserves is strictly prohibited for safety. You can take photos from inside the car."
+      }
+      
     ]
   }
 }
