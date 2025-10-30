@@ -2,33 +2,33 @@ import type { Metadata } from "next";
 import { CarRentalSearch } from "@/app/_components/CarRentalSearch";
 import cabFares from "@/data/cabFares.json";
 import RouteInfoSection from "@/app/_components/Routeinfo";
+import Link from "next/link";
 import Image from "next/image";
 import { AccordionItem } from "@/app/_components/FAQ";
-import Link from "next/link";
 
-// ⬅️ Page params type
-type PageParams = {
-  slug: string;
-};
+type Params = { pickup: string; drop: string };
 
-// --- START: Consolidated Type Definitions (Unchanged) ---
+// --- START: Consolidated Type Definitions ---
 
 type FaqItem = {
   question: string;
   answer: string;
 };
 
+// 1. This is the data from your /api/car response
 interface BaseCarData {
   category: string;
   image: string;
   name: string;
   capacity: number;
   description: string;
+  // It can have inclusions/exclusions here, but we will ignore them
   inclusions?: string[];
   exclusions?: string[];
   termscondition?: string[];
 }
 
+// 2. This is the data from your /api/routes response
 type FixedPrice = {
   cabs: string;
   price: number;
@@ -36,6 +36,8 @@ type FixedPrice = {
   per_kms_extra_charge: number;
 };
 
+// 3. This is the props interface for the CarCategoryCard component
+// It needs all data to pass to the booking page
 interface CarCategoryCardProps {
   category: string;
   image: string;
@@ -49,6 +51,20 @@ interface CarCategoryCardProps {
   pickupTime: Date | undefined;
 }
 
+// 4. This is the interface for the data returned by our fetcher
+// It includes car data + pickup/drop, but NOT date/time.
+interface FetchedCarData {
+  category: string;
+  image: string;
+  price: number;
+  seats: number;
+  description: string;
+  name?: string;
+  pickup: string;
+  drop: string;
+}
+
+// 5. This is the main type for the cabFares.json file
 type RouteData = {
   faq: FaqItem[];
   seoContent?: string;
@@ -56,71 +72,43 @@ type RouteData = {
 
 type CabFaresData = Record<string, RouteData>;
 
+// 6. Type for the search component
+interface InitialValues {
+  pickupLocation: string;
+  dropoffLocation: string;
+  pickupDate: Date | undefined;
+  pickupTime: Date | undefined;
+  dropoffDate: Date | undefined;
+}
+
+// 7. Type for OSRM API response
+type DynamicRouteInfo = { distance: string; time: string };
+
 // --- END: Consolidated Type Definitions ---
 
-// --- START: NEW SLUG HELPER FUNCTIONS ---
-
-/**
- * Parses a slug like "delhi-to-agra-cabs" into its components.
- */
-function parseSlug(slug: string): { pickup: string; drop: string; routeKey: string } {
-  const parts = slug.split('-to-');
-  const pickup = parts[0] || "default"; // Handle potential error
-  
-  // Removes "-cabs" from the end of the second part
-  const dropPart = parts[1] || "default-cabs"; 
-  const drop = dropPart.replace('-cabs', '');
-  
-  // Re-create the key for cabFares.json (e.g., "delhi-agra")
-  const routeKey = `${pickup}-${drop}`;
-  
-  return { pickup, drop, routeKey };
-}
-
-/**
- * Creates a slug like "delhi-to-agra-cabs" from "delhi" and "agra".
- */
-function createSlug(pickup: string, drop: string): string {
-  return `${pickup}-to-${drop}-cabs`;
-}
-
-// --- END: NEW SLUG HELPER FUNCTIONS ---
-
-// 🔹 Generate static params (UPDATED)
-export async function generateStaticParams(): Promise<PageParams[]> {
+// 🔹 Generate static params
+export async function generateStaticParams(): Promise<Params[]> {
   return Object.keys(cabFares).map((key) => {
-    // key is "delhi-agra"
     const [pickup, drop] = key.split("-");
-    return { 
-      slug: createSlug(pickup, drop) // Returns "delhi-to-agra-cabs"
-    };
+    return { pickup, drop };
   });
 }
 
-// 🔹 Generate SEO metadata (FIXED)
-export async function generateMetadata(
-  // 1. Rename prop to await it
-  { params: paramsPromise }: { params: Promise<PageParams> }
-): Promise<Metadata> {
-  
-  // 2. Await the params promise
-  const params = await paramsPromise;
-
-  // 3. Parse the slug
-  const { pickup, drop } = parseSlug(params.slug);
-
-  // 4. Capitalize
-  const pickupCap = capitalize(pickup);
-  const dropCap = capitalize(drop);
+// 🔹 Generate SEO metadata
+export async function generateMetadata(props: {
+  params: Promise<Params>;
+}): Promise<Metadata> {
+  const params = await props.params;
+  const pickup = capitalize(params.pickup);
+  const drop = capitalize(params.drop);
 
   return {
-    title: `${pickupCap} to ${dropCap} Cabs | BlazeCab`,
-    description: `Book ${pickupCap} to ${dropCap} cab service with BlazeCab. Transparent pricing, clean cars, and professional drivers.`,
+    title: `${pickup} to ${drop} Cabs | BlazeCab`,
+    description: `Book ${pickup} to ${drop} cab service with BlazeCab. Transparent pricing, clean cars, and professional drivers.`,
     openGraph: {
-      title: `${pickupCap} to ${dropCap} Cabs | BlazeCab`,
-      description: `Enjoy affordable and comfortable rides from ${pickupCap} to ${dropCap} with BlazeCab.`,
-      // 5. Update the URL to use the new structure
-      url: `https://blazecab.in/location/${params.slug}`,
+      title: `${pickup} to ${drop} Cabs | BlazeCab`,
+      description: `Enjoy affordable and comfortable rides from ${pickup} to ${drop} with BlazeCab.`,
+      url: `https://blazecab.in/${params.pickup}/${params.drop}`,
       siteName: "BlazeCab",
       type: "website",
     },
@@ -131,7 +119,7 @@ function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-// 🔹 Default pickup time helper (unchanged)
+// 🔹 Default pickup time helper
 const getDefaultPickupTime = () => {
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
@@ -139,7 +127,7 @@ const getDefaultPickupTime = () => {
   return tomorrow;
 };
 
-// --- START: OSRM/Nominatim API Helpers (Unchanged) ---
+// --- START: OSRM/Nominatim API Helpers ---
 function formatDuration(seconds: number): string {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
@@ -169,7 +157,7 @@ async function getCoordinates(location: string): Promise<string | null> {
     return null;
   }
 }
-type DynamicRouteInfo = { distance: string; time: string };
+
 async function fetchDynamicRouteInfo(
   pickup: string,
   drop: string
@@ -196,11 +184,14 @@ async function fetchDynamicRouteInfo(
 }
 // --- END: OSRM/Nominatim API Helpers ---
 
-// --- START: DYNAMIC CAR PRICE FETCHER (Unchanged) ---
+// --- START: DYNAMIC CAR PRICE FETCHER (UPDATED) ---
+/**
+ * Fetches dynamic car prices by merging /api/car and /api/routes
+ */
 async function fetchDynamicCarPrices(
   pickup: string,
   drop: string
-): Promise<{ cars: CarCategoryCardProps[]; minPrice: number | null }> {
+): Promise<{ cars: FetchedCarData[]; minPrice: number | null }> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
   try {
@@ -248,13 +239,12 @@ async function fetchDynamicCarPrices(
               price: match.price,
               seats: car.capacity,
               description: car.description,
+              pickup: pickup, // Add pickup
+              drop: drop,     // Add drop
             }
           : null;
       })
-      .filter(Boolean) as Omit<
-      CarCategoryCardProps,
-      "pickup" | "drop" | "pickupDate" | "pickupTime"
-    >[];
+      .filter(Boolean) as FetchedCarData[]; // Cast to our new type
 
     // 4. Find the minimum price
     const minPrice =
@@ -262,7 +252,7 @@ async function fetchDynamicCarPrices(
         ? Math.min(...dynamicCars.map((c) => c.price))
         : null;
 
-    return { cars: dynamicCars as any, minPrice: minPrice };
+    return { cars: dynamicCars, minPrice: minPrice }; // This is now type-safe
   } catch (error) {
     console.error(
       `Failed to fetch dynamic car prices:`,
@@ -273,40 +263,32 @@ async function fetchDynamicCarPrices(
 }
 // --- END: DYNAMIC CAR PRICE FETCHER ---
 
-// 🔹 Main dynamic route page (FIXED)
-export default async function Page(
-  // 1. Rename prop to await it
-  { params: paramsPromise }: { params: Promise<PageParams> }
-) {
-  
-  // 2. Await the params promise
-  const params = await paramsPromise;
-
-  // 3. Parse the slug to get pickup, drop, and routeKey
-  const { pickup, drop, routeKey } = parseSlug(params.slug);
-  
-  // 4. Capitalize
+// 🔹 Main dynamic route page
+export default async function Page({ params }: { params: Promise<Params> }) {
+  const { pickup, drop } = await params;
   const pickupCap = capitalize(pickup);
   const dropCap = capitalize(drop);
+  const routeKey = `${pickup}-${drop}`.toLowerCase();
 
+  // Define dates and times for the page
   const pickupDate = new Date(new Date().setDate(new Date().getDate() + 1));
   const pickupTime = getDefaultPickupTime();
   const dropoffDate = new Date(new Date().setDate(new Date().getDate() + 1));
 
   const initialValues: InitialValues = {
-    pickupLocation: pickup, // Use parsed pickup
-    dropoffLocation: drop, // Use parsed drop
+    pickupLocation: pickup,
+    dropoffLocation: drop,
     pickupDate,
     pickupTime,
     dropoffDate,
   };
 
-  // 1. Get STATIC data from JSON (use parsed routeKey)
+  // 1. Get STATIC data from JSON
   const staticRouteData = (cabFares as CabFaresData)[routeKey];
   const faqs: FaqItem[] = staticRouteData?.faq || [];
   const seoContent: string | null = staticRouteData?.seoContent || null;
 
-  // 2. Fetch DYNAMIC data (use capitalized, parsed values)
+  // 2. Fetch DYNAMIC data
   const dynamicInfo = await fetchDynamicRouteInfo(pickupCap, dropCap);
   const { cars: dynamicCars, minPrice: dynamicMinPrice } =
     await fetchDynamicCarPrices(pickupCap, dropCap);
@@ -320,13 +302,13 @@ export default async function Page(
 
   return (
     <main className="max-w-7xl mx-auto p-4 sm:p-6 space-y-8 pt-26">
-      {/* 🔹 Search Component (Use capitalized values) */}
+      {/* 🔹 Search Component */}
       <h1 className="text-xl sm:text-2xl md:text-3xl uppercase text-center font-bold text-[#6aa4e0]">
         Book {pickupCap} to {dropCap} Cabs
       </h1>
       <CarRentalSearch initialValues={initialValues} />
 
-      {/* 🔹 Route Summary Section (Unchanged) */}
+      {/* 🔹 Route Summary Section */}
       {routeInfo && (
         <RouteInfoSection
           distance={routeInfo.distance}
@@ -335,31 +317,17 @@ export default async function Page(
         />
       )}
 
-      {/* 🔹 Car Cards (Pass capitalized, parsed values) */}
-      <div
-        className={`
-     grid gap-6
-     ${dynamicCars.length === 1 ? "grid-cols-1" : ""}
-     ${dynamicCars.length === 2 ? "sm:grid-cols-2" : ""}
-     ${dynamicCars.length === 3 ? "sm:grid-cols-3" : ""}
-     ${dynamicCars.length >= 4 ? "sm:grid-cols-2 md:grid-cols-4" : ""}
-   `}
-      >
+      {/* 🔹 Car Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         {dynamicCars.length > 0 ? (
           dynamicCars.map((car) => (
             <CarCategoryCard
               key={car.category}
-              category={car.category}
-              image={car.image}
-              price={car.price}
-              seats={car.seats}
-              description={car.description}
-              name={car.name}
-              // ⬇️ Pass the parsed & capitalized props
-              pickup={pickupCap}
-              drop={dropCap}
-              pickupDate={initialValues.pickupDate}
-              pickupTime={initialValues.pickupTime}
+              {...car} // Spread all props from FetchedCarData
+              
+              // Add the missing props to satisfy CarCategoryCardProps
+              pickupDate={pickupDate}
+              pickupTime={pickupTime}
             />
           ))
         ) : (
@@ -372,60 +340,39 @@ export default async function Page(
         )}
       </div>
 
-      {/* 🔹 SEO Content Section (Unchanged) */}
+      {/* 🔹 SEO Content Section (Styled as requested) */}
       {seoContent && (
-        <section className="mt-8 sm:mt-12 border-t border-gray-200 pt-8 sm:pt-10 px-4 sm:px-0">
+        <section className="mt-12 px-4">
           <div
             className="
-         max-w-none text-gray-700
+              prose max-w-none 
+              
+              /* Larger Heading Styles */
+              prose-headings:font-bold
+              prose-headings:text-gray-900 
+              prose-h2:text-4xl 
+              prose-h3:text-3xl 
+              prose-h3:mb-4
 
-         /* Headings */
-         [&>h1]:text-xl sm:[&>h1]:text-2xl
-         [&>h1]:font-bold
-         [&>h1]:text-gray-900
-         [&>h1]:mb-5 sm:[&>h1]:mb-6
-
-         [&>h2]:text-lg sm:[&>h2]:text-xl
-         [&>h2]:font-semibold
-         [&>h2]:text-gray-900
-         [&>h2]:mb-4 sm:[&>h2]:mb-5
-
-         [&>h3]:text-lg sm:[&>h3]:text-2xl
-         [&>h3]:font-semibold
-         [&>h3]:text-gray-900
-         [&>h3]:mb-3 sm:[&>h3]:mb-4
-
-         /* Paragraphs */
-         [&>p]:text-sm sm:[&>p]:text-base
-         [&>p]:text-gray-700
-         [&>p]:leading-relaxed
-         [&>p]:mb-3 sm:[&>p]:mb-4
-
-         /* Lists */
-         [&>ul]:list-disc
-         [&>ul]:pl-5 sm:[&>ul]:pl-6
-         [&>ul]:mb-3 sm:[&>ul]:mb-4
-         [&>li]:marker:text-[#6aa4e0]
-         [&>li]:text-gray-700
-         [&>li]:text-base sm:[&>li]:text-lg
-         [&>li]:leading-relaxed
-         [&>li]:mb-1 sm:[&>li]:mb-2
-
-         /* Strong text */
-         [&>strong]:text-gray-900
-         [&>strong]:font-semibold
-
-         /* Links */
-         [&>a]:text-[#6aa4e0]
-         [&>a]:font-semibold
-         hover:[&>a]:underline
-       "
+              /* Body & Link Styles */
+              prose-p:text-gray-700
+              prose-p:my-4
+              prose-strong:text-gray-900
+              prose-a:text-[#6aa4e0]
+              prose-a:font-semibold
+              hover:prose-a:underline
+              
+              /* List Styles (No Bullets) */
+              prose-ul:list-none
+              prose-ul:p-0
+              prose-li:my-3
+            "
             dangerouslySetInnerHTML={{ __html: seoContent }}
           />
         </section>
       )}
 
-      {/* 🔹 FAQs (Use capitalized values) */}
+      {/* 🔹 FAQs */}
       <h1 className="text-xl sm:text-2xl font-bold">
         FAQs for {pickupCap} to {dropCap} Cabs
       </h1>
@@ -437,76 +384,53 @@ export default async function Page(
   );
 }
 
-// 🔹 InitialValues (Unchanged)
-interface InitialValues {
-  pickupLocation: string;
-  dropoffLocation: string;
-  pickupDate: Date | undefined;
-  pickupTime: Date | undefined;
-  dropoffDate: Date | undefined;
-}
-
-// 🔹 CarCategoryCard Component (TYPO FIXED)
+// 🔹 CarCategoryCard Component (UPDATED)
 const CarCategoryCard = ({
   category,
   image,
   price,
   seats,
   description,
-  name,
   pickup,
   drop,
   pickupDate,
   pickupTime,
-}: CarCategoryCardProps) => {
-  // 4. Create the query object for the link
-  const queryParams: Record<string, string> = {
-    rideType: "oneway", // As requested
-    pickupLocation: pickup,
-    dropoffLocation: drop,
-    category: category,
-    price: price.toString(),
-    seats: seats.toString(),
-  };
-
-  if (name) {
-    queryParams.name = name;
-  }
-  if (pickupDate) {
-    queryParams.pickupDate = pickupDate.toISOString();
-  }
-  if (pickupTime) {
-    queryParams.pickupTime = pickupTime.getTime().toString();
-  }
-
-  return (
-    <Link
-      href={{
-        pathname: "/bookingpage",
-        query: queryParams, // Pass all data as query params
-      }}
-      className="block"
-    >
-      <div className="flex sm:flex-col items-center text-center p-4 border rounded-lg shadow-md hover:shadow-lg transition-shadow h-full">
-        <div className="relative w-48 h-32 mb-4">
-          <Image src={image} alt={category} layout="fill" objectFit="contain" />
-        </div>
-
-        <div className="flex flex-col items-center">
-          <div className="flex flex-col sm:flex-row items-center gap-2 mb-1">
-            <h3 className="text-lg font-bold text-gray-900">{category}</h3>
-            <span className="bg-[#FFB300] text-white text-xs font-semibold px-2 py-0.5 rounded-md">
-              {seats} Seats
-            </span>
-          </div>
-
-          <p className="text-sm text-gray-600 mb-2">{description}</p>
-
-          <p className="text-2xl font-bold text-[#6aa4e0]">
-            ₹{price.toLocaleString()}
-          </p>{/* ⬅️ Typo fixed here (was </NextLink>) */}
-        </div>
+}: CarCategoryCardProps) => (
+  <Link
+    href={{
+      pathname: "/bookingpage",
+      // Pass all relevant data to the booking page
+      query: {
+        pickup,
+        drop,
+        pickupDate: pickupDate?.toISOString(),
+        pickupTime: pickupTime?.toISOString(),
+        category,
+        price,
+        seats,
+      },
+    }}
+    className="block"
+  >
+    <div className="flex sm:flex-col items-center text-center p-4 border rounded-lg shadow-md hover:shadow-lg transition-shadow h-full">
+      <div className="relative w-48 h-32 mb-4">
+        <Image src={image} alt={category} layout="fill" objectFit="contain" />
       </div>
-    </Link>
-  );
-};
+
+      <div className="flex flex-col items-center">
+        <div className="flex flex-col sm:flex-row items-center gap-2 mb-1">
+          <h3 className="text-lg font-bold text-gray-900">{category}</h3>
+          <span className="bg-[#FFB300] text-white text-xs font-semibold px-2 py-0.5 rounded-md">
+            {seats} Seats
+          </span>
+        </div>
+
+        <p className="text-sm text-gray-600 mb-2">{description}</p>
+
+        <p className="text-2xl font-bold text-[#6aa4e0]">
+          ₹{price.toLocaleString()}
+        </p>
+      </div>
+    </div>
+  </Link>
+);
