@@ -368,7 +368,11 @@ export default async function Page(
       )}
 
       {/* 🔹 Car Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+      <div className={`grid grid-cols-1 sm:grid-cols-2 ${
+        dynamicCars.length === 2 ? 'md:grid-cols-2' :
+        dynamicCars.length === 3 ? 'md:grid-cols-3' :
+        'md:grid-cols-4'
+      } gap-6`}>
         {dynamicCars.length > 0 ? (
           dynamicCars.map((car) => (
             <CarCategoryCard
@@ -392,35 +396,57 @@ export default async function Page(
 
       {/* 🔹 SEO Content Section (Styled as requested) */}
       {seoContent && (
-        <section className="mt-12 px-4">
-          <div
-            className="
-              prose max-w-none 
-              
-              /* Larger Heading Styles */
-              prose-headings:font-bold
-              prose-headings:text-gray-900 
-              prose-h2:text-4xl 
-              prose-h3:text-3xl 
-              prose-h3:mb-4
+  <section className="mt-8 sm:mt-12 border-t border-gray-200 pt-8 sm:pt-10 px-4 sm:px-0">
+    <div
+      className="
+        max-w-none text-gray-700
 
-              /* Body & Link Styles */
-              prose-p:text-gray-700
-              prose-p:my-4
-              prose-strong:text-gray-900
-              prose-a:text-[#6aa4e0]
-              prose-a:font-semibold
-              hover:prose-a:underline
-              
-              /* List Styles (No Bullets) */
-              prose-ul:list-none
-              prose-ul:p-0
-              prose-li:my-3
-            "
-            dangerouslySetInnerHTML={{ __html: seoContent }}
-          />
-        </section>
-      )}
+        /* Headings */
+        [&>h1]:text-2xl sm:[&>h1]:text-4xl
+        [&>h1]:font-bold
+        [&>h1]:text-gray-900
+        [&>h1]:mb-5 sm:[&>h1]:mb-6
+
+        [&>h2]:text-xl sm:[&>h2]:text-3xl
+        [&>h2]:font-semibold
+        [&>h2]:text-gray-900
+        [&>h2]:mb-4 sm:[&>h2]:mb-5
+
+        [&>h3]:text-lg sm:[&>h3]:text-2xl
+        [&>h3]:font-semibold
+        [&>h3]:text-gray-900
+        [&>h3]:mb-3 sm:[&>h3]:mb-4
+
+        /* Paragraphs */
+        [&>p]:text-base sm:[&>p]:text-lg
+        [&>p]:text-gray-700
+        [&>p]:leading-relaxed
+        [&>p]:mb-3 sm:[&>p]:mb-4
+
+        /* Lists */
+        [&>ul]:list-disc
+        [&>ul]:pl-5 sm:[&>ul]:pl-6
+        [&>ul]:mb-3 sm:[&>ul]:mb-4
+        [&>li]:marker:text-[#6aa4e0]
+        [&>li]:text-gray-700
+        [&>li]:text-base sm:[&>li]:text-lg
+        [&>li]:leading-relaxed
+        [&>li]:mb-1 sm:[&>li]:mb-2
+
+        /* Strong text */
+        [&>strong]:text-gray-900
+        [&>strong]:font-semibold
+
+        /* Links */
+        [&>a]:text-[#6aa4e0]
+        [&>a]:font-semibold
+        hover:[&>a]:underline
+      "
+      dangerouslySetInnerHTML={{ __html: seoContent }}
+    />
+  </section>
+)}
+
 
       {/* 🔹 FAQs */}
       <h1 className="text-xl sm:text-2xl font-bold">
