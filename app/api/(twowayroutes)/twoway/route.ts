@@ -4,21 +4,16 @@ import TwowayRoute from '@/models/twowayroute' // adjust path as needed
 
 
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest) { 
   try {
     await connect();
     const searchParams = request.nextUrl.searchParams;
-    const pickup = searchParams.get("pickup");
-    const drop = searchParams.get("drop");
+    const pickup = searchParams.get("pickup")?.toLowerCase();
+    const drop = searchParams.get("drop")?.toLowerCase();
 
     const route = await TwowayRoute
-      .find({
-        pickup: String(pickup),
-        drop: String(drop),
-      })
-      .sort({ price: 1 }); 
-
-     console.log(route) 
+      .find({ pickup, drop })
+      .sort({ price: 1 });
 
     if (!route || route.length === 0) {
       return NextResponse.json({ error: "NOT FOUND" }, { status: 404 });
@@ -26,10 +21,11 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(route);
   } catch (err) {
-    console.log(err);
+    console.error(err);
     return NextResponse.json(err, { status: 500 });
   }
 }
+
 
 
 

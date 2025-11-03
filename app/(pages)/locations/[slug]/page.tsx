@@ -474,16 +474,14 @@ const CarCategoryCard = ({
 }: CarCategoryCardProps) => (
   <Link
     href={{
-      pathname: "/bookingpage",
+      pathname: "/carride",
       // Pass all relevant data to the booking page
       query: {
-        pickup,
-        drop,
+        pickupLocation:pickup,
+        dropoffLocation:drop,
         pickupDate: pickupDate?.toISOString(),
         pickupTime: pickupTime?.toISOString(),
-        category,
-        price,
-        seats,
+        rideType:"One Way"
       },
     }}
     className="block"
