@@ -4,7 +4,6 @@ import cabFares from "@/data/cabFares.json";
 import RouteInfoSection from "@/app/_components/Routeinfo";
 import Link from "next/link";
 import Image from "next/image";
-import { AccordionItem } from "@/app/_components/FAQ";
 import FAQ from "@/app/_components/FAQ";
 // ⬅️ UPDATED: Page params type
 type PageParams = {
