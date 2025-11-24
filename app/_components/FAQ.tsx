@@ -4,7 +4,7 @@ import { FaAngleDown } from "react-icons/fa";
 
 const Accordion = () => {
   return (
-    <section className="relative z-20 overflow-hidden px-4  max-w-7xl mx-auto ">
+    <section className="relative z-20 overflow-hidden bg-red  max-w-7xl mx-auto ">
       <div className="container mx-auto">
         <div className="-mx-4 flex flex-wrap">
           <div className="w-full px-4">
@@ -23,7 +23,7 @@ const Accordion = () => {
           </div>
         </div>
 
-        <div className="px-4 flex flex-wrap bg-white">
+        <div className=" flex flex-wrap bg-white">
           <div className="w-full  lg:w-full">
             <AccordionItem
               header="In which cities are Blazecab services available?"

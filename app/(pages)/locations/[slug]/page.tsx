@@ -5,7 +5,7 @@ import RouteInfoSection from "@/app/_components/Routeinfo";
 import Link from "next/link";
 import Image from "next/image";
 import { AccordionItem } from "@/app/_components/FAQ";
-
+import FAQ from "@/app/_components/FAQ";
 // ⬅️ UPDATED: Page params type
 type PageParams = {
   slug: string;
@@ -91,17 +91,27 @@ type DynamicRouteInfo = { distance: string; time: string };
 /**
  * Parses a slug like "delhi-to-agra-cabs" into its components.
  */
-function parseSlug(slug: string): { pickup: string; drop: string; routeKey: string } {
-  const parts = slug.split('-to-');
-  const pickup = parts[0] || "default"; // Handle potential error
-  
+function parseSlug(slug: string): {
+  pickup: string;
+  drop: string;
+  routeKey: string;
+} {
+  const parts = slug.split("-to-");
+
+  // Assign and convert pickup to lowercase
+  const pickup = (parts[0] || "default").toLowerCase();
+
   // Removes "-cabs" from the end of the second part
-  const dropPart = parts[1] || "default-cabs"; 
-  const drop = dropPart.replace('-cabs', '');
-  
-  // Re-create the key for cabFares.json (e.g., "delhi-agra")
+  const dropPart = parts[1] || "default-cabs";
+
+  // Assign and convert drop to lowercase
+  const drop = dropPart.replace("-cabs", "").toLowerCase();
+
+  // Re-create the key (e.g., "delhi-agra")
+  // This will now be lowercase since pickup and drop are.
+  console.log(pickup);
   const routeKey = `${pickup}-${drop}`;
-  
+
   return { pickup, drop, routeKey };
 }
 
@@ -114,14 +124,13 @@ function createSlug(pickup: string, drop: string): string {
 
 // --- END: NEW SLUG HELPER FUNCTIONS ---
 
-
 // 🔹 Generate static params (UPDATED)
 export async function generateStaticParams(): Promise<PageParams[]> {
   return Object.keys(cabFares).map((key) => {
     // key is "delhi-agra"
     const [pickup, drop] = key.split("-");
-    return { 
-      slug: createSlug(pickup, drop) // Returns "delhi-to-agra-cabs"
+    return {
+      slug: createSlug(pickup, drop), // Returns "delhi-to-agra-cabs"
     };
   });
 }
@@ -131,7 +140,6 @@ export async function generateMetadata(
   // 1. Rename prop to await it
   { params: paramsPromise }: { params: Promise<PageParams> }
 ): Promise<Metadata> {
-  
   // 2. Await the params promise
   const params = await paramsPromise;
 
@@ -281,7 +289,7 @@ async function fetchDynamicCarPrices(
               seats: car.capacity,
               description: car.description,
               pickup: pickup, // Add pickup
-              drop: drop,     // Add drop
+              drop: drop, // Add drop
             }
           : null;
       })
@@ -309,13 +317,13 @@ export default async function Page(
   // 1. Rename prop to await it
   { params: paramsPromise }: { params: Promise<PageParams> }
 ) {
-  
   // 2. Await the params promise
   const params = await paramsPromise;
 
   // 3. Parse the slug to get pickup, drop, and routeKey
   const { pickup, drop, routeKey } = parseSlug(params.slug);
-  
+  console.log(routeKey);
+
   // 4. Capitalize
   const pickupCap = capitalize(pickup);
   const dropCap = capitalize(drop);
@@ -335,7 +343,6 @@ export default async function Page(
 
   // 1. Get STATIC data from JSON (use parsed routeKey)
   const staticRouteData = (cabFares as CabFaresData)[routeKey];
-  const faqs: FaqItem[] = staticRouteData?.faq || [];
   const seoContent: string | null = staticRouteData?.seoContent || null;
 
   // 2. Fetch DYNAMIC data (use capitalized, parsed values)
@@ -368,17 +375,20 @@ export default async function Page(
       )}
 
       {/* 🔹 Car Cards */}
-      <div className={`grid grid-cols-1 sm:grid-cols-2 ${
-        dynamicCars.length === 2 ? 'md:grid-cols-2' :
-        dynamicCars.length === 3 ? 'md:grid-cols-3' :
-        'md:grid-cols-4'
-      } gap-6`}>
+      <div
+        className={`grid grid-cols-1 sm:grid-cols-2 ${
+          dynamicCars.length === 2
+            ? "md:grid-cols-2"
+            : dynamicCars.length === 3
+            ? "md:grid-cols-3"
+            : "md:grid-cols-4"
+        } gap-6 max-w-7xl`}
+      >
         {dynamicCars.length > 0 ? (
           dynamicCars.map((car) => (
             <CarCategoryCard
               key={car.category}
               {...car} // Spread all props from FetchedCarData
-              
               // Add the missing props to satisfy CarCategoryCardProps
               pickupDate={pickupDate}
               pickupTime={pickupTime}
@@ -396,13 +406,13 @@ export default async function Page(
 
       {/* 🔹 SEO Content Section (Styled as requested) */}
       {seoContent && (
-  <section className="mt-8 sm:mt-12 border-t border-gray-200 pt-8 sm:pt-10 px-4 sm:px-0">
-    <div
-      className="
+        <section className="mt-8 sm:mt-12 border-t border-gray-200 pt-8 sm:pt-10 px-4 sm:px-0">
+          <div
+            className="
         max-w-none text-gray-700
 
         /* Headings */
-        [&>h1]:text-2xl sm:[&>h1]:text-4xl
+        [&>h1]:text-2xl sm:[&>h1]:text-3xl
         [&>h1]:font-bold
         [&>h1]:text-gray-900
         [&>h1]:mb-5 sm:[&>h1]:mb-6
@@ -442,20 +452,13 @@ export default async function Page(
         [&>a]:font-semibold
         hover:[&>a]:underline
       "
-      dangerouslySetInnerHTML={{ __html: seoContent }}
-    />
-  </section>
-)}
-
+            dangerouslySetInnerHTML={{ __html: seoContent }}
+          />
+        </section>
+      )}
 
       {/* 🔹 FAQs */}
-      <h1 className="text-xl sm:text-2xl font-bold">
-        FAQs for {pickupCap} to {dropCap} Cabs
-      </h1>
-      {faqs.length > 0 &&
-        faqs.map((faq, index) => (
-          <AccordionItem key={index} header={faq.question} text={faq.answer} />
-        ))}
+      <FAQ />
     </main>
   );
 }
@@ -477,17 +480,17 @@ const CarCategoryCard = ({
       pathname: "/carride",
       // Pass all relevant data to the booking page
       query: {
-        pickupLocation:pickup,
-        dropoffLocation:drop,
+        pickupLocation: pickup,
+        dropoffLocation: drop,
         pickupDate: pickupDate?.toISOString(),
         pickupTime: pickupTime?.toISOString(),
-        rideType:"One Way"
+        rideType: "One Way",
       },
     }}
     className="block"
   >
-    <div className="flex sm:flex-col items-center text-center p-4 border rounded-lg shadow-md hover:shadow-lg transition-shadow h-full">
-      <div className="relative w-48 h-32 mb-4">
+    <div className="flex sm:flex-col items-center justify-between text-center p-4 border rounded-lg shadow-md hover:shadow-lg transition-shadow h-full">
+      <div className="relative h-24 w-40 md:w-48 md:h-32 mb-4">
         <Image src={image} alt={category} layout="fill" objectFit="contain" />
       </div>
 
@@ -508,4 +511,3 @@ const CarCategoryCard = ({
     </div>
   </Link>
 );
-
