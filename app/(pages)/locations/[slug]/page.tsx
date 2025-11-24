@@ -10,12 +10,7 @@ type PageParams = {
   slug: string;
 };
 
-// --- START: Consolidated Type Definitions ---
 
-type FaqItem = {
-  question: string;
-  answer: string;
-};
 
 // 1. This is the data from your /api/car response
 interface BaseCarData {
@@ -65,7 +60,6 @@ interface FetchedCarData {
 
 // 5. This is the main type for the cabFares.json file
 type RouteData = {
-  faq: FaqItem[];
   seoContent?: string;
 };
 
