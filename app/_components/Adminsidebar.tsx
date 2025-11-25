@@ -64,7 +64,7 @@ const Sidebar = () => {
     <>
       {/* --- MOBILE HEADER --- */}
       <div className="sm:hidden flex items-center justify-between bg-white border-b p-4 fixed top-0 left-0 right-0 z-50">
-        <Image src={Logo} alt="" width={80} height={80}/>
+        <Image src={Logo} alt="" width={100} height={100}/>
         <div className="flex items-center gap-2 font-bold text-xl text-gray-800">
           <LayoutDashboard className="text-[#6aa4e0]" />
           <span>Admin</span>
