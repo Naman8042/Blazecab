@@ -3,8 +3,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { Check, X, FileText, ArrowRight, Info } from "lucide-react";
 
-interface initialValues {
+interface InitialValues {
   pickupLocation: string;
   dropoffLocation: string;
   pickupDate: Date | undefined;
@@ -22,9 +23,8 @@ interface CarCategoryCardProps {
   exclusions: string[];
   termscondition: string[];
   distance?: number | null;
-  initialValues: initialValues;
+  initialValues: InitialValues;
 }
-
 
 const CarCategoryCard = ({
   category,
@@ -37,30 +37,116 @@ const CarCategoryCard = ({
   initialValues,
   distance,
 }: CarCategoryCardProps) => (
-  <div className="mb-12 border-2 p-4 rounded-2xl shadow-lg hover:shadow-xl transition-all">
-    <h2 className="text-2xl font-bold text-[#6aa4e0] mb-4 text-center sm:text-left">
-      {category}
-    </h2>
+  <div className="group mb-8 bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
+    <div className="flex flex-col md:flex-row">
+      
+      {/* --- Left Side: Image & Price (Desktop) --- */}
+      <div className="w-full md:w-1/3 bg-gray-50 p-6 flex flex-col justify-between relative">
+        <div className="absolute top-4 left-4">
+           <span className="px-3 py-1 bg-white text-xs font-bold uppercase tracking-wider text-gray-900 rounded-full shadow-sm border border-gray-100">
+             {category}
+           </span>
+        </div>
+        
+        <div className="flex-1 flex items-center justify-center py-6">
+          <div className="relative w-full h-40">
+            <Image 
+              src={image} 
+              alt={name} 
+              fill
+              className="object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-500" 
+            />
+          </div>
+        </div>
 
-    <div className=" bg-white overflow-hidden flex flex-col sm:flex-row sm:items-center p-5 gap-6  ">
-      {/* Car Image */}
-      <div className="flex justify-center sm:w-1/3">
-        <Image src={image} width={100} height={100} alt={name} className="w-48 h-32 object-contain" />
+        {/* Mobile Price View */}
+        <div className="md:hidden flex justify-between items-end border-t border-gray-200 pt-4 mt-4">
+           <div>
+             <h3 className="text-lg font-bold text-gray-900">{name}</h3>
+             <p className="text-xs text-green-600 font-medium flex items-center gap-1">
+               <Check size={12} /> All Inclusive
+             </p>
+           </div>
+           <p className="text-2xl font-extrabold text-[#6aa4e0]">₹{price}</p>
+        </div>
       </div>
 
-      {/* Car Info and Tabs */}
-      <div className="flex-1 w-full sm:w-2/3">
-        <div className="flex flex-col sm:flex-row gap-3 justify-between items-center sm:items-start mb-4 ">
-          <div className="text-center sm:text-left  sm:w-3/5">
-            <h3 className="text-xl font-bold text-gray-800">{name}</h3>
-            <p className="text-[#6aa4e0] font-bold text-xl flex items-center gap-2 justify-center sm:justify-start">
-              ₹{price}{" "}
-              <span className="text-xs font-medium text-gray-500">
-                All Inclusive
-              </span>
+      {/* --- Right Side: Details & Tabs --- */}
+      <div className="w-full md:w-2/3 p-6 flex flex-col">
+        
+        {/* Header (Desktop) */}
+        <div className="hidden md:flex justify-between items-start mb-6">
+          <div>
+            <h3 className="text-xl font-bold text-gray-900">{name}</h3>
+            <p className="text-sm text-gray-500 mt-1">
+              Top rated choice for this route
             </p>
           </div>
+          <div className="text-right">
+             <p className="text-3xl font-extrabold text-[#6aa4e0]">₹{price.toLocaleString()}</p>
+             <div className="inline-flex items-center gap-1 bg-green-50 text-green-700 px-2 py-0.5 rounded text-xs font-medium mt-1">
+               <Check size={12} /> All Inclusive
+             </div>
+          </div>
+        </div>
 
+        {/* Tabs Section */}
+        <div className="flex-1">
+          <Tabs defaultValue="inclusions" className="w-full">
+            <TabsList className="w-full justify-between bg-transparent border-b border-gray-100 p-0 h-auto ">
+              <TabsTrigger 
+                value="inclusions" 
+                className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-[#6aa4e0] data-[state=active]:text-[#6aa4e0] rounded-none px-2 py-2 text-gray-500 font-medium hover:text-gray-700 transition-colors"
+              >
+                Inclusions
+              </TabsTrigger>
+              <TabsTrigger 
+                value="exclusions" 
+                className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-red-500 data-[state=active]:text-red-500 rounded-none px-2 py-2 text-gray-500 font-medium hover:text-gray-700 transition-colors"
+              >
+                Exclusions
+              </TabsTrigger>
+              <TabsTrigger 
+                value="tac" 
+                className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-gray-800 data-[state=active]:text-gray-900 rounded-none px-2 py-2 text-gray-500 font-medium hover:text-gray-700 transition-colors"
+              >
+                Terms & Conditions
+              </TabsTrigger>
+            </TabsList>
+
+            <div className="mt-4 min-h-[100px] text-sm text-gray-600">
+              <TabsContent value="inclusions" className="mt-0 space-y-2 animate-in fade-in-50 duration-300">
+                {inclusions.length > 0 ? inclusions.map((item, index) => (
+                  <div key={index} className="flex items-start gap-2">
+                    <Check className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
+                    <span className="text-sm">{item}</span>
+                  </div>
+                )) : <p className="text-gray-400 italic">No specific inclusions listed.</p>}
+              </TabsContent>
+
+              <TabsContent value="exclusions" className="mt-0 space-y-2 animate-in fade-in-50 duration-300">
+                {exclusions.length > 0 ? exclusions.map((item, index) => (
+                  <div key={index} className="flex items-start gap-2">
+                    <X className="h-4 w-4 text-red-500 mt-0.5 shrink-0" />
+                    <span className="text-sm">{item}</span>
+                  </div>
+                )) : <p className="text-gray-400 italic">No specific exclusions listed.</p>}
+              </TabsContent>
+
+              <TabsContent value="tac" className="mt-0 space-y-2 animate-in fade-in-50 duration-300">
+                {termscondition.length > 0 ? termscondition.map((item, index) => (
+                  <div key={index} className="flex items-start gap-2">
+                    <FileText className="h-4 w-4 text-gray-400 mt-0.5 shrink-0" />
+                    <span className="text-sm">{item}</span>
+                  </div>
+                )) : <p className="text-gray-400 italic">Standard terms apply.</p>}
+              </TabsContent>
+            </div>
+          </Tabs>
+        </div>
+
+        {/* Action Button */}
+        <div className="mt-6 pt-4 border-t border-gray-100 flex justify-end">
           <Link
             href={{
               pathname: "/bookingpage",
@@ -70,56 +156,25 @@ const CarCategoryCard = ({
                 date: initialValues.pickupDate
                   ? initialValues.pickupDate.toISOString()
                   : "",
-               time: initialValues.pickupTime ? initialValues.pickupTime.getTime().toString() : "",
+                time: initialValues.pickupTime
+                  ? initialValues.pickupTime.getTime().toString()
+                  : "",
                 carType: name,
                 totalKm: distance?.toFixed(2) || "0",
                 price: price.toString(),
-                rideType:initialValues.rideType,
+                rideType: initialValues.rideType,
                 inclusions: JSON.stringify(inclusions),
                 exclusions: JSON.stringify(exclusions),
                 termscondition: JSON.stringify(termscondition),
               },
             }}
-            className="w-full sm:w-2/5 flex justify-center h-full"
+            className="w-full md:w-auto"
           >
-            <Button className="w-full  px-6 py-2 text-base">Select Car</Button>
+            <Button className="w-full md:w-auto bg-gray-900 hover:bg-[#6aa4e0] text-white font-semibold py-6 px-8 rounded-xl transition-colors shadow-lg shadow-gray-200">
+              Select {name} <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
           </Link>
         </div>
-
-        {/* Tabs Section */}
-        <Card className="p-0 border-none ring-0 bg-gray-50">
-          <Tabs defaultValue="inclusions">
-            <TabsList className="flex justify-around bg-gray-200 rounded-lg p-1 w-full text-sm font-medium">
-              <TabsTrigger value="inclusions" className="w-full">
-                Inclusions
-              </TabsTrigger>
-              <TabsTrigger value="exclusions" className="w-full">
-                Exclusions
-              </TabsTrigger>
-              <TabsTrigger value="tac" className="w-full">
-                T&C
-              </TabsTrigger>
-            </TabsList>
-
-            <CardContent className="p-4 text-sm text-gray-700  relative">
-              <TabsContent value="inclusions" className="space-y-1">
-                {inclusions.map((item, index) => (
-                  <p key={index}>✅ {item}</p>
-                ))}
-              </TabsContent>
-              <TabsContent value="exclusions" className="space-y-1">
-                {exclusions.map((item, index) => (
-                  <p key={index}>❌ {item}</p>
-                ))}
-              </TabsContent>
-              <TabsContent value="tac" className="space-y-1">
-                {termscondition.map((item, index) => (
-                  <p key={index}>📜 {item}</p>
-                ))}
-              </TabsContent>
-            </CardContent>
-          </Tabs>
-        </Card>
       </div>
     </div>
   </div>

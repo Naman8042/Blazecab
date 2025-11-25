@@ -23,7 +23,7 @@ const Accordion = () => {
           </div>
         </div>
 
-        <div className=" flex flex-wrap bg-white">
+        <div className="flex flex-wrap bg-white">
           <div className="w-full  lg:w-full">
             <AccordionItem
               header="In which cities are Blazecab services available?"
@@ -114,7 +114,7 @@ export const AccordionItem = ({ header, text }: AccordionItemInterface) => {
   };
 
   return (
-    <div className="mb-1 w-full border-b ">
+    <div className="mb-1 w-full border-b px-4 sm:px-0 ">
       {/* Header */}
       <div
         className="flex items-center w-full cursor-pointer py-2"

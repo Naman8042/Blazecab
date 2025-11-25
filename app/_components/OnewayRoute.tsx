@@ -3,6 +3,18 @@ import useSWRInfinite from "swr/infinite";
 import useSWR from "swr";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { 
+  Search, 
+  Plus, 
+  Trash2, 
+  Edit2, 
+  Save, 
+  X, 
+  RotateCcw, 
+  Loader2,
+  MapPin,
+  Car
+} from "lucide-react";
 
 type Route = {
   _id: string;
@@ -39,15 +51,14 @@ export default function RouteList() {
   const [pickup, setPickup] = useState("");
   const [drop, setDrop] = useState("");
 
+  // --- SWR Hooks ---
   const {
     data: searchData,
     isValidating: searchLoading,
     mutate: mutateSearch,
   } = useSWR<SearchResponse>(
     pickup && drop
-      ? `/api/routes?pickup=${encodeURIComponent(
-          pickup
-        )}&drop=${encodeURIComponent(drop)}`
+      ? `/api/routes?pickup=${encodeURIComponent(pickup)}&drop=${encodeURIComponent(drop)}`
       : null,
     fetcher
   );
@@ -65,6 +76,7 @@ export default function RouteList() {
       ? searchData || []
       : paginatedData?.flatMap((page) => page.routes) || [];
 
+  // --- Form State ---
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [form, setForm] = useState<Partial<Route>>({});
   const [newRoute, setNewRoute] = useState({
@@ -76,6 +88,7 @@ export default function RouteList() {
     per_kms_extra_charge: "",
   });
 
+  // --- Infinite Scroll ---
   useEffect(() => {
     if (!bottomRef.current || pickup || drop) return;
     const observer = new IntersectionObserver(
@@ -91,6 +104,7 @@ export default function RouteList() {
     return () => observer.disconnect();
   }, [isValidating, setSize, pickup, drop]);
 
+  // --- Handlers ---
   const handleEditClick = (route: Route, index: number) => {
     setEditIndex(index);
     setForm(route);
@@ -108,11 +122,7 @@ export default function RouteList() {
     });
     if (res.ok) {
       setEditIndex(null);
-      if (pickup && drop) {
-        mutateSearch(); // Revalidate search results
-      } else {
-        mutate(); // Revalidate paginated list
-      }
+      pickup && drop ? mutateSearch() : mutate();
     }
   };
 
@@ -123,11 +133,7 @@ export default function RouteList() {
     });
     if (res.ok) {
       setEditIndex(null);
-      if (pickup && drop) {
-        mutateSearch();
-      } else {
-        mutate();
-      }
+      pickup && drop ? mutateSearch() : mutate();
     }
   };
 
@@ -170,215 +176,242 @@ export default function RouteList() {
     setDrop("");
   };
 
-  if (error) return <p className="text-red-600">Failed to load routes</p>;
+  const cabOptions = [
+    "Traveller",
+    "Tempo Traveller 11+1",
+    "Urbania Traveller 15+1",
+    "Urbania Traveller 11+1",
+    "Toyota Innova 6+1",
+    "Sedan",
+    "Suv",
+    "Innova Crysta 6+1",
+    "Hatchback",
+    "Innova Crysta 7+1",
+  ];
+
+  if (error) return (
+    <div className="flex flex-col items-center justify-center h-64 text-red-500">
+      <p>Failed to load routes.</p>
+      <Button variant="outline" onClick={() => window.location.reload()} className="mt-4">Retry</Button>
+    </div>
+  );
 
   return (
-    <div className="w-full mx-auto px-4 sm:py-6 sm:h-[94%] overflow-y-auto">
-      <h1 className="text-2xl font-bold mb-4 text-center sm:text-start mt-2 sm:mt-0">
-        Available Routes
-      </h1>
-
-      {/* Search bar */}
-      <div className="flex gap-2 mb-4">
-        <input
-          type="text"
-          value={pickupInput}
-          onChange={(e) => setPickupInput(e.target.value)}
-          placeholder="Pickup city"
-          className="border p-2 rounded w-full"
-        />
-
-        <input
-          type="text"
-          value={dropInput}
-          onChange={(e) => setDropInput(e.target.value)}
-          placeholder="Drop city"
-          className="border p-2 rounded w-full"
-        />
-
-        <Button onClick={handleSearch}>Search</Button>
-        {(pickup || drop) && (
-          <Button variant="secondary" onClick={clearSearch}>
-            Clear
-          </Button>
-        )}
-      </div>
-
-      {/* Add new route */}
-      <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2">
-        {[
-          "pickup",
-          "drop",
-          "price",
-          "distance",
-          "cabs",
-          "per_kms_extra_charge",
-        ].map((field) =>
-          field === "cabs" ? (
-            <select
-              key={field}
-              name={field}
-              value={newRoute[field as keyof typeof newRoute] ?? ""}
-              onChange={handleNewChange}
-              className="border p-2 rounded"
-            >
-              <option value="">Select Cab</option>
-              <option value="Traveller">Traveller</option>
-              <option value="Tempo Traveller 11+1">Tempo Traveller 11+1</option>
-              <option value="Urbania Traveller 15+1">
-                Urbania Traveller 15+1
-              </option>
-              <option value="Urbania Traveller 11+1">
-                Urbania Traveller 11+1
-              </option>
-              <option value="Toyota Innova 6+1">Toyota Innova 6+1</option>
-              <option value="Sedan">Sedan</option>
-              <option value="Suv">Suv</option>
-              <option value="Innova Crysta 6+1">Innova Crysta 6+1</option>
-              <option value="Hatchback">Hatchback</option>
-              <option value="Innova Crysta 7+1">Innova Crysta 7+1</option>
-            </select>
-          ) : (
-            <input
-              key={field}
-              name={field}
-              placeholder={field.replace(/_/g, " ")}
-              value={newRoute[field as keyof typeof newRoute] ?? ""}
-              onChange={handleNewChange}
-              className="border p-2 rounded"
-              // Conditionally set type to "number" for price/distance if needed
-              type={
-                field === "price" ||
-                field === "distance" ||
-                field === "per_kms_extra_charge"
-                  ? "number"
-                  : "text"
-              }
-            />
-          )
-        )}
-        <Button onClick={handleAddNew}>Add</Button>
-      </div>
-
-      {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full border rounded shadow-sm text-sm">
-          <thead className="bg-gray-100">
-            <tr>
-              {[
-                "Pickup",
-                "Drop",
-                "Price",
-                "Distance",
-                "Cab",
-                "Per kms extra charge",
-                "Actions",
-              ].map((header) => (
-                <th
-                  key={header}
-                  className="p-1 sm:p-2 border whitespace-nowrap text-xs sm:text-sm"
-                >
-                  {header}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {routes.map((route: Route, index: number) => (
-              <tr key={route._id} className="odd:bg-white even:bg-gray-50">
-                {editIndex === index ? (
-                  <>
-                    {[
-                      "pickup",
-                      "drop",
-                      "price",
-                      "distance",
-                      "cabs",
-                      "per_kms_extra_charge",
-                    ].map((field) => (
-                      <td
-                        key={field}
-                        className="p-1 sm:p-2 border text-xs sm:text-sm"
-                      >
-                        <input
-                          name={field}
-                          type={
-                            field === "price" || field === "distance"
-                              ? "number"
-                              : "text"
-                          }
-                          value={form[field as keyof Route] ?? ""}
-                          onChange={handleChange}
-                          className="w-full border p-1 rounded"
-                        />
-                      </td>
-                    ))}
-                    <td className="p-1 sm:p-2 border flex flex-col gap-2 sm:flex-row text-xs sm:text-sm">
-                      <Button onClick={handleSave}>Save</Button>
-                      <Button
-                        variant="secondary"
-                        onClick={() => setEditIndex(null)}
-                      >
-                        Cancel
-                      </Button>
-                    </td>
-                  </>
-                ) : (
-                  <>
-                    <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm">
-                      {route.pickup}
-                    </td>
-                    <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm">
-                      {route.drop}
-                    </td>
-                    <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm">
-                      ₹{route.price}
-                    </td>
-                    <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm">
-                      {route.distance}
-                    </td>
-                    <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm">
-                      {route.cabs}
-                    </td>
-                    <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm">
-                      {route.per_kms_extra_charge}
-                    </td>
-                    <td className="p-1 sm:p-2 border text-center text-xs sm:text-sm flex gap-2 justify-center">
-                      <Button onClick={() => handleEditClick(route, index)}>
-                        Edit
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => handleDelete(route._id)}
-                      >
-                        Delete
-                      </Button>
-                    </td>
-                  </>
-                )}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Infinite Scroll Loader */}
-      {!pickup && !drop && (
-        <div
-          ref={bottomRef}
-          className="h-12 flex items-center justify-center text-gray-500"
-        >
-          {isValidating && "Loading more..."}
+    <div className="p-6 max-w-[1600px] mx-auto space-y-6 bg-gray-50/50 min-h-screen">
+      
+      {/* --- Page Header --- */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800">Route Management</h1>
+          <p className="text-sm text-gray-500">Manage pricing, distances, and cab availability.</p>
         </div>
-      )}
+      </div>
 
-      {/* Search state feedback */}
-      {searchLoading && (
-        <p className="text-center text-gray-500 mt-4">Searching...</p>
-      )}
-      {pickup && drop && !searchLoading && routes.length === 0 && (
-        <p className="text-center text-gray-500 mt-4">No results found</p>
-      )}
+      {/* --- Search Section --- */}
+      <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+        <div className="flex flex-col md:flex-row gap-3 items-end justify-between">
+          <div className="w-full md:w-1/3 space-y-1">
+            <label className="text-xs font-semibold text-gray-500 uppercase">Pickup City</label>
+            <div className="relative">
+              <MapPin className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+              <input
+                type="text"
+                value={pickupInput}
+                onChange={(e) => setPickupInput(e.target.value)}
+                placeholder="Enter city..."
+                className="pl-9 w-full border border-gray-300 p-2 rounded-lg text-sm focus:ring-2 focus:ring-[#6aa4e0] focus:border-transparent outline-none transition-all"
+              />
+            </div>
+          </div>
+          
+          <div className="w-full md:w-1/3 space-y-1">
+            <label className="text-xs font-semibold text-gray-500 uppercase">Drop City</label>
+            <div className="relative">
+              <MapPin className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+              <input
+                type="text"
+                value={dropInput}
+                onChange={(e) => setDropInput(e.target.value)}
+                placeholder="Enter city..."
+                className="pl-9 w-full border border-gray-300 p-2 rounded-lg text-sm focus:ring-2 focus:ring-[#6aa4e0] focus:border-transparent outline-none transition-all"
+              />
+            </div>
+          </div>
+
+          <div className="flex gap-2 w-full md:w-auto">
+            <Button onClick={handleSearch} className="bg-[#6aa4e0] hover:bg-[#5a94d0] text-white">
+              <Search className="mr-2 h-4 w-4" /> Search
+            </Button>
+            {(pickup || drop) && (
+              <Button variant="outline" onClick={clearSearch}>
+                <RotateCcw className="mr-2 h-4 w-4" /> Reset
+              </Button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* --- Add New Route Section --- */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="bg-gray-50 px-6 py-3 border-b border-gray-200 flex justify-between items-center">
+          <h3 className="text-sm font-bold text-gray-700 uppercase flex items-center gap-2">
+            <Plus className="h-4 w-4 text-[#6aa4e0]" /> Add New Route
+          </h3>
+        </div>
+        <div className="p-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 items-end">
+            <input name="pickup" value={newRoute.pickup} onChange={handleNewChange} placeholder="Pickup City" className="border p-2 rounded text-sm w-full" />
+            <input name="drop" value={newRoute.drop} onChange={handleNewChange} placeholder="Drop City" className="border p-2 rounded text-sm w-full" />
+            
+            <select name="cabs" value={newRoute.cabs} onChange={handleNewChange} className="border p-2 rounded text-sm w-full bg-white">
+              <option value="">Select Cab</option>
+              {cabOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+            </select>
+
+            <input name="price" type="number" value={newRoute.price} onChange={handleNewChange} placeholder="Price (₹)" className="border p-2 rounded text-sm w-full" />
+            <input name="distance" type="number" value={newRoute.distance} onChange={handleNewChange} placeholder="Distance (km)" className="border p-2 rounded text-sm w-full" />
+            
+            <Button onClick={handleAddNew} className="w-full bg-gray-800 hover:bg-gray-700 text-white">
+              Add Route
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* --- Data Table --- */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                {["Pickup", "Drop", "Price", "Distance", "Cab Model", "Extra Charge/Km", "Actions"].map((header) => (
+                  <th key={header} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                    {header}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {routes.map((route, index) => {
+                const isEditing = editIndex === index;
+                return (
+                  <tr key={route._id || index} className={`hover:bg-gray-50 transition-colors ${isEditing ? "bg-blue-50/50" : ""}`}>
+                    
+                    {/* Pickup */}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {isEditing ? (
+                        <input name="pickup" value={form.pickup} onChange={handleChange} className="w-full border p-1 rounded" />
+                      ) : (
+                        <div className="flex items-center gap-2">
+                           <MapPin className="h-3 w-3 text-gray-400"/> {route.pickup}
+                        </div>
+                      )}
+                    </td>
+
+                    {/* Drop */}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {isEditing ? (
+                        <input name="drop" value={form.drop} onChange={handleChange} className="w-full border p-1 rounded" />
+                      ) : (
+                         <div className="flex items-center gap-2">
+                           <MapPin className="h-3 w-3 text-red-400"/> {route.drop}
+                        </div>
+                      )}
+                    </td>
+
+                    {/* Price */}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {isEditing ? (
+                        <input name="price" type="number" value={form.price} onChange={handleChange} className="w-24 border p-1 rounded" />
+                      ) : (
+                        <span className="text-[#6aa4e0]">₹{route.price}</span>
+                      )}
+                    </td>
+
+                    {/* Distance */}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {isEditing ? (
+                        <input name="distance" type="number" value={form.distance} onChange={handleChange} className="w-24 border p-1 rounded" />
+                      ) : (
+                        `${route.distance} km`
+                      )}
+                    </td>
+
+                    {/* Cab */}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {isEditing ? (
+                         <select name="cabs" value={form.cabs} onChange={(e: any) => handleChange(e)} className="border p-1 rounded w-full">
+                           {cabOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                         </select>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <Car className="h-3 w-3 text-gray-400"/> {route.cabs}
+                        </div>
+                      )}
+                    </td>
+
+                    {/* Extra Charge */}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {isEditing ? (
+                        <input name="per_kms_extra_charge" value={form.per_kms_extra_charge} onChange={handleChange} className="w-24 border p-1 rounded" />
+                      ) : (
+                        route.per_kms_extra_charge ? `₹${route.per_kms_extra_charge}` : '-'
+                      )}
+                    </td>
+
+                    {/* Actions */}
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div className="flex items-center gap-2">
+                        {isEditing ? (
+                          <>
+                            <Button size="sm" onClick={handleSave} className="bg-green-600 hover:bg-green-700 h-8 w-8 p-0 rounded-full">
+                              <Save className="h-4 w-4" />
+                            </Button>
+                            <Button size="sm" variant="ghost" onClick={() => setEditIndex(null)} className="h-8 w-8 p-0 rounded-full text-gray-500 hover:text-red-500 hover:bg-red-50">
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </>
+                        ) : (
+                          <>
+                            <Button size="sm" variant="ghost" onClick={() => handleEditClick(route, index)} className="h-8 w-8 p-0 rounded-full text-gray-500 hover:text-[#6aa4e0] hover:bg-blue-50">
+                              <Edit2 className="h-4 w-4" />
+                            </Button>
+                            <Button size="sm" variant="ghost" onClick={() => handleDelete(route._id)} className="h-8 w-8 p-0 rounded-full text-gray-500 hover:text-red-600 hover:bg-red-50">
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+              
+              {/* Empty State */}
+              {routes.length === 0 && !isValidating && !searchLoading && (
+                 <tr>
+                   <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
+                     <div className="flex flex-col items-center justify-center gap-2">
+                       <Search className="h-8 w-8 text-gray-300" />
+                       <p>No routes found.</p>
+                     </div>
+                   </td>
+                 </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        
+        {/* Loading State */}
+        {(isValidating || searchLoading) && (
+          <div className="w-full py-6 flex justify-center bg-gray-50/50">
+            <Loader2 className="animate-spin text-[#6aa4e0]" />
+          </div>
+        )}
+      </div>
+
+      {/* Infinite Scroll Trigger */}
+      {!pickup && !drop && <div ref={bottomRef} className="h-4" />}
     </div>
   );
 }

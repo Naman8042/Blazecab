@@ -9,12 +9,14 @@ const layout = ({
 }>) => {
   return (
     <Session>
-      <div className="mt-12">
-        <AdminNav />
-        <div className="flex flex-col sm:flex-row sm:ml-80 justify-between">
+      <div className="">
+        {/* <AdminNav /> */}
+        {/* <div className="flex flex-col sm:flex-row justify-between"> */}
           <Adminsidebar/>
-          {children}
-        </div>
+          <main className="flex-1 sm:ml-64 mt-16 sm:mt-0 min-h-screen">
+     {children}
+  </main>
+        {/* </div> */}
       </div>
     </Session>
   );
