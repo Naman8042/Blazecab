@@ -53,22 +53,22 @@ type DynamicRouteInfo = { distance: string; time: string };
 
 
 function parseSlug(slug: string) {
-  const cabKeywords = ["cabs", "sedan", "suv", "traveller", "innova", "urbania", "hatchback", "crysta","cab"];
-
   const parts = slug.split("-to-");
   const pickup = parts[0] || "";
   let drop = parts[1] || "";
 
+  // Split drop into parts
   const dropParts = drop.split("-");
   const lastPart = dropParts[dropParts.length - 1].toLowerCase();
 
-  if (cabKeywords.includes(lastPart)) {
+  // ✔ Only remove "cab" or "cabs"
+  if (lastPart === "cab") {
     dropParts.pop();
   }
 
   drop = dropParts.join("-");
 
-  // Capitalize first letter
+  // Capitalize
   const capPickup = pickup.charAt(0).toUpperCase() + pickup.slice(1);
   const capDrop = drop.charAt(0).toUpperCase() + drop.slice(1);
 

@@ -1,20 +1,18 @@
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
-  email: {
+  email: { type: String, unique: true, required: true },
+  password: { type: String, required: false },   // required: false
+  name: { type: String, required: false },
+  avatar: { type: String, required: false },
+  authProvider: {
     type: String,
-    unique: true,
-    required: [true, "Please provide an email"],
+    enum: ["google", "credentials"],
+    default: "credentials"
   },
-  password: {
-    type: String,
-    required: [true, "Please provide a password"],
-  },
-  isAdmin: {
-    type: Boolean,
-    default: false,
-  },
+  isAdmin: { type: Boolean, default: false }
 });
+
 
 // Use capitalized model name "User" for clarity and convention
 const User = mongoose.models.User || mongoose.model('User', userSchema);

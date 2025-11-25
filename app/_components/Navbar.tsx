@@ -14,6 +14,7 @@ const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  console.log(session)
   useEffect(() => {
     setIsMounted(true);
 
