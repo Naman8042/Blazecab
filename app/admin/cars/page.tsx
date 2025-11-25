@@ -124,7 +124,7 @@ export default function CarsView() {
   //   }
   // }
 
-  const categories = ["Sedan", "SUV", "Hatchback", "Traveller", "Luxury", "Bus"];
+  // const categories = ["Sedan", "SUV", "Hatchback", "Traveller", "Luxury", "Bus"];
 
   if (loading)
     return (
@@ -180,16 +180,16 @@ export default function CarsView() {
               <label className="text-xs font-semibold text-gray-500 uppercase flex items-center gap-1">
                 <FileText className="h-3 w-3"/> Category
               </label>
-              <select
+              <input
                 name="category"
                 value={form.category}
+                placeholder="Category"
                 onChange={handleChange}
                 className="w-full border border-gray-300 p-2.5 rounded-lg text-sm focus:ring-2 focus:ring-[#6aa4e0] outline-none bg-white"
                 required
-              >
-                <option value="">Select Category</option>
-                {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
-              </select>
+              />
+                
+              
             </div>
 
             <div className="space-y-2">
