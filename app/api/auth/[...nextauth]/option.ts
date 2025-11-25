@@ -14,6 +14,9 @@ interface AuthUser {
 
 export const option: NextAuthOptions = {
   providers: [
+    // ==========================
+    // EMAIL + PASSWORD LOGIN
+    // ==========================
     CredentialsProvider({
       name: "Email",
       credentials: {
@@ -47,6 +50,9 @@ export const option: NextAuthOptions = {
       },
     }),
 
+    // ==========================
+    // GOOGLE LOGIN
+    // ==========================
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
@@ -69,7 +75,9 @@ export const option: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user, account }) {
 
+      // ==========================
       // GOOGLE LOGIN
+      // ==========================
       if (account?.provider === "google") {
 
         let dbUser = await User.findOne({ email: token.email });
@@ -91,10 +99,14 @@ export const option: NextAuthOptions = {
         token.authProvider = "google";
         token.avatar = dbUser.avatar;
         token.name = dbUser.name;
+
+        return token;  // <<<<< CRITICAL FIX
       }
 
-      // NORMAL LOGIN
-      if (user) {
+      // ==========================
+      // NORMAL LOGIN (credentials)
+      // ==========================
+      if (user && !account?.provider) {
         const authUser = user as AuthUser;
         token.id = authUser.id;
         token.email = authUser.email;
@@ -107,6 +119,9 @@ export const option: NextAuthOptions = {
       return token;
     },
 
+    // ==========================
+    // STORE DATA IN SESSION
+    // ==========================
     async session({ session, token }) {
       if (session?.user) {
         session.user.id = token.id as string;
