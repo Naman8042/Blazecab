@@ -175,7 +175,7 @@ const BookingsList = ({ bookings }: { bookings: Booking[] }) => {
             </div>
             <h3 className="text-lg font-semibold text-gray-900">No bookings found</h3>
             <p className="text-gray-500 text-sm mt-1 max-w-xs mx-auto">
-              You haven't made any bookings yet. Your future trips will appear here.
+              You haven`&apos;`t made any bookings yet. Your future trips will appear here.
             </p>
           </div>
         )}

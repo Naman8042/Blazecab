@@ -69,6 +69,10 @@ function capitalize(str: string) {
 /******************************
  * STATIC PARAMS
  ******************************/
+interface SEOListItem {
+  slug: string;
+}
+
 export async function generateStaticParams(): Promise<PageParams[]> {
   const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
   try {
@@ -77,7 +81,7 @@ export async function generateStaticParams(): Promise<PageParams[]> {
     });
     if (!res.ok) return [];
     const data = await res.json();
-    return data.data.map((item: any) => ({
+    return data.data.map((item: SEOListItem) => ({
       slug: createSlug(item.slug.split("-")[0], item.slug.split("-")[1]),
     }));
   } catch (error) {
@@ -85,6 +89,7 @@ export async function generateStaticParams(): Promise<PageParams[]> {
     return [];
   }
 }
+
 
 /******************************
  * METADATA
@@ -415,7 +420,7 @@ export default async function Page({
           {dynamicCars.length === 0 && (
             <div className="text-center py-20 bg-white rounded-xl border border-dashed border-gray-300">
               <p className="text-gray-500 text-lg">
-                We couldn't find any specific cabs for this route at the moment.
+                We couldn&apos;t find any specific cabs for this route at the moment.
               </p>
               <Link
                 href="/"
@@ -500,7 +505,7 @@ export default async function Page({
             </div>
             <div className="grid gap-4 max-w-7xl mx-auto">
               {faqs.map((f) => (
-                <AccordionItem header={f.question} text={f.answer} />
+                <AccordionItem key={f.question} header={f.question} text={f.answer} />
               ))}
             </div>
           </section>

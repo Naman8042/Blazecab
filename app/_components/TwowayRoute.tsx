@@ -125,7 +125,12 @@ export default function RouteList() {
     });
     if (res.ok) {
       setEditIndex(null);
-      pickup && drop ? mutateSearch() : mutate();
+      if (pickup && drop) {
+  mutateSearch();
+} else {
+  mutate();
+}
+
     }
   };
 
@@ -135,7 +140,12 @@ export default function RouteList() {
       method: "DELETE",
     });
     if (res.ok) {
-        pickup && drop ? mutateSearch() : mutate();
+       if (pickup && drop) {
+  mutateSearch();
+} else {
+  mutate();
+}
+
     }
   };
 
@@ -335,7 +345,7 @@ export default function RouteList() {
                     {/* Cab */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {isEditing ? (
-                         <select name="cabs" value={form.cabs} onChange={(e: any) => handleChange(e)} className="border p-1 rounded w-full text-xs">
+                         <select name="cabs" value={form.cabs} onChange={handleChange} className="border p-1 rounded w-full text-xs">
                            {cabOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
                          </select>
                       ) : (

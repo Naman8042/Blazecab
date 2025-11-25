@@ -4,20 +4,20 @@ import useSWRInfinite from "swr/infinite";
 import useSWR from "swr";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { 
-  Search, 
-  Plus, 
-  Trash2, 
-  Edit2, 
-  Save, 
-  X, 
-  RotateCcw, 
+import {
+  Search,
+  Plus,
+  Trash2,
+  Edit2,
+  Save,
+  X,
+  RotateCcw,
   Loader2,
   MapPin,
   Car,
   Clock,
   Hourglass,
-  MoveHorizontal
+  MoveHorizontal,
 } from "lucide-react";
 
 type Route = {
@@ -109,7 +109,7 @@ export default function RouteList() {
     setForm(route);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -122,7 +122,11 @@ export default function RouteList() {
 
     if (res.ok) {
       setEditIndex(null);
-      pickup ? mutateSearch() : mutate();
+      if (pickup) {
+        mutateSearch();
+      } else {
+        mutate();
+      }
     }
   };
 
@@ -132,11 +136,17 @@ export default function RouteList() {
       method: "DELETE",
     });
     if (res.ok) {
-        pickup ? mutateSearch() : mutate();
+      if (pickup) {
+    mutateSearch();
+  } else {
+    mutate();
+  }
     }
   };
 
-  const handleNewChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleNewChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setNewRoute({ ...newRoute, [e.target.name]: e.target.value });
   };
 
@@ -185,21 +195,29 @@ export default function RouteList() {
     "Innova Crysta 7+1",
   ];
 
-  if (error) return (
-    <div className="flex flex-col items-center justify-center h-64 text-red-500">
-      <p>Failed to load routes.</p>
-      <Button variant="outline" onClick={() => window.location.reload()} className="mt-4">Retry</Button>
-    </div>
-  );
+  if (error)
+    return (
+      <div className="flex flex-col items-center justify-center h-64 text-red-500">
+        <p>Failed to load routes.</p>
+        <Button
+          variant="outline"
+          onClick={() => window.location.reload()}
+          className="mt-4"
+        >
+          Retry
+        </Button>
+      </div>
+    );
 
   return (
     <div className="p-6 max-w-[1600px] mx-auto space-y-6 bg-gray-50/50 min-h-screen">
-      
       {/* --- Page Header --- */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Local Rentals</h1>
-          <p className="text-sm text-gray-500">Manage hourly packages, extra charges, and city coverage.</p>
+          <p className="text-sm text-gray-500">
+            Manage hourly packages, extra charges, and city coverage.
+          </p>
         </div>
       </div>
 
@@ -207,7 +225,9 @@ export default function RouteList() {
       <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
         <div className="flex flex-col md:flex-row gap-3 items-end">
           <div className="w-full md:w-1/2 space-y-1">
-            <label className="text-xs font-semibold text-gray-500 uppercase">Search City / Package</label>
+            <label className="text-xs font-semibold text-gray-500 uppercase">
+              Search City / Package
+            </label>
             <div className="relative">
               <MapPin className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
               <input
@@ -221,7 +241,10 @@ export default function RouteList() {
           </div>
 
           <div className="flex gap-2 w-full md:w-auto">
-            <Button onClick={handleSearch} className="bg-[#6aa4e0] hover:bg-[#5a94d0] text-white">
+            <Button
+              onClick={handleSearch}
+              className="bg-[#6aa4e0] hover:bg-[#5a94d0] text-white"
+            >
               <Search className="mr-2 h-4 w-4" /> Search
             </Button>
             {pickup && (
@@ -242,20 +265,73 @@ export default function RouteList() {
         </div>
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-8 gap-4 items-end">
-            <input name="cities" value={newRoute.cities} onChange={handleNewChange} placeholder="City Name" className="border p-2 rounded text-sm w-full" />
-            
-            <select name="cabs" value={newRoute.cabs} onChange={handleNewChange} className="border p-2 rounded text-sm w-full bg-white">
+            <input
+              name="cities"
+              value={newRoute.cities}
+              onChange={handleNewChange}
+              placeholder="City Name"
+              className="border p-2 rounded text-sm w-full"
+            />
+
+            <select
+              name="cabs"
+              value={newRoute.cabs}
+              onChange={handleNewChange}
+              className="border p-2 rounded text-sm w-full bg-white"
+            >
               <option value="">Select Cab</option>
-              {cabOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+              {cabOptions.map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt}
+                </option>
+              ))}
             </select>
 
-            <input name="price" type="number" value={newRoute.price} onChange={handleNewChange} placeholder="Base Price (₹)" className="border p-2 rounded text-sm w-full" />
-            <input name="distance" type="number" value={newRoute.distance} onChange={handleNewChange} placeholder="Distance (km)" className="border p-2 rounded text-sm w-full" />
-            <input name="time" type="number" value={newRoute.time} onChange={handleNewChange} placeholder="Duration (hrs)" className="border p-2 rounded text-sm w-full" />
-            <input name="per_kms_extra_charge" type="number" value={newRoute.per_kms_extra_charge} onChange={handleNewChange} placeholder="Extra Km Charge" className="border p-2 rounded text-sm w-full" />
-            <input name="per_hour_charge" type="number" value={newRoute.per_hour_charge} onChange={handleNewChange} placeholder="Extra Hr Charge" className="border p-2 rounded text-sm w-full" />
-            
-            <Button onClick={handleAddNew} className="w-full bg-gray-800 hover:bg-gray-700 text-white">
+            <input
+              name="price"
+              type="number"
+              value={newRoute.price}
+              onChange={handleNewChange}
+              placeholder="Base Price (₹)"
+              className="border p-2 rounded text-sm w-full"
+            />
+            <input
+              name="distance"
+              type="number"
+              value={newRoute.distance}
+              onChange={handleNewChange}
+              placeholder="Distance (km)"
+              className="border p-2 rounded text-sm w-full"
+            />
+            <input
+              name="time"
+              type="number"
+              value={newRoute.time}
+              onChange={handleNewChange}
+              placeholder="Duration (hrs)"
+              className="border p-2 rounded text-sm w-full"
+            />
+            <input
+              name="per_kms_extra_charge"
+              type="number"
+              value={newRoute.per_kms_extra_charge}
+              onChange={handleNewChange}
+              placeholder="Extra Km Charge"
+              className="border p-2 rounded text-sm w-full"
+            />
+            <input
+              name="per_hour_charge"
+              type="number"
+              value={newRoute.per_hour_charge}
+              onChange={handleNewChange}
+              placeholder="Extra Hr Charge"
+              className="border p-2 rounded text-sm w-full"
+            />
+
+            <Button
+              onClick={handleAddNew}
+              className="w-full bg-gray-800 hover:bg-gray-700 text-white"
+            >
               Add
             </Button>
           </div>
@@ -269,16 +345,19 @@ export default function RouteList() {
             <thead className="bg-gray-50">
               <tr>
                 {[
-                  "City / Package", 
-                  "Base Price", 
-                  "Includes (Km)", 
-                  "Includes (Hrs)", 
-                  "Cab Model", 
-                  "Extra / Km", 
-                  "Extra / Hr", 
-                  "Actions"
+                  "City / Package",
+                  "Base Price",
+                  "Includes (Km)",
+                  "Includes (Hrs)",
+                  "Cab Model",
+                  "Extra / Km",
+                  "Extra / Hr",
+                  "Actions",
                 ].map((header) => (
-                  <th key={header} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                  <th
+                    key={header}
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap"
+                  >
                     {header}
                   </th>
                 ))}
@@ -288,15 +367,25 @@ export default function RouteList() {
               {routes.map((route, index) => {
                 const isEditing = editIndex === index;
                 return (
-                  <tr key={route._id || index} className={`hover:bg-gray-50 transition-colors ${isEditing ? "bg-blue-50/50" : ""}`}>
-                    
+                  <tr
+                    key={route._id || index}
+                    className={`hover:bg-gray-50 transition-colors ${
+                      isEditing ? "bg-blue-50/50" : ""
+                    }`}
+                  >
                     {/* Cities */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {isEditing ? (
-                        <input name="cities" value={form.cities} onChange={handleChange} className="w-full border p-1 rounded" />
+                        <input
+                          name="cities"
+                          value={form.cities}
+                          onChange={handleChange}
+                          className="w-full border p-1 rounded"
+                        />
                       ) : (
                         <div className="flex items-center gap-2">
-                           <MapPin className="h-3 w-3 text-gray-400"/> {route.cities}
+                          <MapPin className="h-3 w-3 text-gray-400" />{" "}
+                          {route.cities}
                         </div>
                       )}
                     </td>
@@ -304,7 +393,13 @@ export default function RouteList() {
                     {/* Price */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {isEditing ? (
-                        <input name="price" type="number" value={form.price} onChange={handleChange} className="w-20 border p-1 rounded" />
+                        <input
+                          name="price"
+                          type="number"
+                          value={form.price}
+                          onChange={handleChange}
+                          className="w-20 border p-1 rounded"
+                        />
                       ) : (
                         <span className="text-[#6aa4e0]">₹{route.price}</span>
                       )}
@@ -313,10 +408,17 @@ export default function RouteList() {
                     {/* Distance */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {isEditing ? (
-                        <input name="distance" type="number" value={form.distance} onChange={handleChange} className="w-20 border p-1 rounded" />
+                        <input
+                          name="distance"
+                          type="number"
+                          value={form.distance}
+                          onChange={handleChange}
+                          className="w-20 border p-1 rounded"
+                        />
                       ) : (
                         <div className="flex items-center gap-1">
-                          <MoveHorizontal className="h-3 w-3 text-gray-400"/> {route.distance} km
+                          <MoveHorizontal className="h-3 w-3 text-gray-400" />{" "}
+                          {route.distance} km
                         </div>
                       )}
                     </td>
@@ -324,10 +426,17 @@ export default function RouteList() {
                     {/* Time */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {isEditing ? (
-                        <input name="time" type="number" value={form.time} onChange={handleChange} className="w-20 border p-1 rounded" />
+                        <input
+                          name="time"
+                          type="number"
+                          value={form.time}
+                          onChange={handleChange}
+                          className="w-20 border p-1 rounded"
+                        />
                       ) : (
                         <div className="flex items-center gap-1">
-                          <Clock className="h-3 w-3 text-gray-400"/> {route.time} hrs
+                          <Clock className="h-3 w-3 text-gray-400" />{" "}
+                          {route.time} hrs
                         </div>
                       )}
                     </td>
@@ -335,12 +444,21 @@ export default function RouteList() {
                     {/* Cab */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {isEditing ? (
-                         <select name="cabs" value={form.cabs} onChange={(e: any) => handleChange(e)} className="border p-1 rounded w-full text-xs">
-                           {cabOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-                         </select>
+                        <select
+                          name="cabs"
+                          value={form.cabs}
+                          onChange={handleChange}
+                          className="border p-1 rounded w-full text-xs"
+                        >
+                          {cabOptions.map((opt) => (
+                            <option key={opt} value={opt}>
+                              {opt}
+                            </option>
+                          ))}
+                        </select>
                       ) : (
                         <div className="flex items-center gap-2">
-                          <Car className="h-3 w-3 text-gray-400"/> {route.cabs}
+                          <Car className="h-3 w-3 text-gray-400" /> {route.cabs}
                         </div>
                       )}
                     </td>
@@ -348,20 +466,35 @@ export default function RouteList() {
                     {/* Extra Per Km */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {isEditing ? (
-                        <input name="perkmextra_charge" value={form.perkmextra_charge} onChange={handleChange} className="w-20 border p-1 rounded" />
+                        <input
+                          name="perkmextra_charge"
+                          value={form.perkmextra_charge}
+                          onChange={handleChange}
+                          className="w-20 border p-1 rounded"
+                        />
+                      ) : route.perkmextra_charge ? (
+                        `₹${route.perkmextra_charge}`
                       ) : (
-                        route.perkmextra_charge ? `₹${route.perkmextra_charge}` : '-'
+                        "-"
                       )}
                     </td>
 
                     {/* Extra Per Hour */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {isEditing ? (
-                        <input name="per_hour_charge" type="number" value={form.per_hour_charge} onChange={handleChange} className="w-20 border p-1 rounded" />
+                        <input
+                          name="per_hour_charge"
+                          type="number"
+                          value={form.per_hour_charge}
+                          onChange={handleChange}
+                          className="w-20 border p-1 rounded"
+                        />
                       ) : (
                         <div className="flex items-center gap-1">
-                          <Hourglass className="h-3 w-3 text-gray-400"/> 
-                          {route.per_hour_charge ? `₹${route.per_hour_charge}` : '-'}
+                          <Hourglass className="h-3 w-3 text-gray-400" />
+                          {route.per_hour_charge
+                            ? `₹${route.per_hour_charge}`
+                            : "-"}
                         </div>
                       )}
                     </td>
@@ -371,19 +504,38 @@ export default function RouteList() {
                       <div className="flex items-center gap-2">
                         {isEditing ? (
                           <>
-                            <Button size="sm" onClick={handleSave} className="bg-green-600 hover:bg-green-700 h-8 w-8 p-0 rounded-full">
+                            <Button
+                              size="sm"
+                              onClick={handleSave}
+                              className="bg-green-600 hover:bg-green-700 h-8 w-8 p-0 rounded-full"
+                            >
                               <Save className="h-4 w-4" />
                             </Button>
-                            <Button size="sm" variant="ghost" onClick={() => setEditIndex(null)} className="h-8 w-8 p-0 rounded-full text-gray-500 hover:text-red-500 hover:bg-red-50">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => setEditIndex(null)}
+                              className="h-8 w-8 p-0 rounded-full text-gray-500 hover:text-red-500 hover:bg-red-50"
+                            >
                               <X className="h-4 w-4" />
                             </Button>
                           </>
                         ) : (
                           <>
-                            <Button size="sm" variant="ghost" onClick={() => handleEditClick(route, index)} className="h-8 w-8 p-0 rounded-full text-gray-500 hover:text-[#6aa4e0] hover:bg-blue-50">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => handleEditClick(route, index)}
+                              className="h-8 w-8 p-0 rounded-full text-gray-500 hover:text-[#6aa4e0] hover:bg-blue-50"
+                            >
                               <Edit2 className="h-4 w-4" />
                             </Button>
-                            <Button size="sm" variant="ghost" onClick={() => handleDelete(route._id)} className="h-8 w-8 p-0 rounded-full text-gray-500 hover:text-red-600 hover:bg-red-50">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => handleDelete(route._id)}
+                              className="h-8 w-8 p-0 rounded-full text-gray-500 hover:text-red-600 hover:bg-red-50"
+                            >
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           </>
@@ -393,22 +545,25 @@ export default function RouteList() {
                   </tr>
                 );
               })}
-              
+
               {/* Empty State */}
               {routes.length === 0 && !isValidating && !searchLoading && (
-                 <tr>
-                   <td colSpan={8} className="px-6 py-12 text-center text-gray-500">
-                     <div className="flex flex-col items-center justify-center gap-2">
-                       <Search className="h-8 w-8 text-gray-300" />
-                       <p>No local routes found.</p>
-                     </div>
-                   </td>
-                 </tr>
+                <tr>
+                  <td
+                    colSpan={8}
+                    className="px-6 py-12 text-center text-gray-500"
+                  >
+                    <div className="flex flex-col items-center justify-center gap-2">
+                      <Search className="h-8 w-8 text-gray-300" />
+                      <p>No local routes found.</p>
+                    </div>
+                  </td>
+                </tr>
               )}
             </tbody>
           </table>
         </div>
-        
+
         {/* Loading State */}
         {(isValidating || searchLoading) && (
           <div className="w-full py-6 flex justify-center bg-gray-50/50">

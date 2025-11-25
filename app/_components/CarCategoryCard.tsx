@@ -1,9 +1,9 @@
-import { Card, CardContent } from "@/components/ui/card";
+// import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { Check, X, FileText, ArrowRight, Info } from "lucide-react";
+import { Check, X, FileText, ArrowRight} from "lucide-react";
 
 interface InitialValues {
   pickupLocation: string;

@@ -4,7 +4,7 @@ import Logo from "@/assets/photo_2025-10-13_20-42-02.png";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Phone, UserCircle, User, BookOpen, LogOut } from "lucide-react";
+import { Phone, UserCircle,BookOpen, LogOut } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect, useRef } from "react";
 
