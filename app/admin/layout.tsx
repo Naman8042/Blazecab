@@ -1,4 +1,4 @@
-import AdminNav from "@/app/_components/Adminnav";
+// import AdminNav from "@/app/_components/Adminnav";
 import Session from "./Session";
 import Adminsidebar from '@/app/_components/Adminsidebar'
 
