@@ -4,21 +4,24 @@ declare module "next-auth" {
   interface Session {
     user: {
       id: string;
-  email: string;
-  isAdmin: boolean;
-  avatar?: string;
-  name?: string;    };
+      email: string;
+      isAdmin: boolean;
+      avatar?: string;
+      name?: string;
+      authProvider: string;
+    };
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
-  id: string;
-  email: string;
-  isAdmin: boolean;
-  avatar?: string;
-  name?: string;
-}
+    id: string;
+    email: string;
+    isAdmin: boolean;
+    avatar?: string;
+    name?: string;
+    authProvider: string;
+  }
 }
 
 export const authOptions: NextAuthOptions = {
@@ -31,9 +34,9 @@ export const authOptions: NextAuthOptions = {
           prompt: "consent",
           access_type: "offline",
           response_type: "code",
-        }
-      }
+        },
+      },
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
-}
+};
