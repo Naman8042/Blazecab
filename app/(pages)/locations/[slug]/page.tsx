@@ -56,7 +56,7 @@ function parseSlug(slug: string) {
   const cabKeywords = ["cabs", "sedan", "suv", "traveller", "innova", "urbania", "hatchback", "crysta","cab"];
 
   const parts = slug.split("-to-");
-  let pickup = parts[0] || "";
+  const pickup = parts[0] || "";
   let drop = parts[1] || "";
 
   const dropParts = drop.split("-");
