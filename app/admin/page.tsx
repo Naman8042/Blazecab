@@ -87,7 +87,7 @@ const BookingsView = () => {
   }
 
   return (
-    <div className="p-6 max-w-[1600px] mx-auto space-y-6">
+    <div className="p-6 max-w-[1600px] mx-auto space-y-6 min-h-screen">
       
       {/* --- Header Section --- */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

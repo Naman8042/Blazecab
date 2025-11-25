@@ -219,7 +219,7 @@ export default function RouteList() {
 
       {/* --- Search Section --- */}
       <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-        <div className="flex flex-col md:flex-row gap-3 items-end justify-between">
+        <div className="flex flex-col md:flex-row gap-3 items-end justify-start">
           <div className="w-full md:w-1/3 space-y-1">
             <label className="text-xs font-semibold text-gray-500 uppercase">Pickup City</label>
             <div className="relative">

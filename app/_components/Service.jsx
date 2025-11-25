@@ -98,13 +98,13 @@ const Service = () => {
   const cards = [ 
   {
     imageSrc: Oneway,
-    title: 'Oneway Drops',
+    title: 'One Way Drops',
     value: 'One Way',
     description: 'Travel one way across India with ease. No return fare, just pay for your ride.'
   },
   {
     imageSrc: Roundtrip,
-    title: 'Roundtrip Cabs',
+    title: 'Round Trip Cabs',
     value: 'Round Trip',
     description: 'Plan a round trip anywhere in India. Clean cars, expert drivers & punctual service.'
   },

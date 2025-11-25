@@ -50,13 +50,34 @@ type DynamicRouteInfo = { distance: string; time: string };
 /******************************
  * HELPERS
  ******************************/
+
+
 function parseSlug(slug: string) {
+  const cabKeywords = ["cabs", "sedan", "suv", "traveller", "innova", "urbania", "hatchback", "crysta","cab"];
+
   const parts = slug.split("-to-");
-  const pickup = parts[0] || "";
-  const drop = (parts[1] || "").replace("-cabs", "");
+  let pickup = parts[0] || "";
+  let drop = parts[1] || "";
+
+  const dropParts = drop.split("-");
+  const lastPart = dropParts[dropParts.length - 1].toLowerCase();
+
+  if (cabKeywords.includes(lastPart)) {
+    dropParts.pop();
+  }
+
+  drop = dropParts.join("-");
+
+  // Capitalize first letter
+  const capPickup = pickup.charAt(0).toUpperCase() + pickup.slice(1);
+  const capDrop = drop.charAt(0).toUpperCase() + drop.slice(1);
+
   const routeKey = `${pickup}-${drop}`.toLowerCase();
-  return { pickup, drop, routeKey };
+
+  return { pickup: capPickup, drop: capDrop, routeKey };
 }
+
+
 
 function createSlug(pickup: string, drop: string) {
   return `${pickup}-to-${drop}-cabs`;
@@ -72,6 +93,13 @@ function capitalize(str: string) {
 interface SEOListItem {
   slug: string;
 }
+
+const getDefaultPickupTime = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1); // kal ka din
+    tomorrow.setHours(6, 0, 0, 0); // 6 AM fix
+    return tomorrow;
+  };
 
 export async function generateStaticParams(): Promise<PageParams[]> {
   const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
@@ -274,16 +302,16 @@ export default async function Page({
   /*************************************
    * INITIAL FORM VALUES
    *************************************/
-  const pickupDate = new Date();
-  pickupDate.setDate(pickupDate.getDate() + 1);
-  const pickupTime = pickupDate;
+  const pickupDate = new Date(new Date().setDate(new Date().getDate() + 1));
+    const pickupTime = getDefaultPickupTime();
+    const dropoffDate = new Date(new Date().setDate(new Date().getDate() + 1));
 
   const initialValues: InitialValues = {
     pickupLocation: pickup,
     dropoffLocation: drop,
     pickupDate,
     pickupTime,
-    dropoffDate: pickupDate,
+    dropoffDate: dropoffDate,
   };
 
   /*************************************
@@ -338,9 +366,9 @@ export default async function Page({
             <h2 className="text-2xl font-bold text-gray-900">
               Available Vehicles
             </h2>
-            <div className="text-sm text-gray-500 bg-white px-3 py-1 rounded-full border border-gray-200 shadow-sm">
+            {/* <div className="text-sm text-gray-500 bg-white px-3 py-1 rounded-full border border-gray-200 shadow-sm">
               {dynamicCars.length} options available
-            </div>
+            </div> */}
           </div>
 
           <div className={`grid gap-6 ${gridClass}`}>
@@ -352,7 +380,8 @@ export default async function Page({
                     pickupLocation: pickup,
                     dropoffLocation: drop,
                     pickupDate: pickupDate.toISOString(),
-                    pickupTime: pickupTime.toISOString(),
+                    pickupTime: pickupTime.getTime().toString(),
+                    dropoffDate:dropoffDate.toISOString(),
                     rideType: "One Way",
                   },
                 }}

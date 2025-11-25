@@ -12,7 +12,7 @@ import {
   Car, 
   FileText, 
   LogOut, 
-  LayoutDashboard 
+  // LayoutDashboard 
 } from "lucide-react";
 import Logo from '@/assets/photo_2025-10-13_20-42-02.png'
 import Image from "next/image";
@@ -65,10 +65,10 @@ const Sidebar = () => {
       {/* --- MOBILE HEADER --- */}
       <div className="sm:hidden flex items-center justify-between bg-white border-b p-4 fixed top-0 left-0 right-0 z-50">
         <Image src={Logo} alt="" width={100} height={100}/>
-        <div className="flex items-center gap-2 font-bold text-xl text-gray-800">
+        {/* <div className="flex items-center gap-2 font-bold text-xl text-gray-800">
           <LayoutDashboard className="text-[#6aa4e0]" />
           <span>Admin</span>
-        </div>
+        </div> */}
         <button 
           onClick={() => setIsMobileOpen(!isMobileOpen)}
           className="p-2 text-gray-600 hover:bg-gray-100 rounded-md"
@@ -89,15 +89,8 @@ const Sidebar = () => {
           
           {/* Logo & Nav Links */}
           <div className="px-4 py-6">
-            <Image src={Logo} alt="" width={150} height={150} className="mb-4 ml-2"/>
-            <div className="flex items-center gap-2 px-2 mb-8">
-              <div className="w-8 h-8 bg-[#6aa4e0] rounded-lg flex items-center justify-center text-white">
-                <LayoutDashboard size={20} />
-              </div>
-              <span className="text-xl font-bold text-gray-800 tracking-tight">
-                Dashboard
-              </span>
-            </div>
+            <Image src={Logo} alt="" width={150} height={150} className="mb-8 ml-2"/>
+            
 
             {/* Navigation List */}
             <nav className="space-y-1">

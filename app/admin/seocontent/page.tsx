@@ -187,7 +187,7 @@ export default function SEODashboard() {
       {/* SIDEBAR */}
       <aside className="w-80 bg-white border-r border-slate-200 flex flex-col h-full shadow-sm z-10">
         <div className="p-6 border-b border-slate-100">
-          <div className="flex items-center gap-2 text-indigo-600 mb-6">
+          <div className="flex items-center gap-2 text-[#6aa4e0] mb-6">
             <LayoutDashboard size={24} />
             <h1 className="text-xl font-bold tracking-tight">SEO Admin</h1>
           </div>
@@ -201,7 +201,7 @@ export default function SEODashboard() {
             />
             <button
               onClick={createNewSlug}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-md transition-colors"
+              className="bg-[#6aa4e0]  text-white p-2 rounded-md transition-colors"
             >
               <Plus size={18} />
             </button>
@@ -218,7 +218,7 @@ export default function SEODashboard() {
               placeholder="Filter slugs..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-400"
+              className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-[#6aa4e0]"
             />
           </div>
 
@@ -235,14 +235,14 @@ export default function SEODashboard() {
                   className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-3
                       ${
                         selectedSlug === slug
-                          ? "bg-indigo-50 text-indigo-700 shadow-sm border border-indigo-100"
+                          ? "bg-indigo-50 text-[#6aa4e0] shadow-sm border border-indigo-100"
                           : "text-slate-600 hover:bg-slate-100 border border-transparent"
                       }`}
                 >
                   <FileText
                     size={16}
                     className={
-                      selectedSlug === slug ? "text-indigo-500" : "text-slate-400"
+                      selectedSlug === slug ? "text-[#6aa4e0]" : "text-slate-400"
                     }
                   />
                   <span className="truncate">{slug}</span>
@@ -262,7 +262,7 @@ export default function SEODashboard() {
             {selectedSlug ? (
               <>
                 Editing:{" "}
-                <span className="text-indigo-600 font-mono bg-indigo-50 px-2 py-1 rounded">
+                <span className="text-[#6aa4e0] font-mono bg-indigo-50 px-2 py-1 rounded">
                   {selectedSlug}
                 </span>
               </>
@@ -294,14 +294,14 @@ export default function SEODashboard() {
               {/* SEO Content Editor */}
               <div className="w-full bg-white rounded-xl shadow-sm border border-slate-200 p-6">
                 <div className="flex items-center gap-2 mb-4 border-b pb-4">
-                  <FileText className="text-indigo-500" size={20} />
+                  <FileText className="text-[#6aa4e0]" size={20} />
                   <h3 className="font-semibold text-slate-800">Page Content</h3>
                 </div>
                 <textarea
                   value={seoContent}
                   onChange={(e) => setSeoContent(e.target.value)}
                   placeholder="Write your HTML or Markdown content here..."
-                  className="w-full h-[400px] p-4 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-mono text-sm resize-none"
+                  className="w-full h-[400px] p-4 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#6aa4e0] focus:border-transparent font-mono text-sm resize-none"
                 />
               </div>
 
@@ -322,13 +322,13 @@ export default function SEODashboard() {
                       value={newQuestion}
                       onChange={(e) => setNewQuestion(e.target.value)}
                       placeholder="Question?"
-                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-md text-sm focus:outline-indigo-500"
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-md text-sm focus:outline-[#6aa4e0]"
                     />
                     <input
                       value={newAnswer}
                       onChange={(e) => setNewAnswer(e.target.value)}
                       placeholder="Answer..."
-                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-md text-sm focus:outline-indigo-500"
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-md text-sm focus:outline-[#6aa4e0]"
                     />
                   </div>
                   <button
