@@ -5,8 +5,8 @@ import { FaAngleDown } from "react-icons/fa";
 const Accordion = () => {
   return (
     <section className="relative z-20 overflow-hidden bg-red  max-w-7xl mx-auto ">
-      <div className="container mx-auto">
-        <div className="-mx-4 flex flex-wrap">
+      <div className="container mx-auto px-4 sm:px-0">
+        <div className="-mx-4 flex flex-wrap ">
           <div className="w-full px-4">
             <div className="mx-auto mb-[60px] max-w-[520px] text-center lg:mb-20">
               <span className="bg-[#FFB300] text-white px-3 py-1 rounded-full text-xs font-semibold">
@@ -114,7 +114,7 @@ export const AccordionItem = ({ header, text }: AccordionItemInterface) => {
   };
 
   return (
-    <div className="mb-1 w-full border-b px-4 sm:px-0 ">
+    <div className="mb-1 w-full border-b ">
       {/* Header */}
       <div
         className="flex items-center w-full cursor-pointer py-2"

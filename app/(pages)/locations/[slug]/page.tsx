@@ -6,6 +6,8 @@ import Image from "next/image";
 import { Users, ArrowRight } from "lucide-react";
 import { AccordionItem } from "@/app/_components/FAQ";
 
+export const dynamic = "force-dynamic";
+
 /******************************
  * TYPES
  ******************************/
@@ -333,7 +335,7 @@ export default async function Page({
   return (
     <main className="min-h-screen ">
       {/* HEADER SECTION */}
-      <div className="bg-white py-12 px-4 sm:px-6">
+      <div className="bg-white py-12 px-4 sm:px-6 mt-10 sm:mt-0">
         <div className="max-w-7xl mx-auto space-y-8">
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">

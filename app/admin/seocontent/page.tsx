@@ -12,7 +12,10 @@ import {
   HelpCircle,
   Loader2,
   LayoutDashboard,
+  Menu, // New import for mobile toggle
+  X     // New import for closing mobile menu
 } from "lucide-react";
+import { cn } from "@/lib/utils"; // Assuming you have this, otherwise standard string interpolation works
 
 /*************** TYPES *****************/
 
@@ -57,6 +60,9 @@ export default function SEODashboard() {
   const [loadingContent, setLoadingContent] = useState(false);
   const [saving, setSaving] = useState(false);
 
+  // Mobile State
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   /****************************************
    * Fetch Slugs
    ****************************************/
@@ -81,6 +87,9 @@ export default function SEODashboard() {
   const loadSEO = async (slug: string) => {
     setSelectedSlug(slug);
     setLoadingContent(true);
+    // Close mobile menu when a slug is selected
+    setIsMobileMenuOpen(false); 
+    
     try {
       const res = await axios.get<SEOGetResponse>(`/api/seo/${slug}/get`);
       setSeoContent(res.data.data.seoContent || "");
@@ -182,14 +191,36 @@ export default function SEODashboard() {
    * UI
    ****************************************/
   return (
-    <div className="flex h-screen bg-slate-0 text-slate-900 font-sans w-full">
+    <div className="flex h-screen bg-slate-50 text-slate-900 font-sans w-full overflow-hidden mt-12 sm:mt-0">
+
+      {/* MOBILE OVERLAY (Closes menu when clicked) */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-20 md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
 
       {/* SIDEBAR */}
-      <aside className="w-80 bg-white border-r border-slate-200 flex flex-col h-full shadow-sm z-10">
-        <div className="p-6 border-b border-slate-100">
-          <div className="flex items-center gap-2 text-[#6aa4e0] mb-6">
-            <LayoutDashboard size={24} />
-            <h1 className="text-xl font-bold tracking-tight">SEO Admin</h1>
+      <aside 
+        className={cn(
+          "fixed md:static inset-y-0 left-0 z-30 w-80 bg-white border-r border-slate-200 flex flex-col h-full shadow-xl md:shadow-sm transition-transform duration-300 ease-in-out",
+          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+        )}
+      >
+        <div className="p-6 border-b border-slate-100 flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-[#6aa4e0]">
+              <LayoutDashboard size={24} />
+              <h1 className="text-xl font-bold tracking-tight">SEO Admin</h1>
+            </div>
+            {/* Close Button Mobile */}
+            <button 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="md:hidden text-slate-400 hover:text-slate-600"
+            >
+              <X size={24} />
+            </button>
           </div>
 
           <div className="flex gap-2">
@@ -197,11 +228,11 @@ export default function SEODashboard() {
               value={newSlug}
               onChange={(e) => setNewSlug(e.target.value)}
               placeholder="new-page-slug"
-              className="flex-1 bg-slate-50 border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="flex-1 bg-slate-50 border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 min-w-0"
             />
             <button
               onClick={createNewSlug}
-              className="bg-[#6aa4e0]  text-white p-2 rounded-md transition-colors"
+              className="bg-[#6aa4e0] text-white p-2 rounded-md transition-colors shrink-0"
             >
               <Plus size={18} />
             </button>
@@ -241,9 +272,9 @@ export default function SEODashboard() {
                 >
                   <FileText
                     size={16}
-                    className={
+                    className={`shrink-0 ${
                       selectedSlug === slug ? "text-[#6aa4e0]" : "text-slate-400"
-                    }
+                    }`}
                   />
                   <span className="truncate">{slug}</span>
                 </button>
@@ -254,45 +285,57 @@ export default function SEODashboard() {
       </aside>
 
       {/* =========== MAIN CONTENT ============= */}
-      <main className="flex-1 flex flex-col h-full overflow-hidden w-full">
+      <main className="flex-1 flex flex-col h-full overflow-hidden w-full relative">
 
         {/* Header */}
-        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 shadow-sm shrink-0 ">
-          <h2 className="text-lg font-semibold text-slate-800">
-            {selectedSlug ? (
-              <>
-                Editing:{" "}
-                <span className="text-[#6aa4e0] font-mono bg-indigo-50 px-2 py-1 rounded">
-                  {selectedSlug}
-                </span>
-              </>
-            ) : (
-              <span className="text-slate-400">Select a page to edit</span>
-            )}
-          </h2>
+        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-8 shadow-sm shrink-0 gap-4">
+          <div className="flex items-center gap-4 overflow-hidden">
+            {/* Mobile Menu Toggle */}
+            <button 
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="md:hidden text-slate-500 hover:text-slate-800"
+            >
+              <Menu size={24} />
+            </button>
+            
+            <h2 className="text-lg font-semibold text-slate-800 truncate">
+              {selectedSlug ? (
+                <div className="flex items-center gap-2">
+                  <span className="hidden sm:inline">Editing:</span>
+                  <span className="text-[#6aa4e0] font-mono bg-indigo-50 px-2 py-1 rounded text-sm sm:text-base truncate">
+                    {selectedSlug}
+                  </span>
+                </div>
+              ) : (
+                <span className="text-slate-400 text-sm sm:text-base">Select page</span>
+              )}
+            </h2>
+          </div>
+
           {selectedSlug && (
             <button
               onClick={updateSEO}
               disabled={saving}
-              className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-5 py-2 rounded-lg font-medium transition-all disabled:opacity-50"
+              className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-3 md:px-5 py-2 rounded-lg font-medium transition-all disabled:opacity-50 text-sm md:text-base shrink-0"
             >
               {saving ? (
                 <Loader2 size={18} className="animate-spin" />
               ) : (
                 <Save size={18} />
               )}
-              Save Changes
+              <span className="hidden sm:inline">Save Changes</span>
+              <span className="sm:hidden">Save</span>
             </button>
           )}
         </header>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-8 bg-slate-50">
+        <div className="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50">
           {selectedSlug && !loadingContent && (
-            <div className="max-w-4xl mx-auto flex flex-col gap-8 pb-20">
+            <div className="max-w-4xl mx-auto flex flex-col gap-6 md:gap-8 pb-20">
 
               {/* SEO Content Editor */}
-              <div className="w-full bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+              <div className="w-full bg-white rounded-xl shadow-sm border border-slate-200 p-4 md:p-6">
                 <div className="flex items-center gap-2 mb-4 border-b pb-4">
                   <FileText className="text-[#6aa4e0]" size={20} />
                   <h3 className="font-semibold text-slate-800">Page Content</h3>
@@ -301,19 +344,19 @@ export default function SEODashboard() {
                   value={seoContent}
                   onChange={(e) => setSeoContent(e.target.value)}
                   placeholder="Write your HTML or Markdown content here..."
-                  className="w-full h-[400px] p-4 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#6aa4e0] focus:border-transparent font-mono text-sm resize-none"
+                  className="w-full h-[300px] md:h-[400px] p-4 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#6aa4e0] focus:border-transparent font-mono text-sm resize-none"
                 />
               </div>
 
               {/* FAQ Manager */}
-              <div className="w-full bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+              <div className="w-full bg-white rounded-xl shadow-sm border border-slate-200 p-4 md:p-6">
                 <div className="flex items-center gap-2 mb-4 border-b pb-4">
                   <HelpCircle className="text-purple-500" size={20} />
                   <h3 className="font-semibold text-slate-800">FAQs</h3>
                 </div>
 
                 {/* Add New */}
-                <div className="bg-slate-50 p-5 rounded-lg mb-6 border border-slate-200">
+                <div className="bg-slate-50 p-4 md:p-5 rounded-lg mb-6 border border-slate-200">
                   <h4 className="text-sm font-semibold text-slate-600 mb-3">
                     Add New FAQ
                   </h4>
@@ -350,19 +393,19 @@ export default function SEODashboard() {
                   {faqs.map((faq, i) => (
                     <div
                       key={i}
-                      className="group flex items-start justify-between bg-white border border-slate-200 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                      className="group flex flex-col sm:flex-row items-start justify-between bg-white border border-slate-200 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow gap-4"
                     >
-                      <div className="pr-8">
-                        <h4 className="font-semibold text-slate-800 text-sm mb-1">
+                      <div className="pr-0 sm:pr-8 w-full">
+                        <h4 className="font-semibold text-slate-800 text-sm mb-1 break-words">
                           Q: {faq.question}
                         </h4>
-                        <p className="text-slate-600 text-sm leading-relaxed">
+                        <p className="text-slate-600 text-sm leading-relaxed break-words">
                           A: {faq.answer}
                         </p>
                       </div>
                       <button
                         onClick={() => deleteFAQ(faq.question)}
-                        className="text-slate-300 hover:text-red-500 transition-colors p-1"
+                        className="text-slate-300 hover:text-red-500 transition-colors p-1 self-end sm:self-start"
                         title="Delete FAQ"
                       >
                         <Trash2 size={18} />
@@ -383,7 +426,7 @@ export default function SEODashboard() {
 
           {/* No slug selected */}
           {!selectedSlug && (
-            <div className="h-full flex flex-col items-center justify-center text-slate-300 gap-4">
+            <div className="h-full flex flex-col items-center justify-center text-slate-300 gap-4 text-center px-4">
               <LayoutDashboard size={64} className="opacity-20" />
               <p>Select a route from the sidebar to start editing</p>
             </div>

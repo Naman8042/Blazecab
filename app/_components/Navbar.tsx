@@ -73,17 +73,17 @@ const Navbar = () => {
                   className="flex items-center gap-2 focus:outline-none p-1 rounded-full hover:bg-gray-100 transition-colors"
                 >
                     {/* User Avatar - Removed Border and Arrow */}
-                    {/* {session.user?.image ? (
+                    {session.user?.avatar ? (
                         <Image 
-                            src={session.user.image} 
+                            src={session.user.avatar} 
                             alt="User" 
                             width={32} 
                             height={32} 
                             className="rounded-full w-8 h-8 object-cover"
                         />
-                    ) : ( */}
+                    ) : (
                         <UserCircle className="text-[#6aa4e0] w-7 h-7 sm:w-8 sm:h-8" />
-                    {/* )} */}
+                     )} 
                 </button>
 
                 {/* Dropdown Content */}
