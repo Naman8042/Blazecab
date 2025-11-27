@@ -1,6 +1,6 @@
 "use client";
-import { useState, FormEvent, Dispatch, SetStateAction } from "react";
-import { useRef } from "react";
+
+import { useState, FormEvent, Dispatch, SetStateAction, forwardRef, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import axios from "axios";
@@ -8,8 +8,11 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Button } from "@/components/ui/button";
 import { useRideTypeStore } from "../Providers";
-import { IoClose } from "react-icons/io5";
 import { RideType } from "@/state/counter-store";
+
+// Icons
+import { IoClose, IoLocationSharp, IoCalendarClear, IoTime } from "react-icons/io5";
+import { FaCarSide } from "react-icons/fa";
 
 const rideTypes: RideType[] = ["One Way", "Round Trip", "Local"];
 
@@ -22,6 +25,7 @@ type PhotonFeature = {
     street?: string;
     housenumber?: string;
     postcode?: string;
+    state?: string;
   };
   geometry: {
     coordinates: [number, number];
@@ -44,6 +48,22 @@ type CarRentalSearchProps = {
   showForm?: boolean;
 };
 
+// --- Custom Input Component ---
+const CustomDateInput = forwardRef(({ value, onClick, placeholder, icon: Icon }: any, ref: any) => (
+  <div className="relative w-full group h-full" onClick={onClick} ref={ref}>
+    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-hover:text-[#6aa4e0] transition-colors z-10">
+      <Icon size={18} />
+    </div>
+    <button
+      type="button"
+      className="w-full h-12 lg:h-full pl-10 pr-3 py-3 text-left bg-gray-50 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:border-[#6aa4e0] focus:ring-2 focus:ring-[#6aa4e0] transition-all truncate flex items-center"
+    >
+      {value || <span className="text-gray-400 font-normal">{placeholder}</span>}
+    </button>
+  </div>
+));
+CustomDateInput.displayName = "CustomDateInput";
+
 export const CarRentalSearch = ({
   initialValues,
   setShowForm,
@@ -59,8 +79,8 @@ export const CarRentalSearch = ({
 
   const getDefaultPickupTime = () => {
     const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1); // kal ka din
-    tomorrow.setHours(6, 0, 0, 0); // 6 AM fix
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(6, 0, 0, 0);
     return tomorrow;
   };
 
@@ -80,25 +100,18 @@ export const CarRentalSearch = ({
       : getDefaultPickupTime(),
     dropOffDate: initialValues?.dropOffDate
       ? new Date(initialValues.dropOffDate)
-      : new Date(new Date().setDate(new Date().getDate() + 2)), // 👈 default return next day
+      : new Date(new Date().setDate(new Date().getDate() + 2)),
   });
 
-  const [pickupSuggestions, setPickupSuggestions] = useState<PhotonFeature[]>(
-    []
-  );
-  const [dropoffSuggestions, setDropoffSuggestions] = useState<PhotonFeature[]>(
-    []
-  );
-  const [activeField, setActiveField] = useState<"pickup" | "dropoff" | null>(
-    null
-  );
+  const [pickupSuggestions, setPickupSuggestions] = useState<PhotonFeature[]>([]);
+  const [dropoffSuggestions, setDropoffSuggestions] = useState<PhotonFeature[]>([]);
+  const [activeField, setActiveField] = useState<"pickup" | "dropoff" | null>(null);
 
   const router = useRouter();
 
+  // --- Validation Logic ---
   const onNavigateHandler = (e: FormEvent) => {
     e.preventDefault();
-
-    // --- Validation Logic ---
     let isValid = true;
     let errorMessage = "";
 
@@ -119,21 +132,13 @@ export const CarRentalSearch = ({
         isValid = false;
         errorMessage = "One Way bookings must be at least 3 hours in advance.";
       }
-      if (
-        (rideType === "Round Trip" || rideType === "Local") &&
-        diffInHours < 2
-      ) {
+      if ((rideType === "Round Trip" || rideType === "Local") && diffInHours < 2) {
         isValid = false;
-        errorMessage =
-          "Round Trip and Local bookings must be at least 2 hours in advance.";
+        errorMessage = "Round Trip and Local bookings must be at least 2 hours in advance.";
       }
     }
 
-    if (
-      rideType === "Round Trip" &&
-      formData.pickupDate &&
-      formData.dropOffDate
-    ) {
+    if (rideType === "Round Trip" && formData.pickupDate && formData.dropOffDate) {
       if (formData.dropOffDate < formData.pickupDate) {
         isValid = false;
         errorMessage = "Return date cannot be earlier than pickup date.";
@@ -146,37 +151,35 @@ export const CarRentalSearch = ({
     }
 
     if (!rideType) {
-      errorMessage = "Please select a ride type.";
-      isValid = false;
-    } else if (!formData.pickupLocation.trim()) {
-      errorMessage = "Pickup location cannot be empty.";
-      isValid = false;
-    } else if (rideType !== "Local" && !formData.dropoffLocation.trim()) {
-      errorMessage = "Dropoff location cannot be empty for this ride type.";
-      isValid = false;
-    } else if (!formData.pickupDate) {
-      errorMessage = "Please select a pickup date.";
-      isValid = false;
-    } else if (!formData.pickupTime) {
-      errorMessage = "Please select a pickup time.";
-      isValid = false;
-    } else if (rideType === "Round Trip" && !formData.dropOffDate) {
-      errorMessage = "Please select a dropoff date for round trip.";
-      isValid = false;
-    }
-
-    if (!isValid) {
-      toast.error(errorMessage);
-      return;
-    }
-    // --- End Validation Logic ---
+        errorMessage = "Please select a ride type.";
+        isValid = false;
+      } else if (!formData.pickupLocation.trim()) {
+        errorMessage = "Pickup location cannot be empty.";
+        isValid = false;
+      } else if (rideType !== "Local" && !formData.dropoffLocation.trim()) {
+        errorMessage = "Dropoff location cannot be empty for this ride type.";
+        isValid = false;
+      } else if (!formData.pickupDate) {
+        errorMessage = "Please select a pickup date.";
+        isValid = false;
+      } else if (!formData.pickupTime) {
+        errorMessage = "Please select a pickup time.";
+        isValid = false;
+      } else if (rideType === "Round Trip" && !formData.dropOffDate) {
+        errorMessage = "Please select a dropoff date for round trip.";
+        isValid = false;
+      }
+  
+      if (!isValid) {
+        toast.error(errorMessage);
+        return;
+      }
 
     if (showForm && typeof setShowForm === "function") {
       setShowForm(!showForm);
     }
 
     const queryParams = new URLSearchParams();
-
     queryParams.append("rideType", rideType.replace(/\s+/g, "-"));
     queryParams.append("pickupLocation", formData.pickupLocation);
 
@@ -187,28 +190,18 @@ export const CarRentalSearch = ({
     }
 
     if (formData.pickupDate) {
-      queryParams.append(
-        "pickupDate",
-        formData?.pickupDate.toISOString().replace(/:/g, "-")
-      );
+      queryParams.append("pickupDate", formData?.pickupDate.toISOString().replace(/:/g, "-"));
     }
 
     if (formData.pickupTime) {
-      queryParams.append(
-        "pickupTime",
-        formData.pickupTime.getTime().toString()
-      );
+      queryParams.append("pickupTime", formData.pickupTime.getTime().toString());
     }
 
     if (rideType === "Round Trip" && formData.dropOffDate) {
-      queryParams.append(
-        "dropoffDate",
-        formData.dropOffDate.toISOString().replace(/:/g, "-")
-      );
+      queryParams.append("dropoffDate", formData.dropOffDate.toISOString().replace(/:/g, "-"));
     }
 
     const url = `/carride?${queryParams.toString()}`;
-    console.log("Navigating to URL:", url);
     router.push(url);
   };
 
@@ -230,365 +223,281 @@ export const CarRentalSearch = ({
     }
   };
 
-  const handleAddressSearch = async (
-  query: string,
-  field: "pickup" | "dropoff"
-) => {
-  if (!query || query.length < 3) {
-    if (field === "pickup") {
-      setPickupSuggestions([]);
-    } else {
-      setDropoffSuggestions([]);
+  const handleAddressSearch = async (query: string, field: "pickup" | "dropoff") => {
+    if (!query || query.length < 3) {
+      field === "pickup" ? setPickupSuggestions([]) : setDropoffSuggestions([]);
+      return;
     }
-    return;
-  }
 
-  try {
-    const response = await axios.get<{ features: PhotonFeature[] }>(
-      `https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&lang=en`
-    );
+    try {
+      const response = await axios.get<{ features: PhotonFeature[] }>(
+        `https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&lang=en`
+      );
+      const features = response?.data?.features ?? [];
+      const indiaResults = features.filter((place) => place?.properties?.country === "India");
+      const uniqueResults = indiaResults.filter((place, i, self) => {
+        const osmId = place?.properties?.osm_id;
+        return i === self.findIndex((p) => p?.properties?.osm_id === osmId);
+      });
 
-    const features = response?.data?.features ?? [];
-
-    // ✅ Only keep India results
-    const indiaResults = features.filter(
-      (place) => place?.properties?.country === "India"
-    );
-
-    // ✅ Keep only unique major cities
-    const uniqueResults = indiaResults.filter((place, i, self) => {
-      const osmId = place?.properties?.osm_id;
-      return i === self.findIndex((p) => p?.properties?.osm_id === osmId);
-    });
-
-    if (field === "pickup") {
-      setPickupSuggestions(uniqueResults);
-    } else {
-      setDropoffSuggestions(uniqueResults);
+      if (field === "pickup") {
+        setPickupSuggestions(uniqueResults);
+      } else {
+        setDropoffSuggestions(uniqueResults);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      field === "pickup" ? setPickupSuggestions([]) : setDropoffSuggestions([]);
     }
-  } catch (error) {
-    console.error("Error fetching data from Photon API:", error);
-    if (field === "pickup") {
-      setPickupSuggestions([]);
-    } else {
-      setDropoffSuggestions([]);
-    }
-  }
-};
-
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    if (!formData.pickupTime) return;
-    const formattedData = {
-      ...formData,
-      pickupTime: formData.pickupTime.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-    console.log("Form submitted:", formattedData);
   };
 
-  const getVisibleInputCount = () => {
-    if (rideType === "One Way") return 4;
-    if (rideType === "Round Trip") return 5;
-    if (rideType === "Local") return 3;
-    return 5;
+  const getGridClass = () => {
+    if (rideType === "Local") return "lg:grid-cols-3";       
+    if (rideType === "Round Trip") return "lg:grid-cols-5";  
+    return "lg:grid-cols-4";                                 
   };
-
-  const inputCount = getVisibleInputCount();
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div
-        className={`bg-opacity-90 bg-white py-6 rounded-xl ${
-          source === "home" ? "shadow-2xl" : "border-2"
-        } border w-full backdrop-blur-sm`}
-      >
-        {/* Ride Type Buttons */}
-        {source === "carride" ? (
-          <div className=" flex justify-end pr-4 py-2">
-            <IoClose
-              size={20}
-              onClick={() => setShowForm?.(false)}
-              className="hover:cursor-pointer"
-            />
-          </div>
-        ) : (
-          <></>
-        )}
-        <div className="flex flex-wrap justify-between sm:justify-center gap-2 mb-6  px-5 sm:px-6">
+    <form
+      onSubmit={onNavigateHandler}
+      className={`relative w-full max-w-7xl mx-auto bg-white rounded-2xl ${
+        source === "home" ? "shadow-2xl shadow-blue-900/10" : "border border-gray-200"
+      } p-4 sm:p-6 lg:p-8 z-20`}
+    >
+      {/* Close Button (Modal Mode) */}
+      {source === "carride" && (
+        <button
+          type="button"
+          onClick={() => setShowForm?.(false)}
+          className="absolute top-4 right-4 p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition"
+        >
+          <IoClose size={20} />
+        </button>
+      )}
+
+      {/* Ride Type Tabs */}
+      <div className="flex justify-center mb-6">
+        <div className="inline-flex bg-gray-100 p-1.5 rounded-full overflow-hidden shadow-inner">
           {rideTypes.map((type) => (
             <button
               key={type}
-              // type="button"
+              type="button"
               onClick={() => setRideType(type)}
-              className={`px-2.5 md:px-4 py-1 md:py-2 rounded-full font-medium transition-all duration-200 ${
+              className={`px-4 sm:px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
                 rideType === type
-                  ? "bg-[#6aa4e0] text-white text-[13px] sm:text-base cursor-pointer uppercase"
-                  : "bg-opacity-20 text-black hover:bg-opacity-30 text-[15px] sm:text-base cursor-pointer uppercase"
+                  ? "bg-[#6aa4e0] text-white shadow-md transform scale-105"
+                  : "text-gray-500 hover:text-gray-800 hover:bg-gray-200"
               }`}
             >
               {type}
             </button>
           ))}
         </div>
+      </div>
 
-        {/* Inputs */}
-        <div
-          className="flex flex-col sm:grid gap-2 md:gap-4 px-6"
-          style={{
-            gridTemplateColumns: `repeat(${inputCount}, minmax(0, 1fr))`,
-          }}
-        >
-          {/* Pickup Location */}
-          <div className="relative">
-            <label className="block text-sm font-medium mb-1">
-              Pickup City
-            </label>
+      <div className={`grid grid-cols-2 ${getGridClass()} gap-3 items-end`}>
+        
+        {/* 1. Pickup Location */}
+        <div className="relative col-span-2 lg:col-span-1">
+          <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5 ml-1">
+            Pickup
+          </label>
+          <div className="relative group h-12">
+            <IoLocationSharp className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-hover:text-[#6aa4e0] transition-colors z-10" size={18} />
             <input
               type="text"
               value={formData.pickupLocation}
               onChange={(e) => {
-                setFormData({
-                  ...formData,
-                  pickupLocation: e.target.value,
-                });
+                setFormData({ ...formData, pickupLocation: e.target.value });
                 handleAddressSearch(e.target.value, "pickup");
               }}
               onFocus={() => setActiveField("pickup")}
               onBlur={() => setTimeout(() => setActiveField(null), 200)}
-              placeholder="Enter Pickup City"
-              className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 placeholder-gray-500 border-2"
+              placeholder="City or Airport"
+              className="w-full h-full pl-10 pr-3 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm font-medium text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#6aa4e0] focus:border-transparent transition-all"
             />
             {activeField === "pickup" && pickupSuggestions.length > 0 && (
-              <ul className="absolute top-full text-black left-0 w-full bg-white rounded-lg shadow-lg z-50 h-40 overflow-y-auto">
+              <ul className="absolute top-[calc(100%+8px)] left-0 w-full bg-white rounded-xl shadow-xl border border-gray-100 max-h-60 overflow-y-auto z-50 animate-in fade-in slide-in-from-top-2">
                 {pickupSuggestions.map((suggestion) => (
                   <li
                     key={suggestion.properties.osm_id}
-                    className="p-2 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => {
-                      setFormData({
-                        ...formData,
-                        pickupLocation: suggestion.properties.name,
-                      });
+                    className="px-4 py-3 hover:bg-blue-50 cursor-pointer border-b border-gray-50 last:border-none text-sm text-gray-700"
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      setFormData((prev) => ({ ...prev, pickupLocation: suggestion.properties.name }));
                       setPickupSuggestions([]);
                       setActiveField(null);
                     }}
                   >
-                    {suggestion.properties.name},{" "}
-                    {suggestion.properties.city || ""}
+                    <span className="font-semibold">{suggestion.properties.name}</span>
+                    <span className="block text-xs text-gray-500 mt-0.5">{suggestion.properties.city || suggestion.properties.state}</span>
                   </li>
                 ))}
               </ul>
             )}
           </div>
+        </div>
 
-          {/* Dropoff Location */}
-          {rideType !== "Local" && (
-            <div className="relative">
-              <label className="block text-sm font-medium mb-1">
-                {rideType === "One Way" ? "Drop City" : "Destination City"}
-              </label>
+        {/* 2. Dropoff Location */}
+        {rideType !== "Local" && (
+          <div className="relative col-span-2 lg:col-span-1">
+            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5 ml-1">
+              Dropoff
+            </label>
+            <div className="relative group h-12">
+              <IoLocationSharp className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-hover:text-red-400 transition-colors z-10" size={18} />
               <input
                 type="text"
                 value={formData.dropoffLocation}
                 onChange={(e) => {
-                  setFormData({
-                    ...formData,
-                    dropoffLocation: e.target.value,
-                  });
+                  setFormData({ ...formData, dropoffLocation: e.target.value });
                   handleAddressSearch(e.target.value, "dropoff");
                 }}
                 onFocus={() => setActiveField("dropoff")}
                 onBlur={() => setTimeout(() => setActiveField(null), 200)}
-                placeholder={
-                  rideType == "One Way"
-                    ? "Enter Your Drop City"
-                    : "Enter Your Destination City"
-                }
-                className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 placeholder-gray-500 border-2"
+                placeholder="Drop City"
+                className="w-full h-full pl-10 pr-3 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm font-medium text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#6aa4e0] focus:border-transparent transition-all"
               />
-              {activeField === "dropoff" && dropoffSuggestions.length > 0 && (
-                <ul className="absolute top-full text-black left-0 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-50 h-40 overflow-y-auto">
-                  {dropoffSuggestions.map((suggestion) => (
-                    <li
-                      key={suggestion.properties.osm_id}
-                      className="p-2 hover:bg-gray-100 cursor-pointer"
-                      onClick={() => {
-                        setFormData({
-                          ...formData,
-                          dropoffLocation: suggestion.properties.name,
-                        });
-                        setDropoffSuggestions([]);
-                        setActiveField(null);
-                      }}
-                    >
-                      {suggestion.properties.name},{" "}
-                      {suggestion.properties.city || ""}
-                    </li>
-                  ))}
-                </ul>
-              )}
+               {activeField === "dropoff" && dropoffSuggestions.length > 0 && (
+                  <ul className="absolute top-[calc(100%+8px)] left-0 w-full bg-white rounded-xl shadow-xl border border-gray-100 max-h-60 overflow-y-auto z-50 animate-in fade-in slide-in-from-top-2">
+                    {dropoffSuggestions.map((suggestion) => (
+                      <li
+                        key={suggestion.properties.osm_id}
+                        className="px-4 py-3 hover:bg-blue-50 cursor-pointer border-b border-gray-50 last:border-none text-sm text-gray-700"
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          setFormData((prev) => ({ ...prev, dropoffLocation: suggestion.properties.name }));
+                          setDropoffSuggestions([]);
+                          setActiveField(null);
+                        }}
+                      >
+                         <span className="font-semibold">{suggestion.properties.name}</span>
+                         <span className="block text-xs text-gray-500 mt-0.5">{suggestion.properties.city || suggestion.properties.state}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
             </div>
-          )}
-
-          {/* Pickup Date */}
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Pickup date
-            </label>
-            <DatePicker
-              ref={pickupDateRef}
-              selected={formData.pickupDate}
-              onChange={(date) => handleDateChange(date, "pickupDate")}
-              dateFormat="dd MMM yyyy"
-              wrapperClassName="w-full"
-              minDate={new Date()}
-              customInput={
-                <button
-                  type="button"
-                  className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2 text-left"
-                >
-                  {formData.pickupDate
-                    ? `${String(formData.pickupDate.getDate()).padStart(
-                        2,
-                        "0"
-                      )}-${formData.pickupDate.toLocaleString("en-US", {
-                        month: "short",
-                      })}-${formData.pickupDate.getFullYear()}`
-                    : "Select date"}
-                </button>
-              }
-            />
           </div>
+        )}
 
-          {/* Pickup Time */}
-          {/* Pickup Time */}
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Pickup time
-            </label>
-            <DatePicker
-              ref={pickupTimeRef}
-              selected={formData.pickupTime}
-              onChange={(time) => handleTimeChange(time)}
-              showTimeSelect
-              showTimeSelectOnly
-              timeIntervals={30}
-              timeCaption="Time"
-              dateFormat="h:mm aa"
-              wrapperClassName="w-full"
-              minTime={(() => {
-                const now = new Date();
-                const pickupDate = formData.pickupDate || new Date();
-
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-
-                // Agar pickup date aaj hai
-                if (
-                  pickupDate.getDate() === today.getDate() &&
-                  pickupDate.getMonth() === today.getMonth() &&
-                  pickupDate.getFullYear() === today.getFullYear()
-                ) {
-                  if (rideType === "One Way") {
-                    return new Date(now.getTime() + 3 * 60 * 60 * 1000); // now + 3h
-                  } else {
-                    return new Date(now.getTime() + 2 * 60 * 60 * 1000); // now + 2h
-                  }
-                }
-
-                // Agar kal ya future date hai → 12:00 AM se select kar sakta hai
-                const midnight = new Date(pickupDate);
-                midnight.setHours(0, 0, 0, 0);
-                return midnight;
-              })()}
-              maxTime={new Date(new Date().setHours(23, 59, 59, 999))}
-              customInput={
-                <button className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2 text-left">
-                  {formData.pickupTime
-                    ? formData.pickupTime.toLocaleTimeString("en-US", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        hour12: true,
-                      })
-                    : "Select time"}
-                </button>
-              }
-            />
-          </div>
-
-          {/* Dropoff Date */}
-          {rideType === "Round Trip" && (
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Return date
-              </label>
+        {/* 3. Date */}
+        <div className="col-span-1">
+            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5 ml-1">Date</label>
+            <div className="h-12">
               <DatePicker
-                ref={dropOffDateRef}
-                selected={formData.dropOffDate}
-                onChange={(date) => handleDateChange(date, "dropOffDate")}
-                dateFormat="dd-MM-yyyy"
-                wrapperClassName="w-full"
-                minDate={formData.pickupDate || new Date()} // 👈 cannot select before pickup
-                customInput={
-                  <button className="w-full p-2 sm:p-3 rounded-lg bg-white/90 text-gray-900 border-2 text-left">
-                    {formData.dropOffDate
-                      ? `${String(formData.dropOffDate.getDate()).padStart(
-                          2,
-                          "0"
-                        )}-${formData.dropOffDate.toLocaleString("en-US", {
-                          month: "short",
-                        })}-${formData.dropOffDate.getFullYear()}`
-                      : "Select date"}
-                  </button>
-                }
+                  ref={pickupDateRef}
+                  selected={formData.pickupDate}
+                  onChange={(date) => handleDateChange(date, "pickupDate")}
+                  dateFormat="dd MMM yy"
+                  minDate={new Date()}
+                  customInput={<CustomDateInput icon={IoCalendarClear} placeholder="Date" />}
+                  wrapperClassName="h-full w-full"
               />
             </div>
-          )}
         </div>
 
-        {/* Search Button */}
-        <div className="mt-6 flex justify-center">
-          <Button
-            type="submit"
-            className="font-semibold py-3 px-8"
-            onClick={onNavigateHandler}
-          >
-            Search Cars
-          </Button>
+        {/* 4. Time */}
+        <div className="col-span-1">
+            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5 ml-1">Time</label>
+            <div className="h-12">
+              <DatePicker
+                  ref={pickupTimeRef}
+                  selected={formData.pickupTime}
+                  onChange={(time) => handleTimeChange(time)}
+                  showTimeSelect
+                  showTimeSelectOnly
+                  timeIntervals={30}
+                  dateFormat="h:mm aa"
+                  customInput={<CustomDateInput icon={IoTime} placeholder="Time" />}
+                  wrapperClassName="h-full w-full"
+                  minTime={(() => {
+                      const now = new Date();
+                      const pickupDate = formData.pickupDate || new Date();
+                      const today = new Date();
+                      today.setHours(0, 0, 0, 0);
+
+                      if (
+                        pickupDate.getDate() === today.getDate() &&
+                        pickupDate.getMonth() === today.getMonth() &&
+                        pickupDate.getFullYear() === today.getFullYear()
+                      ) {
+                        const hoursToAdd = rideType === "One Way" ? 3 : 2;
+                        return new Date(now.getTime() + hoursToAdd * 60 * 60 * 1000);
+                      }
+                      const midnight = new Date(pickupDate);
+                      midnight.setHours(0, 0, 0, 0);
+                      return midnight;
+                    })()}
+                    maxTime={new Date(new Date().setHours(23, 59, 59, 999))}
+              />
+            </div>
         </div>
+
+        {/* 5. Return Date */}
+        {rideType === "Round Trip" && (
+            <div className="col-span-2 lg:col-span-1">
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5 ml-1">Return</label>
+                <div className="h-12">
+                  <DatePicker
+                  ref={dropOffDateRef}
+                  selected={formData.dropOffDate}
+                  onChange={(date) => handleDateChange(date, "dropOffDate")}
+                  dateFormat="dd MMM yy"
+                  minDate={formData.pickupDate || new Date()}
+                  customInput={<CustomDateInput icon={IoCalendarClear} placeholder="Return" />}
+                  wrapperClassName="h-full w-full"
+                  />
+                </div>
+            </div>
+        )}
+
+      </div>
+
+      {/* Search Button */}
+      <div className="mt-8 flex justify-center">
+        <Button
+          type="submit"
+          onClick={onNavigateHandler}
+          className="w-full sm:w-auto bg-[#6aa4e0] hover:bg-[#5b91c9] text-white text-lg font-bold py-6 px-12 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
+        >
+          <FaCarSide className="text-xl" />
+          Search Best Fares
+        </Button>
       </div>
     </form>
   );
 };
 
+// --- Hero Section Component ---
 function CarSearch() {
   return (
-    <section className="relative w-full bg-gray-100 min-h-svh sm:min-h-[calc(100vh-3.5rem)] flex items-center overflow-hidden pt-[20%] sm:pt-0">
-      <div className="absolute inset-0 bg-opacity-50 -z-10"></div>
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 ">
-        <div className="text-center lg:text-left mb-4 md:mb-8 lg:mb-12">
-          <h1 className="text-[#6aa4e0] font-bold text-center mb-3 leading-snug">
-            {/* Mobile version (shortened) */}
-            <span className="block text-2xl sm:hidden">
-              Ride Smart with Blaze<span className="text-[#fbd20b]">Cab</span>
-            </span>
+    // FIXES APPLIED HERE:
+    // 1. pt-28: Adds top padding so text isn't hidden behind the fixed header.
+    // 2. pb-24: Adds bottom padding so WhatsApp button doesn't block the submit button.
+    // 3. justify-start: Ensures content starts from top on mobile (not centered, which causes cutoff).
+    <section className="relative w-full sm:min-h-[91vh] flex flex-col justify-start lg:justify-center bg-gradient-to-br from-blue-50 to-white overflow-hidden pt-28 pb-24 lg:py-0">
+      
+      {/* Background Blobs */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 opacity-30 pointer-events-none">
+        <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-blue-200 rounded-full blur-[100px]" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-yellow-100 rounded-full blur-[80px]" />
+      </div>
 
-            {/* Larger screens version (full text) */}
-            <span className="hidden sm:block text-2xl md:text-4xl lg:text-5xl">
-              Ride Smart → Ride Safe → Ride with{" "}
-              Blaze<span className="text-[#fbd20b]">Cab</span>
-            </span>
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 relative z-10 flex flex-col justify-center">
+        
+        {/* Text Section */}
+        <div className="text-center mb-6 sm:mb-10 max-w-3xl mx-auto">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-800 tracking-tight leading-[1.2] mb-3 px-2">
+             Ride Smart with <span className="text-[#6aa4e0]">Blaze</span><span className="text-[#fbd20b]">Cab</span>
           </h1>
-
-          <p className="text-[#6aa4e0] text-lg sm:text-xl  mx-auto lg:mx-0 hidden sm:block text-center">
-            Compare prices from top rental companies and save up to 60%
+          <p className="text-base sm:text-xl text-slate-600 font-medium max-w-xl mx-auto px-4 leading-relaxed">
+            Premium intercity & local cab services. Compare prices, book instantly, and save up to 60%.
           </p>
         </div>
-        <CarRentalSearch />
+
+        {/* Form Section */}
+        <CarRentalSearch source="home" />
       </div>
     </section>
   );

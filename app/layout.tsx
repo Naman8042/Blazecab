@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { RideTypeStoreProvider } from "./Providers";
+import WhatsAppButton from '@/app/_components/Whatsappbutton';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -181,6 +182,7 @@ export default function RootLayout({
         <RideTypeStoreProvider>
           <Toaster position="top-center" />
           {children}
+          <WhatsAppButton/>
         </RideTypeStoreProvider>
       </body>
     </html>

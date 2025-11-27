@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Users, ArrowRight } from "lucide-react";
 import { AccordionItem } from "@/app/_components/FAQ";
+import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
@@ -55,29 +56,39 @@ type DynamicRouteInfo = { distance: string; time: string };
 
 
 function parseSlug(slug: string) {
-  const parts = slug.split("-to-");
-  const pickup = parts[0] || "";
-  let drop = parts[1] || "";
+  // 1. STRICT VALIDATION: Must end with allowed suffixes
+  const validSuffixes = ["-cab"];
+  const matchedSuffix = validSuffixes.find((s) => slug.endsWith(s));
 
-  // Split drop into parts
-  const dropParts = drop.split("-");
-  const lastPart = dropParts[dropParts.length - 1].toLowerCase();
-
-  // ✔ Only remove "cab" or "cabs"
-  if (lastPart === "cab") {
-    dropParts.pop();
+  if (!matchedSuffix) {
+    return null; // ❌ Invalid URL (e.g. "delhi-to-agra")
   }
 
-  drop = dropParts.join("-");
+  // Remove suffix to get "delhi-to-agra"
+  const cleanRoute = slug.slice(0, -matchedSuffix.length);
+
+  // 2. STRICT VALIDATION: Must have "-to-" separator
+  if (!cleanRoute.includes("-to-")) {
+    return null; // ❌ Invalid Route (e.g. "delhicabs")
+  }
+
+  const parts = cleanRoute.split("-to-");
+  const pickup = parts[0];
+  const drop = parts[1];
+
+  if (!pickup || !drop) return null;
 
   // Capitalize
   const capPickup = pickup.charAt(0).toUpperCase() + pickup.slice(1);
   const capDrop = drop.charAt(0).toUpperCase() + drop.slice(1);
 
-  const routeKey = `${pickup}-${drop}`.toLowerCase();
+  // Route Key for DB (e.g. "delhi-agra")
+  const routeKey = `${pickup}-${drop}`.toLowerCase(); 
 
   return { pickup: capPickup, drop: capDrop, routeKey };
 }
+
+
 
 
 
@@ -130,7 +141,13 @@ export async function generateMetadata({
   params: Promise<PageParams>;
 }): Promise<Metadata> {
   const resolved = await params;
-  const { pickup, drop } = parseSlug(resolved.slug);
+  const parsed = parseSlug(resolved.slug);
+  
+  if (!parsed) {
+    notFound(); // This will automatically render app/not-found.tsx
+  }
+
+  const { pickup, drop, routeKey } = parsed;
   const pCap = capitalize(pickup);
   const dCap = capitalize(drop);
   return {
@@ -255,7 +272,13 @@ export default async function Page({
   params: Promise<PageParams>;
 }) {
   const resolved = await params;
-  const { pickup, drop, routeKey } = parseSlug(resolved.slug);
+  const parsed = parseSlug(resolved.slug);
+  
+  if (!parsed) {
+    notFound(); // This will automatically render app/not-found.tsx
+  }
+
+  const { pickup, drop, routeKey } = parsed;
 
   const pickupCap = capitalize(pickup);
   const dropCap = capitalize(drop);
