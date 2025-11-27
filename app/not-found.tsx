@@ -19,7 +19,7 @@ export default function NotFound() {
         Lost on the road?
       </h2>
       <p className="text-gray-500 max-w-md mx-auto mb-8 text-lg">
-        The route or page you are looking for doesn't exist. It might have been moved or you may have mistyped the address.
+        The route or page you are looking for doesn`&apos;`t exist. It might have been moved or you may have mistyped the address.
       </p>
 
       {/* Action Buttons */}
