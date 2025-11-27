@@ -9,10 +9,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Button } from "@/components/ui/button";
 import { useRideTypeStore } from "../Providers";
 import { RideType } from "@/state/counter-store";
-
-// Icons
 import { IoClose, IoLocationSharp, IoCalendarClear, IoTime } from "react-icons/io5";
 import { FaCarSide } from "react-icons/fa";
+import { IconType } from "react-icons";
 
 const rideTypes: RideType[] = ["One Way", "Round Trip", "Local"];
 
@@ -48,20 +47,29 @@ type CarRentalSearchProps = {
   showForm?: boolean;
 };
 
-// --- Custom Input Component ---
-const CustomDateInput = forwardRef(({ value, onClick, placeholder, icon: Icon }: any, ref: any) => (
-  <div className="relative w-full group h-full" onClick={onClick} ref={ref}>
-    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-hover:text-[#6aa4e0] transition-colors z-10">
-      <Icon size={18} />
+// --- Custom Input Component Types & Definition ---
+interface CustomInputProps {
+  value?: string;
+  onClick?: () => void;
+  placeholder: string;
+  icon: IconType;
+}
+
+const CustomDateInput = forwardRef<HTMLDivElement, CustomInputProps>(
+  ({ value, onClick, placeholder, icon: Icon }, ref) => (
+    <div className="relative w-full group h-full" onClick={onClick} ref={ref}>
+      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-hover:text-[#6aa4e0] transition-colors z-10">
+        <Icon size={18} />
+      </div>
+      <button
+        type="button"
+        className="w-full h-12 lg:h-full pl-10 pr-3 py-3 text-left bg-gray-50 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:border-[#6aa4e0] focus:ring-2 focus:ring-[#6aa4e0] transition-all truncate flex items-center"
+      >
+        {value || <span className="text-gray-400 font-normal">{placeholder}</span>}
+      </button>
     </div>
-    <button
-      type="button"
-      className="w-full h-12 lg:h-full pl-10 pr-3 py-3 text-left bg-gray-50 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:border-[#6aa4e0] focus:ring-2 focus:ring-[#6aa4e0] transition-all truncate flex items-center"
-    >
-      {value || <span className="text-gray-400 font-normal">{placeholder}</span>}
-    </button>
-  </div>
-));
+  )
+);
 CustomDateInput.displayName = "CustomDateInput";
 
 export const CarRentalSearch = ({
@@ -225,7 +233,11 @@ export const CarRentalSearch = ({
 
   const handleAddressSearch = async (query: string, field: "pickup" | "dropoff") => {
     if (!query || query.length < 3) {
-      field === "pickup" ? setPickupSuggestions([]) : setDropoffSuggestions([]);
+      if (field === "pickup") {
+        setPickupSuggestions([]);
+      } else {
+        setDropoffSuggestions([]);
+      }
       return;
     }
 
@@ -247,7 +259,11 @@ export const CarRentalSearch = ({
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-      field === "pickup" ? setPickupSuggestions([]) : setDropoffSuggestions([]);
+      if (field === "pickup") {
+        setPickupSuggestions([]);
+      } else {
+        setDropoffSuggestions([]);
+      }
     }
   };
 

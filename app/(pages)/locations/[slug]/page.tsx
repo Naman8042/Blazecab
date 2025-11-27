@@ -147,7 +147,7 @@ export async function generateMetadata({
     notFound(); // This will automatically render app/not-found.tsx
   }
 
-  const { pickup, drop, routeKey } = parsed;
+  const { pickup, drop} = parsed;
   const pCap = capitalize(pickup);
   const dCap = capitalize(drop);
   return {
